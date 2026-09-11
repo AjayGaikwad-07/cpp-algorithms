@@ -17,11 +17,9 @@ int main() {
         }
     }
 
-    // Set diagonal to 0
     for (int i = 0; i < n; i++)
         dist[i][i] = 0;
 
-    // Floyd-Warshall: try each vertex k as intermediate
     for (int k = 0; k < n; k++) {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
@@ -34,7 +32,6 @@ int main() {
         }
     }
 
-    // Check for negative weight cycles
     bool negCycle = false;
     for (int i = 0; i < n; i++) {
         if (dist[i][i] < 0) {

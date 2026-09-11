@@ -1,10 +1,11 @@
 import React from 'react';
-import { Network, Zap, BarChart2, ChevronRight } from 'lucide-react';
+import { Network, Zap, Cpu, BarChart2, ChevronRight } from 'lucide-react';
 
 export default function Sidebar({ algorithms, selectedAlgo, setSelectedAlgo, searchTerm }) {
   const categories = [
     { key: 'graph', name: 'Graph Algorithms', icon: Network, badgeClass: 'badge-graph' },
     { key: 'greedy', name: 'Greedy Algorithms', icon: Zap, badgeClass: 'badge-greedy' },
+    { key: 'dp', name: 'Dynamic Programming', icon: Cpu, badgeClass: 'badge-dp' },
     { key: 'sorting', name: 'Sorting Algorithms', icon: BarChart2, badgeClass: 'badge-sorting' }
   ];
 

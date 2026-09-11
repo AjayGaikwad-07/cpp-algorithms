@@ -908,5 +908,439 @@ int main() {
     return 0;
 }
 `
+  },
+  // -------------------------------------------------------------
+  // DYNAMIC PROGRAMMING ALGORITHMS
+  // -------------------------------------------------------------
+  {
+    id: 'mcm',
+    name: 'Matrix Chain Multiplication',
+    category: 'dp',
+    categoryName: 'Dynamic Programming',
+    filePath: 'dynamic_programming/1_matrix_chain_multiplication.cpp',
+    timeComplexity: 'O(n^3)',
+    spaceComplexity: 'O(n^2)',
+    description: 'Finds the optimal parenthesization of a chain of matrices to minimize the total number of scalar multiplications required using a bottom-up Dynamic Programming table.',
+    realWorld: ['Graphics & Physics Engines Optimization', 'Database Query Optimization', 'Compiler Vector/Matrix Expressions'],
+    steps: [
+      'Define dimensions array p[] of size n+1 for n matrices.',
+      'Initialize dp[i][i] = 0 for single matrices (chain length 1).',
+      'Iterate over chain length len from 2 to n.',
+      'For each subchain (i, j), try all split points k from i to j-1.',
+      'Calculate cost: dp[i][k] + dp[k+1][j] + p[i-1]*p[k]*p[j].',
+      'Store minimum cost in dp[i][j].'
+    ],
+    pseudocode: [
+      'for i = 1 to n: dp[i][i] = 0',
+      'for len = 2 to n:',
+      '  for i = 1 to n - len + 1:',
+      '    j = i + len - 1',
+      '    dp[i][j] = INF',
+      '    for k = i to j - 1:',
+      '      cost = dp[i][k] + dp[k+1][j] + p[i-1]*p[k]*p[j]',
+      '      dp[i][j] = min(dp[i][j], cost)'
+    ],
+    defaultInput: '4\n10 30 5 60 8',
+    code: `#include <iostream>
+using namespace std;
+
+int main() {
+    int n;
+    cout << "Enter number of matrices: ";
+    cin >> n;
+
+    int p[20];
+    cout << "Enter dimensions (p[0] to p[n]) - " << n + 1 << " values:" << endl;
+    for (int i = 0; i <= n; i++) {
+        cin >> p[i];
+    }
+
+    int dp[20][20] = {0};
+    int split[20][20] = {0};
+
+    for (int len = 2; len <= n; len++) {
+        for (int i = 1; i <= n - len + 1; i++) {
+            int j = i + len - 1;
+            dp[i][j] = 99999;
+            for (int k = i; k < j; k++) {
+                int cost = dp[i][k] + dp[k + 1][j] + p[i - 1] * p[k] * p[j];
+                if (cost < dp[i][j]) {
+                    dp[i][j] = cost;
+                    split[i][j] = k;
+                }
+            }
+        }
+    }
+
+    cout << "\\nDP Table (minimum costs):" << endl;
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= n; j++) {
+            if (i > j)
+                cout << "  -  ";
+            else
+                cout << dp[i][j] << "\\t";
+        }
+        cout << endl;
+    }
+
+    cout << "\\nMinimum number of multiplications: " << dp[1][n] << endl;
+
+    return 0;
+}
+`
+  },
+  {
+    id: 'lcs',
+    name: 'Longest Common Subsequence',
+    category: 'dp',
+    categoryName: 'Dynamic Programming',
+    filePath: 'dynamic_programming/2_longest_common_subsequence.cpp',
+    timeComplexity: 'O(m * n)',
+    spaceComplexity: 'O(m * n)',
+    description: 'Finds the longest subsequence present in two sequences in the same relative order using a 2D Dynamic Programming table and backtracking.',
+    realWorld: ['Git Diff & Version Control Code Comparison', 'Bioinformatics & DNA Sequence Alignment', 'Plagiarism Detection Software'],
+    steps: [
+      'Create 2D DP table of size (m+1) x (n+1) initialized with 0.',
+      'If s1[i-1] == s2[j-1], dp[i][j] = dp[i-1][j-1] + 1.',
+      'Otherwise, dp[i][j] = max(dp[i-1][j], dp[i][j-1]).',
+      'After filling the table, backtrack from dp[m][n] to reconstruct the string.'
+    ],
+    pseudocode: [
+      'for i = 1 to m:',
+      '  for j = 1 to n:',
+      '    if s1[i-1] == s2[j-1]:',
+      '      dp[i][j] = dp[i-1][j-1] + 1',
+      '    else:',
+      '      dp[i][j] = max(dp[i-1][j], dp[i][j-1])'
+    ],
+    defaultInput: 'AGGTAB\nGXTXAYB',
+    code: `#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+    string s1, s2;
+    cout << "Enter first string: ";
+    cin >> s1;
+    cout << "Enter second string: ";
+    cin >> s2;
+
+    int m = s1.length();
+    int n = s2.length();
+    int dp[100][100] = {0};
+
+    for (int i = 1; i <= m; i++) {
+        for (int j = 1; j <= n; j++) {
+            if (s1[i - 1] == s2[j - 1])
+                dp[i][j] = dp[i - 1][j - 1] + 1;
+            else
+                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+        }
+    }
+
+    cout << "\\nDP Table:" << endl;
+    cout << "    ";
+    for (int j = 0; j < n; j++)
+        cout << s2[j] << " ";
+    cout << endl;
+    for (int i = 1; i <= m; i++) {
+        cout << s1[i - 1] << " : ";
+        for (int j = 1; j <= n; j++)
+            cout << dp[i][j] << " ";
+        cout << endl;
+    }
+
+    string lcs = "";
+    int i = m, j = n;
+    while (i > 0 && j > 0) {
+        if (s1[i - 1] == s2[j - 1]) {
+            lcs = s1[i - 1] + lcs;
+            i--;
+            j--;
+        } else if (dp[i - 1][j] > dp[i][j - 1]) {
+            i--;
+        } else {
+            j--;
+        }
+    }
+
+    cout << "\\nLength of LCS: " << dp[m][n] << endl;
+    cout << "LCS: " << lcs << endl;
+
+    return 0;
+}
+`
+  },
+  {
+    id: 'knapsack01',
+    name: '0/1 Knapsack Problem',
+    category: 'dp',
+    categoryName: 'Dynamic Programming',
+    filePath: 'dynamic_programming/3_01_knapsack.cpp',
+    timeComplexity: 'O(n * W)',
+    spaceComplexity: 'O(n * W)',
+    description: 'Solves the 0/1 Knapsack problem where items cannot be broken into fractions. Uses dynamic programming to compute the maximum value that fits within weight capacity W.',
+    realWorld: ['Resource Allocation & Budgeting', 'Cargo Loading & Freight Optimization', 'Portfolio Financial Selection'],
+    steps: [
+      'Initialize 2D DP array dp[n+1][W+1] with zeros.',
+      'For item i and weight w, if wt[i-1] <= w, option to include item: val[i-1] + dp[i-1][w-wt[i-1]].',
+      'Compare with excluding item dp[i-1][w] and store max value.',
+      'Backtrack from dp[n][W] to find chosen items.'
+    ],
+    pseudocode: [
+      'for i = 1 to n:',
+      '  for w = 0 to W:',
+      '    if wt[i-1] <= w:',
+      '      dp[i][w] = max(dp[i-1][w], val[i-1] + dp[i-1][w - wt[i-1]])',
+      '    else:',
+      '      dp[i][w] = dp[i-1][w]'
+    ],
+    defaultInput: '3\n60 10\n100 20\n120 30\n50',
+    code: `#include <iostream>
+using namespace std;
+
+int main() {
+    int n, capacity;
+    cout << "Enter number of items: ";
+    cin >> n;
+
+    int val[100], wt[100];
+    cout << "Enter value and weight of each item:" << endl;
+    for (int i = 0; i < n; i++) {
+        cin >> val[i] >> wt[i];
+    }
+
+    cout << "Enter knapsack capacity: ";
+    cin >> capacity;
+
+    int dp[100][100] = {0};
+
+    for (int i = 1; i <= n; i++) {
+        for (int w = 0; w <= capacity; w++) {
+            dp[i][w] = dp[i - 1][w];
+            if (wt[i - 1] <= w) {
+                int include = dp[i - 1][w - wt[i - 1]] + val[i - 1];
+                if (include > dp[i][w])
+                    dp[i][w] = include;
+            }
+        }
+    }
+
+    cout << "\\nDP Table:" << endl;
+    cout << "Item\\\\Cap\\t";
+    for (int w = 0; w <= capacity; w++)
+        cout << w << "\\t";
+    cout << endl;
+    for (int i = 0; i <= n; i++) {
+        cout << "Item " << i << "\\t\\t";
+        for (int w = 0; w <= capacity; w++)
+            cout << dp[i][w] << "\\t";
+        cout << endl;
+    }
+
+    cout << "\\nMaximum value: " << dp[n][capacity] << endl;
+    cout << "Items selected (1-indexed): ";
+    int w = capacity;
+    for (int i = n; i > 0; i--) {
+        if (dp[i][w] != dp[i - 1][w]) {
+            cout << i << " ";
+            w -= wt[i - 1];
+        }
+    }
+    cout << endl;
+
+    return 0;
+}
+`
+  },
+  {
+    id: 'floyd_warshall',
+    name: 'Floyd-Warshall All-Pairs Shortest Path',
+    category: 'dp',
+    categoryName: 'Dynamic Programming',
+    filePath: 'dynamic_programming/4_floyd_warshall.cpp',
+    timeComplexity: 'O(V^3)',
+    spaceComplexity: 'O(V^2)',
+    description: 'Computes the shortest paths between all pairs of vertices in a directed weighted graph (allowing negative weights) and detects negative weight cycles.',
+    realWorld: ['Flight & Transit Network All-Pairs Distance Tables', 'Transitive Closure in Graphs', 'Network Delay Matrix Computation'],
+    steps: [
+      'Initialize distance matrix dist[][] with direct edge weights and 0 on diagonal.',
+      'Iterate through every intermediate vertex k from 0 to V-1.',
+      'For each pair of vertices (i, j), check if dist[i][k] + dist[k][j] < dist[i][j].',
+      'Update dist[i][j] with shorter path.',
+      'If any dist[i][i] < 0 after completion, a negative cycle exists.'
+    ],
+    pseudocode: [
+      'for k = 0 to V-1:',
+      '  for i = 0 to V-1:',
+      '    for j = 0 to V-1:',
+      '      if dist[i][k] + dist[k][j] < dist[i][j]:',
+      '        dist[i][j] = dist[i][k] + dist[k][j]'
+    ],
+    defaultInput: '4\n0 5 9999 10\n9999 0 3 9999\n9999 9999 0 1\n9999 9999 9999 0',
+    code: `#include <iostream>
+using namespace std;
+
+#define INF 9999
+
+int main() {
+    int n;
+    cout << "Enter number of vertices: ";
+    cin >> n;
+
+    int dist[10][10];
+
+    cout << "Enter adjacency matrix (use 9999 for no edge):" << endl;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            cin >> dist[i][j];
+        }
+    }
+
+    for (int i = 0; i < n; i++)
+        dist[i][i] = 0;
+
+    for (int k = 0; k < n; k++) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (dist[i][k] != INF && dist[k][j] != INF) {
+                    if (dist[i][k] + dist[k][j] < dist[i][j]) {
+                        dist[i][j] = dist[i][k] + dist[k][j];
+                    }
+                }
+            }
+        }
+    }
+
+    bool negCycle = false;
+    for (int i = 0; i < n; i++) {
+        if (dist[i][i] < 0) {
+            negCycle = true;
+            break;
+        }
+    }
+
+    if (negCycle) {
+        cout << "\\nNegative weight cycle detected!" << endl;
+        return 0;
+    }
+
+    cout << "\\nAll-Pairs Shortest Path Matrix:" << endl;
+    cout << "\\t";
+    for (int j = 0; j < n; j++)
+        cout << j << "\\t";
+    cout << endl;
+
+    for (int i = 0; i < n; i++) {
+        cout << i << "\\t";
+        for (int j = 0; j < n; j++) {
+            if (dist[i][j] == INF)
+                cout << "INF\\t";
+            else
+                cout << dist[i][j] << "\\t";
+        }
+        cout << endl;
+    }
+
+    return 0;
+}
+`
+  },
+  {
+    id: 'bellman_ford',
+    name: 'Bellman-Ford Shortest Path',
+    category: 'dp',
+    categoryName: 'Dynamic Programming',
+    filePath: 'dynamic_programming/5_bellman_ford.cpp',
+    timeComplexity: 'O(V * E)',
+    spaceComplexity: 'O(V)',
+    description: 'Finds single-source shortest paths in graphs with negative edge weights and detects negative weight cycles by relaxing all edges V-1 times.',
+    realWorld: ['Distance Vector Routing Protocols (RIP)', 'Financial Arbitrage Detection in Currency Exchange', 'Distributed Network Routing'],
+    steps: [
+      'Initialize distance to source as 0 and all other vertices as INF.',
+      'Relax all E edges V-1 times: if dist[u] + w < dist[v], set dist[v] = dist[u] + w.',
+      'Perform 1 extra relaxation step across all edges.',
+      'If any distance shrinks in the V-th step, report a negative weight cycle.'
+    ],
+    pseudocode: [
+      'dist[src] = 0, dist[others] = INF',
+      'for step = 1 to V-1:',
+      '  for each edge (u, v, w):',
+      '    if dist[u] + w < dist[v]:',
+      '      dist[v] = dist[u] + w',
+      'for each edge (u, v, w):',
+      '  if dist[u] + w < dist[v]: return "Negative Cycle"'
+    ],
+    defaultInput: '5 8\n0 1 -1\n0 2 4\n1 2 3\n1 3 2\n1 4 2\n3 2 5\n3 1 1\n4 3 -3\n0',
+    code: `#include <iostream>
+using namespace std;
+
+#define INF 9999
+
+struct Edge {
+    int u, v, w;
+};
+
+int main() {
+    int n, e;
+    cout << "Enter number of vertices: ";
+    cin >> n;
+    cout << "Enter number of edges: ";
+    cin >> e;
+
+    Edge edges[100];
+    cout << "Enter edges (from to weight):" << endl;
+    for (int i = 0; i < e; i++) {
+        cin >> edges[i].u >> edges[i].v >> edges[i].w;
+    }
+
+    int src;
+    cout << "Enter source vertex: ";
+    cin >> src;
+
+    int dist[100];
+    for (int i = 0; i < n; i++)
+        dist[i] = INF;
+    dist[src] = 0;
+
+    for (int step = 1; step <= n - 1; step++) {
+        for (int i = 0; i < e; i++) {
+            int u = edges[i].u;
+            int v = edges[i].v;
+            int w = edges[i].w;
+            if (dist[u] != INF && dist[u] + w < dist[v]) {
+                dist[v] = dist[u] + w;
+            }
+        }
+    }
+
+    bool negCycle = false;
+    for (int i = 0; i < e; i++) {
+        int u = edges[i].u;
+        int v = edges[i].v;
+        int w = edges[i].w;
+        if (dist[u] != INF && dist[u] + w < dist[v]) {
+            negCycle = true;
+            break;
+        }
+    }
+
+    if (negCycle) {
+        cout << "\\nNegative weight cycle detected! Bellman-Ford cannot solve this." << endl;
+        return 0;
+    }
+
+    cout << "\\nShortest distances from vertex " << src << ":" << endl;
+    for (int i = 0; i < n; i++) {
+        cout << "To " << i << " : ";
+        if (dist[i] == INF)
+            cout << "Not reachable" << endl;
+        else
+            cout << dist[i] << endl;
+    }
+
+    return 0;
+}
+`
   }
 ];

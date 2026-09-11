@@ -12,10 +12,9 @@ int main() {
         cin >> p[i];
     }
 
-    int dp[20][20] = {0};  // dp[i][j] = min cost to multiply matrices i..j
-    int split[20][20] = {0}; // to reconstruct optimal split
+    int dp[20][20] = {0};
+    int split[20][20] = {0};
 
-    // chain length from 2 to n
     for (int len = 2; len <= n; len++) {
         for (int i = 1; i <= n - len + 1; i++) {
             int j = i + len - 1;

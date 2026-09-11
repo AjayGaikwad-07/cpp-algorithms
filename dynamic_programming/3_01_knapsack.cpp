@@ -15,11 +15,11 @@ int main() {
     cout << "Enter knapsack capacity: ";
     cin >> capacity;
 
-    int dp[100][100] = {0};  // dp[i][w] = max value using first i items with capacity w
+    int dp[100][100] = {0};
 
     for (int i = 1; i <= n; i++) {
         for (int w = 0; w <= capacity; w++) {
-            dp[i][w] = dp[i - 1][w];  // exclude item i
+            dp[i][w] = dp[i - 1][w];
             if (wt[i - 1] <= w) {
                 int include = dp[i - 1][w - wt[i - 1]] + val[i - 1];
                 if (include > dp[i][w])
@@ -40,7 +40,6 @@ int main() {
         cout << endl;
     }
 
-    // Backtrack to find selected items
     cout << "\nMaximum value: " << dp[n][capacity] << endl;
     cout << "Items selected (1-indexed): ";
     int w = capacity;

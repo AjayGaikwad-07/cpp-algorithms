@@ -34,7 +34,6 @@ int main() {
         cout << endl;
     }
 
-    // Backtrack to find LCS string
     string lcs = "";
     int i = m, j = n;
     while (i > 0 && j > 0) {

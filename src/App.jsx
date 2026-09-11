@@ -6,6 +6,7 @@ import CompilerTab from './components/CompilerTab';
 import SortingVisualizer from './components/Visualizers/SortingVisualizer';
 import GraphVisualizer from './components/Visualizers/GraphVisualizer';
 import GreedyVisualizer from './components/Visualizers/GreedyVisualizer';
+import DynamicProgrammingVisualizer from './components/Visualizers/DynamicProgrammingVisualizer';
 import { ALGORITHMS } from './data/algorithmsData';
 import { BookOpen, Activity, Terminal } from 'lucide-react';
 
@@ -21,6 +22,8 @@ export default function App() {
       return <GraphVisualizer algo={selectedAlgo} />;
     } else if (selectedAlgo.category === 'greedy') {
       return <GreedyVisualizer algo={selectedAlgo} />;
+    } else if (selectedAlgo.category === 'dp') {
+      return <DynamicProgrammingVisualizer algo={selectedAlgo} />;
     }
     return null;
   };

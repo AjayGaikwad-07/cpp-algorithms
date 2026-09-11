@@ -29,7 +29,6 @@ int main() {
         dist[i] = INF;
     dist[src] = 0;
 
-    // Relax all edges (n-1) times
     for (int step = 1; step <= n - 1; step++) {
         for (int i = 0; i < e; i++) {
             int u = edges[i].u;
@@ -41,7 +40,6 @@ int main() {
         }
     }
 
-    // Check for negative weight cycles (nth relaxation)
     bool negCycle = false;
     for (int i = 0; i < e; i++) {
         int u = edges[i].u;
