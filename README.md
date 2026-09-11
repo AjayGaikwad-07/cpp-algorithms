@@ -1,5 +1,7 @@
 # C++ Algorithms Collection
 
+🚀 Live Demo: https://ajaygaikwad-07.github.io/cpp-algorithms/
+
 A collection of core algorithms implemented in C++, categorized by domain:
 
 ## 📁 Repository Structure
@@ -22,6 +24,12 @@ A collection of core algorithms implemented in C++, categorized by domain:
 - `4_merge_sort.cpp` - Merge Sort
 - `5_quick_sort.cpp` - Quick Sort
 - `6_selection_sort.cpp` - Selection Sort
+### 🔹 Dynamic Programming (`/dynamic_programming`)
+- `1_matrix_chain_multiplication.cpp` - Matrix Chain Multiplication
+- `2_longest_common_subsequence.cpp` - Longest Common Subsequence (LCS)
+- `3_01_knapsack.cpp` - 0/1 Knapsack Problem
+- `4_floyd_warshall.cpp` - Floyd-Warshall All-Pairs Shortest Paths
+- `5_bellman_ford.cpp` - Bellman-Ford Single-Source Shortest Paths
 
 ---
 
