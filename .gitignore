@@ -1,0 +1,23 @@
+# Compiled binaries
+*.exe
+*.out
+*.o
+*.obj
+*.app
+*.dll
+*.so
+*.dylib
+
+# IDE & Editor files
+.vscode/
+.vs/
+*.user
+*.suo
+*.sln
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
