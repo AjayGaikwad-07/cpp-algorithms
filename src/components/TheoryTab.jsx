@@ -141,6 +141,30 @@ export default function TheoryTab({ algo }) {
           ))}
         </div>
       </div>
+
+      {/* Sample Test Case Section */}
+      {algo.defaultInput && (
+        <div className="glass-card" style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: '700', fontSize: '1rem', color: '#fff' }}>
+            <FileCode2 size={18} color="var(--accent-purple)" />
+            <span>Sample Test Case Input</span>
+          </div>
+
+          <pre style={{
+            background: 'rgba(15, 23, 42, 0.9)',
+            border: '1px solid var(--border-color)',
+            padding: '1rem',
+            borderRadius: '8px',
+            fontFamily: 'var(--font-mono)',
+            fontSize: '0.85rem',
+            color: 'var(--accent-purple)',
+            overflowX: 'auto',
+            lineHeight: '1.5'
+          }}>
+            {algo.defaultInput}
+          </pre>
+        </div>
+      )}
     </div>
   );
 }
