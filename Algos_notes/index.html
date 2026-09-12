@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Algorithm Notes — Sorting · Greedy · Graph</title>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Patrick+Hand&family=Kalam:wght@300;400;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- ===== COVER PAGE ===== -->
+<div class="page cover-page">
+  <div class="notebook-rings">
+    <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+    <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+  </div>
+  <div class="cover-content">
+    <div class="cover-label">Computer Science</div>
+    <div class="cover-title">Algorithm<br/>Notes</div>
+    <div class="cover-subtitle">Complete Study Guide</div>
+    <div class="cover-divider"></div>
+    <div class="cover-topics">
+      <div class="cover-topic">📊 Sorting Algorithms</div>
+      <div class="cover-topic">💰 Greedy Algorithms</div>
+      <div class="cover-topic">🕸️ Graph Algorithms</div>
+    </div>
+    <div class="cover-meta">
+      <span>Definitions · Numericals · Code · Tips</span>
+    </div>
+    <div class="cover-doodles">
+      <!-- SVG doodle elements -->
+      <svg width="100%" height="120" viewBox="0 0 600 120" class="doodle-svg">
+        <!-- Array boxes -->
+        <g transform="translate(20,30)">
+          <rect x="0" y="0" width="35" height="35" rx="4" fill="none" stroke="#2563eb" stroke-width="1.5"/>
+          <text x="17" y="22" text-anchor="middle" font-family="Kalam" font-size="14" fill="#2563eb">5</text>
+          <rect x="38" y="0" width="35" height="35" rx="4" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+          <text x="55" y="22" text-anchor="middle" font-family="Kalam" font-size="14" fill="#1d4ed8">2</text>
+          <rect x="76" y="0" width="35" height="35" rx="4" fill="none" stroke="#2563eb" stroke-width="1.5"/>
+          <text x="93" y="22" text-anchor="middle" font-family="Kalam" font-size="14" fill="#2563eb">8</text>
+          <rect x="114" y="0" width="35" height="35" rx="4" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+          <text x="131" y="22" text-anchor="middle" font-family="Kalam" font-size="14" fill="#1d4ed8">1</text>
+          <rect x="152" y="0" width="35" height="35" rx="4" fill="none" stroke="#2563eb" stroke-width="1.5"/>
+          <text x="169" y="22" text-anchor="middle" font-family="Kalam" font-size="14" fill="#2563eb">9</text>
+          <text x="90" y="55" text-anchor="middle" font-family="Caveat" font-size="13" fill="#6b7280">unsorted array</text>
+          <!-- Arrow -->
+          <line x1="210" y1="17" x2="250" y2="17" stroke="#16a34a" stroke-width="2" marker-end="url(#arrowG)"/>
+          <text x="228" y="12" text-anchor="middle" font-family="Caveat" font-size="11" fill="#16a34a">sort!</text>
+        </g>
+        <!-- Sorted array -->
+        <g transform="translate(270,30)">
+          <rect x="0" y="0" width="35" height="35" rx="4" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+          <text x="17" y="22" text-anchor="middle" font-family="Kalam" font-size="14" fill="#15803d">1</text>
+          <rect x="38" y="0" width="35" height="35" rx="4" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+          <text x="55" y="22" text-anchor="middle" font-family="Kalam" font-size="14" fill="#15803d">2</text>
+          <rect x="76" y="0" width="35" height="35" rx="4" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+          <text x="93" y="22" text-anchor="middle" font-family="Kalam" font-size="14" fill="#15803d">5</text>
+          <rect x="114" y="0" width="35" height="35" rx="4" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+          <text x="131" y="22" text-anchor="middle" font-family="Kalam" font-size="14" fill="#15803d">8</text>
+          <rect x="152" y="0" width="35" height="35" rx="4" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+          <text x="169" y="22" text-anchor="middle" font-family="Kalam" font-size="14" fill="#15803d">9</text>
+          <text x="90" y="55" text-anchor="middle" font-family="Caveat" font-size="13" fill="#6b7280">sorted! ✓</text>
+        </g>
+        <!-- Simple graph doodle on right -->
+        <g transform="translate(480,10)">
+          <circle cx="30" cy="30" r="14" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+          <text x="30" y="35" text-anchor="middle" font-family="Kalam" font-size="12" fill="#92400e">A</text>
+          <circle cx="80" cy="10" r="14" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+          <text x="80" y="15" text-anchor="middle" font-family="Kalam" font-size="12" fill="#92400e">B</text>
+          <circle cx="80" cy="55" r="14" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+          <text x="80" y="60" text-anchor="middle" font-family="Kalam" font-size="12" fill="#92400e">C</text>
+          <line x1="43" y1="24" x2="67" y2="15" stroke="#d97706" stroke-width="1.5"/>
+          <line x1="43" y1="36" x2="67" y2="50" stroke="#d97706" stroke-width="1.5"/>
+          <line x1="80" y1="24" x2="80" y2="41" stroke="#d97706" stroke-width="1.5"/>
+          <text x="28" y="30" text-anchor="middle" font-family="Caveat" font-size="10" fill="#9ca3af" dy="45">graph</text>
+        </g>
+        <defs>
+          <marker id="arrowG" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#16a34a"/>
+          </marker>
+        </defs>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TABLE OF CONTENTS ===== -->
+<div class="page toc-page">
+  <div class="page-header-line">
+    <span class="page-subject">Algorithm Notes</span>
+    <span class="page-num">TOC</span>
+  </div>
+  <h1 class="toc-title">📋 Table of Contents</h1>
+  <div class="toc-section">
+    <div class="toc-cat">Part I — Sorting Algorithms</div>
+    <div class="toc-item"><span>01. Bubble Sort</span><span class="dots"></span><span>3</span></div>
+    <div class="toc-item"><span>02. Selection Sort</span><span class="dots"></span><span>4</span></div>
+    <div class="toc-item"><span>03. Insertion Sort</span><span class="dots"></span><span>5</span></div>
+    <div class="toc-item"><span>04. Merge Sort</span><span class="dots"></span><span>6</span></div>
+    <div class="toc-item"><span>05. Quick Sort</span><span class="dots"></span><span>8</span></div>
+    <div class="toc-item"><span>06. Heap Sort</span><span class="dots"></span><span>10</span></div>
+    <div class="toc-item toc-ref"><span>📊 Sorting Complexity Comparison</span><span class="dots"></span><span>12</span></div>
+  </div>
+  <div class="toc-section">
+    <div class="toc-cat">Part II — Greedy Algorithms</div>
+    <div class="toc-item"><span>07. Activity Selection Problem</span><span class="dots"></span><span>13</span></div>
+    <div class="toc-item"><span>08. Fractional Knapsack</span><span class="dots"></span><span>14</span></div>
+    <div class="toc-item"><span>09. Huffman Coding</span><span class="dots"></span><span>15</span></div>
+    <div class="toc-item"><span>10. Job Sequencing with Deadlines</span><span class="dots"></span><span>17</span></div>
+    <div class="toc-item"><span>11. Coin Change (Greedy)</span><span class="dots"></span><span>18</span></div>
+  </div>
+  <div class="toc-section">
+    <div class="toc-cat">Part III — Graph Algorithms</div>
+    <div class="toc-item"><span>12. BFS — Breadth First Search</span><span class="dots"></span><span>19</span></div>
+    <div class="toc-item"><span>13. DFS — Depth First Search</span><span class="dots"></span><span>20</span></div>
+    <div class="toc-item"><span>14. Dijkstra's Algorithm</span><span class="dots"></span><span>21</span></div>
+    <div class="toc-item"><span>15. Bellman-Ford Algorithm</span><span class="dots"></span><span>23</span></div>
+    <div class="toc-item"><span>16. Kruskal's MST</span><span class="dots"></span><span>25</span></div>
+    <div class="toc-item"><span>17. Prim's MST</span><span class="dots"></span><span>26</span></div>
+    <div class="toc-item"><span>18. Floyd-Warshall</span><span class="dots"></span><span>27</span></div>
+    <div class="toc-item"><span>19. Topological Sort</span><span class="dots"></span><span>28</span></div>
+    <div class="toc-item toc-ref"><span>📊 Graph Algorithms Summary</span><span class="dots"></span><span>29</span></div>
+  </div>
+  <div class="toc-note">💡 Tip: Each algo has Definition → Complexity → Numerical → Code → Key Points</div>
+</div>
+
+<!-- ===========================
+     PART I: SORTING ALGORITHMS
+     =========================== -->
+
+<div class="page section-divider-page">
+  <div class="section-div-content">
+    <div class="section-div-num">Part I</div>
+    <div class="section-div-title">Sorting<br/>Algorithms</div>
+    <div class="section-div-sub">"Arrange data in a specific order"</div>
+    <svg viewBox="0 0 300 100" class="section-doodle">
+      <rect x="10" y="60" width="20" height="40" rx="3" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+      <rect x="40" y="40" width="20" height="60" rx="3" fill="#bfdbfe" stroke="#3b82f6" stroke-width="1.5"/>
+      <rect x="70" y="20" width="20" height="80" rx="3" fill="#93c5fd" stroke="#3b82f6" stroke-width="1.5"/>
+      <rect x="100" y="10" width="20" height="90" rx="3" fill="#60a5fa" stroke="#3b82f6" stroke-width="1.5"/>
+      <rect x="130" y="30" width="20" height="70" rx="3" fill="#93c5fd" stroke="#3b82f6" stroke-width="1.5"/>
+      <line x1="5" y1="100" x2="160" y2="100" stroke="#6b7280" stroke-width="1"/>
+      <text x="80" y="115" text-anchor="middle" font-family="Caveat" font-size="12" fill="#6b7280">sorting bars</text>
+    </svg>
+  </div>
+</div>
+
+<!-- ===== BUBBLE SORT ===== -->
+<div class="page algo-page" data-algo="01" data-name="Bubble Sort">
+  <div class="page-header-line">
+    <span class="page-subject">Sorting Algorithms</span>
+    <span class="page-num">3</span>
+  </div>
+  <div class="algo-header">
+    <span class="algo-badge">01</span>
+    <h2>Bubble Sort</h2>
+    <span class="difficulty-tag easy">Easy</span>
+    <div class="complexity-pill">O(n²)</div>
+  </div>
+
+  <div class="two-col-notes">
+    <div>
+      <div class="note-box definition-box">
+        <div class="box-label">📖 Definition</div>
+        <p>Repeatedly compares <strong>adjacent elements</strong> and swaps them if out of order. Largest element <em>"bubbles up"</em> to end in each pass. Like sorting by repeatedly picking bubble to top!</p>
+      </div>
+      <div class="note-box formula-note">
+        <div class="box-label">📐 Key Facts</div>
+        <ul class="note-list">
+          <li>Passes needed = <strong>n − 1</strong></li>
+          <li>Comparisons in pass i = <strong>n − i</strong></li>
+          <li>Max swaps = n(n−1)/2</li>
+          <li>Optimization: stop if no swap in a pass</li>
+        </ul>
+      </div>
+    </div>
+    <div class="complexity-table-wrap">
+      <div class="box-label">⚡ Complexity</div>
+      <table class="complexity-table">
+        <tr><th>Case</th><th>Time</th><th>Space</th></tr>
+        <tr><td>Best</td><td class="good">O(n)</td><td class="good" rowspan="3">O(1)</td></tr>
+        <tr><td>Average</td><td class="bad">O(n²)</td></tr>
+        <tr><td>Worst</td><td class="bad">O(n²)</td></tr>
+      </table>
+      <div class="props-row">
+        <span class="prop-badge good-b">✓ Stable</span>
+        <span class="prop-badge good-b">✓ In-Place</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- NUMERICAL -->
+  <div class="numerical-section">
+    <div class="numerical-header">🔢 Numerical — Sort [29, 10, 14, 37, 13]</div>
+    <div class="drawn-numerical">
+      <svg viewBox="0 0 680 260" width="100%" class="num-svg">
+        <!-- Pass 1 -->
+        <text x="10" y="22" font-family="Kalam" font-size="13" fill="#1e40af" font-weight="bold">Pass 1:</text>
+
+        <!-- Step 1: compare 29,10 -->
+        <g transform="translate(60,5)">
+          <!-- cells -->
+          <rect x="0" y="5" width="30" height="28" rx="3" fill="#fee2e2" stroke="#ef4444" stroke-width="1.5"/>
+          <text x="15" y="24" text-anchor="middle" font-family="Kalam" font-size="13" fill="#dc2626">29</text>
+          <rect x="33" y="5" width="30" height="28" rx="3" fill="#fee2e2" stroke="#ef4444" stroke-width="1.5"/>
+          <text x="48" y="24" text-anchor="middle" font-family="Kalam" font-size="13" fill="#dc2626">10</text>
+          <rect x="66" y="5" width="30" height="28" rx="3" fill="none" stroke="#6b7280" stroke-width="1"/>
+          <text x="81" y="24" text-anchor="middle" font-family="Kalam" font-size="13" fill="#374151">14</text>
+          <rect x="99" y="5" width="30" height="28" rx="3" fill="none" stroke="#6b7280" stroke-width="1"/>
+          <text x="114" y="24" text-anchor="middle" font-family="Kalam" font-size="13" fill="#374151">37</text>
+          <rect x="132" y="5" width="30" height="28" rx="3" fill="none" stroke="#6b7280" stroke-width="1"/>
+          <text x="147" y="24" text-anchor="middle" font-family="Kalam" font-size="13" fill="#374151">13</text>
+          <text x="80" y="48" text-anchor="middle" font-family="Caveat" font-size="11" fill="#ef4444">swap 29↔10</text>
+          <!-- bracket under compared -->
+          <path d="M0,37 L63,37" stroke="#ef4444" stroke-width="1" stroke-dasharray="3,2"/>
+        </g>
+
+        <!-- Arrow -->
+        <text x="218" y="24" font-family="Caveat" font-size="16" fill="#6b7280">→</text>
+
+        <!-- After swap 1 -->
+        <g transform="translate(232,5)">
+          <rect x="0" y="5" width="30" height="28" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+          <text x="15" y="24" text-anchor="middle" font-family="Kalam" font-size="13" fill="#15803d">10</text>
+          <rect x="33" y="5" width="30" height="28" rx="3" fill="#fee2e2" stroke="#ef4444" stroke-width="1.5"/>
+          <text x="48" y="24" text-anchor="middle" font-family="Kalam" font-size="13" fill="#dc2626">29</text>
+          <rect x="66" y="5" width="30" height="28" rx="3" fill="#fee2e2" stroke="#ef4444" stroke-width="1.5"/>
+          <text x="81" y="24" text-anchor="middle" font-family="Kalam" font-size="13" fill="#dc2626">14</text>
+          <rect x="99" y="5" width="30" height="28" rx="3" fill="none" stroke="#6b7280" stroke-width="1"/>
+          <text x="114" y="24" text-anchor="middle" font-family="Kalam" font-size="13" fill="#374151">37</text>
+          <rect x="132" y="5" width="30" height="28" rx="3" fill="none" stroke="#6b7280" stroke-width="1"/>
+          <text x="147" y="24" text-anchor="middle" font-family="Kalam" font-size="13" fill="#374151">13</text>
+          <text x="80" y="48" text-anchor="middle" font-family="Caveat" font-size="11" fill="#ef4444">swap 29↔14</text>
+        </g>
+
+        <!-- Arrow 2 -->
+        <text x="392" y="24" font-family="Caveat" font-size="16" fill="#6b7280">→</text>
+
+        <!-- Final Pass 1 result -->
+        <g transform="translate(405,5)">
+          <rect x="0" y="5" width="30" height="28" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1"/>
+          <text x="15" y="24" text-anchor="middle" font-family="Kalam" font-size="13" fill="#15803d">10</text>
+          <rect x="33" y="5" width="30" height="28" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1"/>
+          <text x="48" y="24" text-anchor="middle" font-family="Kalam" font-size="13" fill="#15803d">14</text>
+          <rect x="66" y="5" width="30" height="28" rx="3" fill="none" stroke="#6b7280" stroke-width="1"/>
+          <text x="81" y="24" text-anchor="middle" font-family="Kalam" font-size="13" fill="#374151">29</text>
+          <rect x="99" y="5" width="30" height="28" rx="3" fill="none" stroke="#6b7280" stroke-width="1"/>
+          <text x="114" y="24" text-anchor="middle" font-family="Kalam" font-size="13" fill="#374151">13</text>
+          <rect x="132" y="5" width="30" height="28" rx="3" fill="#d1fae5" stroke="#059669" stroke-width="2"/>
+          <text x="147" y="24" text-anchor="middle" font-family="Kalam" font-size="13" fill="#065f46" font-weight="bold">37</text>
+          <text x="147" y="48" text-anchor="middle" font-family="Caveat" font-size="10" fill="#059669">sorted ✓</text>
+        </g>
+
+        <!-- Pass 2 -->
+        <text x="10" y="85" font-family="Kalam" font-size="13" fill="#1e40af" font-weight="bold">Pass 2:</text>
+        <g transform="translate(60,68)">
+          <rect x="0" y="5" width="30" height="28" rx="3" fill="none" stroke="#6b7280" stroke-width="1"/>
+          <text x="15" y="24" text-anchor="middle" font-family="Kalam" font-size="13" fill="#374151">10</text>
+          <rect x="33" y="5" width="30" height="28" rx="3" fill="none" stroke="#6b7280" stroke-width="1"/>
+          <text x="48" y="24" text-anchor="middle" font-family="Kalam" font-size="13" fill="#374151">14</text>
+          <rect x="66" y="5" width="30" height="28" rx="3" fill="#fee2e2" stroke="#ef4444" stroke-width="1.5"/>
+          <text x="81" y="24" text-anchor="middle" font-family="Kalam" font-size="13" fill="#dc2626">29</text>
+          <rect x="99" y="5" width="30" height="28" rx="3" fill="#fee2e2" stroke="#ef4444" stroke-width="1.5"/>
+          <text x="114" y="24" text-anchor="middle" font-family="Kalam" font-size="13" fill="#dc2626">13</text>
+          <rect x="132" y="5" width="30" height="28" rx="3" fill="#d1fae5" stroke="#059669" stroke-width="2"/>
+          <text x="147" y="24" text-anchor="middle" font-family="Kalam" font-size="13" fill="#065f46">37</text>
+          <text x="90" y="48" text-anchor="middle" font-family="Caveat" font-size="11" fill="#ef4444">swap 29↔13</text>
+        </g>
+        <text x="218" y="87" font-family="Caveat" font-size="16" fill="#6b7280">→</text>
+        <g transform="translate(232,68)">
+          <rect x="0" y="5" width="30" height="28" rx="3" fill="none" stroke="#6b7280" stroke-width="1"/>
+          <text x="15" y="24" text-anchor="middle" font-family="Kalam" font-size="13" fill="#374151">10</text>
+          <rect x="33" y="5" width="30" height="28" rx="3" fill="none" stroke="#6b7280" stroke-width="1"/>
+          <text x="48" y="24" text-anchor="middle" font-family="Kalam" font-size="13" fill="#374151">14</text>
+          <rect x="66" y="5" width="30" height="28" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1"/>
+          <text x="81" y="24" text-anchor="middle" font-family="Kalam" font-size="13" fill="#15803d">13</text>
+          <rect x="99" y="5" width="30" height="28" rx="3" fill="#d1fae5" stroke="#059669" stroke-width="2"/>
+          <text x="114" y="24" text-anchor="middle" font-family="Kalam" font-size="13" fill="#065f46" font-weight="bold">29</text>
+          <rect x="132" y="5" width="30" height="28" rx="3" fill="#d1fae5" stroke="#059669" stroke-width="2"/>
+          <text x="147" y="24" text-anchor="middle" font-family="Kalam" font-size="13" fill="#065f46">37</text>
+          <text x="124" y="48" text-anchor="middle" font-family="Caveat" font-size="10" fill="#059669">sorted ✓</text>
+        </g>
+
+        <!-- Pass 3 -->
+        <text x="10" y="148" font-family="Kalam" font-size="13" fill="#1e40af" font-weight="bold">Pass 3:</text>
+        <g transform="translate(60,131)">
+          <rect x="0" y="5" width="30" height="28" rx="3" fill="none" stroke="#6b7280" stroke-width="1"/>
+          <text x="15" y="24" text-anchor="middle" font-family="Kalam" font-size="13" fill="#374151">10</text>
+          <rect x="33" y="5" width="30" height="28" rx="3" fill="#fee2e2" stroke="#ef4444" stroke-width="1.5"/>
+          <text x="48" y="24" text-anchor="middle" font-family="Kalam" font-size="13" fill="#dc2626">14</text>
+          <rect x="66" y="5" width="30" height="28" rx="3" fill="#fee2e2" stroke="#ef4444" stroke-width="1.5"/>
+          <text x="81" y="24" text-anchor="middle" font-family="Kalam" font-size="13" fill="#dc2626">13</text>
+          <rect x="99" y="5" width="30" height="28" rx="3" fill="#d1fae5" stroke="#059669" stroke-width="2"/>
+          <text x="114" y="24" text-anchor="middle" font-family="Kalam" font-size="13" fill="#065f46">29</text>
+          <rect x="132" y="5" width="30" height="28" rx="3" fill="#d1fae5" stroke="#059669" stroke-width="2"/>
+          <text x="147" y="24" text-anchor="middle" font-family="Kalam" font-size="13" fill="#065f46">37</text>
+          <text x="56" y="48" text-anchor="middle" font-family="Caveat" font-size="11" fill="#ef4444">swap 14↔13</text>
+        </g>
+        <text x="218" y="150" font-family="Caveat" font-size="16" fill="#6b7280">→</text>
+        <g transform="translate(232,131)">
+          <rect x="0" y="5" width="30" height="28" rx="3" fill="#d1fae5" stroke="#059669" stroke-width="2"/>
+          <text x="15" y="24" text-anchor="middle" font-family="Kalam" font-size="13" fill="#065f46">10</text>
+          <rect x="33" y="5" width="30" height="28" rx="3" fill="#d1fae5" stroke="#059669" stroke-width="2"/>
+          <text x="48" y="24" text-anchor="middle" font-family="Kalam" font-size="13" fill="#065f46">13</text>
+          <rect x="66" y="5" width="30" height="28" rx="3" fill="#d1fae5" stroke="#059669" stroke-width="2"/>
+          <text x="81" y="24" text-anchor="middle" font-family="Kalam" font-size="13" fill="#065f46">14</text>
+          <rect x="99" y="5" width="30" height="28" rx="3" fill="#d1fae5" stroke="#059669" stroke-width="2"/>
+          <text x="114" y="24" text-anchor="middle" font-family="Kalam" font-size="13" fill="#065f46">29</text>
+          <rect x="132" y="5" width="30" height="28" rx="3" fill="#d1fae5" stroke="#059669" stroke-width="2"/>
+          <text x="147" y="24" text-anchor="middle" font-family="Kalam" font-size="13" fill="#065f46">37</text>
+          <text x="80" y="48" text-anchor="middle" font-family="Caveat" font-size="13" fill="#059669" font-weight="bold">✅ SORTED!</text>
+        </g>
+
+        <!-- Legend -->
+        <rect x="420" y="130" width="12" height="12" fill="#fee2e2" stroke="#ef4444" stroke-width="1.5" rx="2"/>
+        <text x="436" y="141" font-family="Caveat" font-size="11" fill="#374151">comparing/swapping</text>
+        <rect x="420" y="148" width="12" height="12" fill="#d1fae5" stroke="#059669" stroke-width="1.5" rx="2"/>
+        <text x="436" y="159" font-family="Caveat" font-size="11" fill="#374151">sorted in place</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="code-section">
+    <div class="code-label">C++ Code</div>
+    <pre class="code-block"><code>void bubbleSort(int arr[], int n) {
+    for (int i = 0; i &lt; n-1; i++) {
+        bool swapped = false;
+        for (int j = 0; j &lt; n-i-1; j++) {
+            if (arr[j] &gt; arr[j+1]) {
+                swap(arr[j], arr[j+1]);
+                swapped = true;
+            }
+        }
+        if (!swapped) break; // Already sorted!
+    }
+}</code></pre>
+  </div>
+
+  <div class="key-points-box">
+    <div class="box-label">💡 Key Points to Remember</div>
+    <ul class="key-list">
+      <li>Best case O(n) when array already sorted (with flag check)</li>
+      <li>Called "Bubble" — larger elements bubble to the top each pass</li>
+      <li>Total passes = n-1, comparisons in pass i = n-i-1</li>
+      <li>Rarely used in practice — only for educational purposes</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== SELECTION SORT ===== -->
+<div class="page algo-page" data-algo="02" data-name="Selection Sort">
+  <div class="page-header-line">
+    <span class="page-subject">Sorting Algorithms</span>
+    <span class="page-num">4</span>
+  </div>
+  <div class="algo-header">
+    <span class="algo-badge">02</span>
+    <h2>Selection Sort</h2>
+    <span class="difficulty-tag easy">Easy</span>
+    <div class="complexity-pill">O(n²)</div>
+  </div>
+  <div class="two-col-notes">
+    <div class="note-box definition-box">
+      <div class="box-label">📖 Definition</div>
+      <p>Divides array into <strong>sorted</strong> and <strong>unsorted</strong> parts. Finds minimum from unsorted part and places it at the beginning of unsorted. Repeats until fully sorted.</p>
+    </div>
+    <div class="complexity-table-wrap">
+      <div class="box-label">⚡ Complexity</div>
+      <table class="complexity-table">
+        <tr><th>Case</th><th>Time</th></tr>
+        <tr><td>Best/Avg/Worst</td><td class="bad">O(n²)</td></tr>
+        <tr><td>Space</td><td class="good">O(1)</td></tr>
+      </table>
+      <div class="props-row">
+        <span class="prop-badge bad-b">✗ Unstable</span>
+        <span class="prop-badge good-b">✓ In-Place</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="numerical-section">
+    <div class="numerical-header">🔢 Numerical — Sort [64, 25, 12, 22, 11]</div>
+    <div class="drawn-numerical">
+      <svg viewBox="0 0 660 210" width="100%" class="num-svg">
+        <defs>
+          <marker id="arr1" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L6,3 z" fill="#7c3aed"/>
+          </marker>
+        </defs>
+
+        <!-- Step 1 -->
+        <text x="5" y="20" font-family="Kalam" font-size="12" fill="#1e40af" font-weight="bold">Step 1: Find min in entire array</text>
+        <g transform="translate(10,28)">
+          <rect x="0" y="0" width="34" height="30" rx="3" fill="#f3e8ff" stroke="#7c3aed" stroke-width="1.5"/>
+          <text x="17" y="20" text-anchor="middle" font-family="Kalam" font-size="13" fill="#6d28d9">64</text>
+          <rect x="38" y="0" width="34" height="30" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1"/>
+          <text x="55" y="20" text-anchor="middle" font-family="Kalam" font-size="13" fill="#374151">25</text>
+          <rect x="76" y="0" width="34" height="30" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1"/>
+          <text x="93" y="20" text-anchor="middle" font-family="Kalam" font-size="13" fill="#374151">12</text>
+          <rect x="114" y="0" width="34" height="30" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1"/>
+          <text x="131" y="20" text-anchor="middle" font-family="Kalam" font-size="13" fill="#374151">22</text>
+          <rect x="152" y="0" width="34" height="30" rx="3" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+          <text x="169" y="20" text-anchor="middle" font-family="Kalam" font-size="13" fill="#92400e" font-weight="bold">11</text>
+          <!-- min pointer -->
+          <text x="169" y="45" text-anchor="middle" font-family="Caveat" font-size="11" fill="#f59e0b">min=11</text>
+          <line x1="169" y1="32" x2="169" y2="38" stroke="#f59e0b" stroke-width="1.5"/>
+          <!-- swap arrow curved -->
+          <path d="M17,0 C17,-20 169,-20 169,0" fill="none" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr1)"/>
+          <text x="90" y="-8" text-anchor="middle" font-family="Caveat" font-size="11" fill="#7c3aed">swap!</text>
+        </g>
+        <!-- Result -->
+        <text x="220" y="50" font-family="Caveat" font-size="15" fill="#6b7280">→</text>
+        <g transform="translate(238,28)">
+          <rect x="0" y="0" width="34" height="30" rx="3" fill="#d1fae5" stroke="#059669" stroke-width="2"/>
+          <text x="17" y="20" text-anchor="middle" font-family="Kalam" font-size="13" fill="#065f46" font-weight="bold">11</text>
+          <rect x="38" y="0" width="34" height="30" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1"/>
+          <text x="55" y="20" text-anchor="middle" font-family="Kalam" font-size="13" fill="#374151">25</text>
+          <rect x="76" y="0" width="34" height="30" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1"/>
+          <text x="93" y="20" text-anchor="middle" font-family="Kalam" font-size="13" fill="#374151">12</text>
+          <rect x="114" y="0" width="34" height="30" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1"/>
+          <text x="131" y="20" text-anchor="middle" font-family="Kalam" font-size="13" fill="#374151">22</text>
+          <rect x="152" y="0" width="34" height="30" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1"/>
+          <text x="169" y="20" text-anchor="middle" font-family="Kalam" font-size="13" fill="#374151">64</text>
+          <text x="17" y="45" text-anchor="middle" font-family="Caveat" font-size="10" fill="#059669">sorted</text>
+        </g>
+
+        <!-- Step 2 -->
+        <text x="5" y="88" font-family="Kalam" font-size="12" fill="#1e40af" font-weight="bold">Step 2: Find min in [25,12,22,64]</text>
+        <g transform="translate(10,95)">
+          <rect x="0" y="0" width="34" height="30" rx="3" fill="#d1fae5" stroke="#059669" stroke-width="2"/>
+          <text x="17" y="20" text-anchor="middle" font-family="Kalam" font-size="13" fill="#065f46">11</text>
+          <rect x="38" y="0" width="34" height="30" rx="3" fill="#f3e8ff" stroke="#7c3aed" stroke-width="1.5"/>
+          <text x="55" y="20" text-anchor="middle" font-family="Kalam" font-size="13" fill="#6d28d9">25</text>
+          <rect x="76" y="0" width="34" height="30" rx="3" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+          <text x="93" y="20" text-anchor="middle" font-family="Kalam" font-size="13" fill="#92400e" font-weight="bold">12</text>
+          <rect x="114" y="0" width="34" height="30" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1"/>
+          <text x="131" y="20" text-anchor="middle" font-family="Kalam" font-size="13" fill="#374151">22</text>
+          <rect x="152" y="0" width="34" height="30" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1"/>
+          <text x="169" y="20" text-anchor="middle" font-family="Kalam" font-size="13" fill="#374151">64</text>
+          <text x="93" y="45" text-anchor="middle" font-family="Caveat" font-size="11" fill="#f59e0b">min=12</text>
+          <path d="M55,0 C55,-15 93,-15 93,0" fill="none" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr1)"/>
+        </g>
+        <text x="220" y="117" font-family="Caveat" font-size="15" fill="#6b7280">→</text>
+        <g transform="translate(238,95)">
+          <rect x="0" y="0" width="34" height="30" rx="3" fill="#d1fae5" stroke="#059669" stroke-width="2"/>
+          <text x="17" y="20" text-anchor="middle" font-family="Kalam" font-size="13" fill="#065f46">11</text>
+          <rect x="38" y="0" width="34" height="30" rx="3" fill="#d1fae5" stroke="#059669" stroke-width="2"/>
+          <text x="55" y="20" text-anchor="middle" font-family="Kalam" font-size="13" fill="#065f46" font-weight="bold">12</text>
+          <rect x="76" y="0" width="34" height="30" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1"/>
+          <text x="93" y="20" text-anchor="middle" font-family="Kalam" font-size="13" fill="#374151">25</text>
+          <rect x="114" y="0" width="34" height="30" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1"/>
+          <text x="131" y="20" text-anchor="middle" font-family="Kalam" font-size="13" fill="#374151">22</text>
+          <rect x="152" y="0" width="34" height="30" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1"/>
+          <text x="169" y="20" text-anchor="middle" font-family="Kalam" font-size="13" fill="#374151">64</text>
+        </g>
+
+        <!-- Steps 3-5 summarized -->
+        <text x="5" y="158" font-family="Kalam" font-size="12" fill="#1e40af" font-weight="bold">Steps 3-5: Continue similarly...</text>
+        <g transform="translate(10,165)">
+          <text x="0" y="15" font-family="Caveat" font-size="12" fill="#374151">Step 3: min=22 → swap with 25 →</text>
+          <rect x="190" y="0" width="28" height="22" rx="2" fill="#d1fae5" stroke="#059669" stroke-width="1.5"/>
+          <text x="204" y="15" text-anchor="middle" font-family="Kalam" font-size="11" fill="#065f46">11</text>
+          <rect x="221" y="0" width="28" height="22" rx="2" fill="#d1fae5" stroke="#059669" stroke-width="1.5"/>
+          <text x="235" y="15" text-anchor="middle" font-family="Kalam" font-size="11" fill="#065f46">12</text>
+          <rect x="252" y="0" width="28" height="22" rx="2" fill="#d1fae5" stroke="#059669" stroke-width="1.5"/>
+          <text x="266" y="15" text-anchor="middle" font-family="Kalam" font-size="11" fill="#065f46">22</text>
+          <rect x="283" y="0" width="28" height="22" rx="2" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1"/>
+          <text x="297" y="15" text-anchor="middle" font-family="Kalam" font-size="11" fill="#374151">25</text>
+          <rect x="314" y="0" width="28" height="22" rx="2" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1"/>
+          <text x="328" y="15" text-anchor="middle" font-family="Kalam" font-size="11" fill="#374151">64</text>
+        </g>
+        <g transform="translate(10,192)">
+          <text x="0" y="15" font-family="Caveat" font-size="13" fill="#059669" font-weight="bold">Final: ✅ [11, 12, 22, 25, 64]</text>
+          <text x="0" y="30" font-family="Caveat" font-size="11" fill="#6b7280">Total swaps = 3 (selection sort minimizes swaps!)</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+  <div class="code-section">
+    <div class="code-label">C++ Code</div>
+    <pre class="code-block"><code>void selectionSort(int arr[], int n) {
+    for (int i = 0; i &lt; n-1; i++) {
+        int minIdx = i;
+        for (int j = i+1; j &lt; n; j++)
+            if (arr[j] &lt; arr[minIdx]) minIdx = j;
+        swap(arr[minIdx], arr[i]);  // Always n-1 swaps
+    }
+}</code></pre>
+  </div>
+  <div class="key-points-box">
+    <div class="box-label">💡 Key Points</div>
+    <ul class="key-list">
+      <li>Always makes exactly <strong>n-1 swaps</strong> — great when write operations are costly</li>
+      <li>Unstable: equal elements may change relative order</li>
+      <li>Total comparisons = n(n-1)/2 regardless of input</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== MERGE SORT ===== -->
+<div class="page algo-page" data-algo="04" data-name="Merge Sort">
+  <div class="page-header-line">
+    <span class="page-subject">Sorting Algorithms</span>
+    <span class="page-num">6</span>
+  </div>
+  <div class="algo-header">
+    <span class="algo-badge">04</span>
+    <h2>Merge Sort</h2>
+    <span class="difficulty-tag medium">Medium</span>
+    <div class="complexity-pill good-pill">O(n log n)</div>
+  </div>
+  <div class="two-col-notes">
+    <div>
+      <div class="note-box definition-box">
+        <div class="box-label">📖 Definition</div>
+        <p><strong>Divide and Conquer</strong>: Recursively split array in halves until single elements. Then <strong>merge</strong> sorted halves back. Guaranteed O(n log n) always.</p>
+      </div>
+      <div class="note-box formula-note">
+        <div class="box-label">📐 Recurrence</div>
+        <div class="math-formula">T(n) = 2T(n/2) + O(n)<br/>→ By Master Theorem: <strong>O(n log n)</strong></div>
+      </div>
+    </div>
+    <div class="complexity-table-wrap">
+      <div class="box-label">⚡ Complexity</div>
+      <table class="complexity-table">
+        <tr><th>Case</th><th>Time</th><th>Space</th></tr>
+        <tr><td>Best</td><td class="good">O(n log n)</td><td class="warn" rowspan="3">O(n)</td></tr>
+        <tr><td>Average</td><td class="good">O(n log n)</td></tr>
+        <tr><td>Worst</td><td class="good">O(n log n)</td></tr>
+      </table>
+      <div class="props-row">
+        <span class="prop-badge good-b">✓ Stable</span>
+        <span class="prop-badge bad-b">✗ Extra Space</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="numerical-section">
+    <div class="numerical-header">🔢 Numerical — Sort [38, 27, 43, 3, 9, 82, 10]</div>
+    <div class="drawn-numerical">
+      <svg viewBox="0 0 700 280" width="100%" class="num-svg">
+        <defs>
+          <marker id="splitArr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L6,3 z" fill="#7c3aed"/>
+          </marker>
+          <marker id="mergeArr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L6,3 z" fill="#059669"/>
+          </marker>
+        </defs>
+
+        <!-- Level 0 -->
+        <text x="5" y="18" font-family="Kalam" font-size="11" fill="#7c3aed">DIVIDE ↓</text>
+        <g transform="translate(190,5)">
+          <rect x="0" y="0" width="320" height="28" rx="4" fill="#f3e8ff" stroke="#7c3aed" stroke-width="1.5"/>
+          <text x="160" y="18" text-anchor="middle" font-family="Kalam" font-size="12" fill="#6d28d9">[38, 27, 43, 3, 9, 82, 10]</text>
+        </g>
+
+        <!-- Split lines -->
+        <line x1="350" y1="35" x2="200" y2="65" stroke="#7c3aed" stroke-width="1.2" stroke-dasharray="4,3"/>
+        <line x1="350" y1="35" x2="510" y2="65" stroke="#7c3aed" stroke-width="1.2" stroke-dasharray="4,3"/>
+
+        <!-- Level 1 -->
+        <g transform="translate(80,65)">
+          <rect x="0" y="0" width="190" height="26" rx="4" fill="#ede9fe" stroke="#7c3aed" stroke-width="1"/>
+          <text x="95" y="17" text-anchor="middle" font-family="Kalam" font-size="12" fill="#5b21b6">[38, 27, 43, 3]</text>
+        </g>
+        <g transform="translate(420,65)">
+          <rect x="0" y="0" width="160" height="26" rx="4" fill="#ede9fe" stroke="#7c3aed" stroke-width="1"/>
+          <text x="80" y="17" text-anchor="middle" font-family="Kalam" font-size="12" fill="#5b21b6">[9, 82, 10]</text>
+        </g>
+
+        <!-- Level 2 -->
+        <line x1="175" y1="93" x2="115" y2="118" stroke="#7c3aed" stroke-width="1" stroke-dasharray="3,2"/>
+        <line x1="175" y1="93" x2="235" y2="118" stroke="#7c3aed" stroke-width="1" stroke-dasharray="3,2"/>
+        <line x1="500" y1="93" x2="460" y2="118" stroke="#7c3aed" stroke-width="1" stroke-dasharray="3,2"/>
+        <line x1="500" y1="93" x2="545" y2="118" stroke="#7c3aed" stroke-width="1" stroke-dasharray="3,2"/>
+
+        <g transform="translate(60,118)">
+          <rect x="0" y="0" width="110" height="26" rx="4" fill="#ddd6fe" stroke="#6d28d9" stroke-width="1"/>
+          <text x="55" y="17" text-anchor="middle" font-family="Kalam" font-size="11" fill="#4c1d95">[38, 27]</text>
+        </g>
+        <g transform="translate(185,118)">
+          <rect x="0" y="0" width="110" height="26" rx="4" fill="#ddd6fe" stroke="#6d28d9" stroke-width="1"/>
+          <text x="55" y="17" text-anchor="middle" font-family="Kalam" font-size="11" fill="#4c1d95">[43, 3]</text>
+        </g>
+        <g transform="translate(415,118)">
+          <rect x="0" y="0" width="80" height="26" rx="4" fill="#ddd6fe" stroke="#6d28d9" stroke-width="1"/>
+          <text x="40" y="17" text-anchor="middle" font-family="Kalam" font-size="11" fill="#4c1d95">[9, 82]</text>
+        </g>
+        <g transform="translate(508,118)">
+          <rect x="0" y="0" width="60" height="26" rx="4" fill="#ddd6fe" stroke="#6d28d9" stroke-width="1"/>
+          <text x="30" y="17" text-anchor="middle" font-family="Kalam" font-size="11" fill="#4c1d95">[10]</text>
+        </g>
+
+        <!-- Level 3 (leaves) -->
+        <line x1="115" y1="146" x2="90" y2="168" stroke="#7c3aed" stroke-width="1" stroke-dasharray="3,2"/>
+        <line x1="115" y1="146" x2="142" y2="168" stroke="#7c3aed" stroke-width="1" stroke-dasharray="3,2"/>
+        <line x1="240" y1="146" x2="215" y2="168" stroke="#7c3aed" stroke-width="1" stroke-dasharray="3,2"/>
+        <line x1="240" y1="146" x2="267" y2="168" stroke="#7c3aed" stroke-width="1" stroke-dasharray="3,2"/>
+        <line x1="455" y1="146" x2="435" y2="168" stroke="#7c3aed" stroke-width="1" stroke-dasharray="3,2"/>
+        <line x1="455" y1="146" x2="475" y2="168" stroke="#7c3aed" stroke-width="1" stroke-dasharray="3,2"/>
+
+        <g transform="translate(65,168)"><rect x="0" y="0" width="40" height="24" rx="3" fill="#c4b5fd" stroke="#6d28d9" stroke-width="1"/><text x="20" y="16" text-anchor="middle" font-family="Kalam" font-size="11" fill="#3b0764">[38]</text></g>
+        <g transform="translate(115,168)"><rect x="0" y="0" width="40" height="24" rx="3" fill="#c4b5fd" stroke="#6d28d9" stroke-width="1"/><text x="20" y="16" text-anchor="middle" font-family="Kalam" font-size="11" fill="#3b0764">[27]</text></g>
+        <g transform="translate(193,168)"><rect x="0" y="0" width="40" height="24" rx="3" fill="#c4b5fd" stroke="#6d28d9" stroke-width="1"/><text x="20" y="16" text-anchor="middle" font-family="Kalam" font-size="11" fill="#3b0764">[43]</text></g>
+        <g transform="translate(243,168)"><rect x="0" y="0" width="30" height="24" rx="3" fill="#c4b5fd" stroke="#6d28d9" stroke-width="1"/><text x="15" y="16" text-anchor="middle" font-family="Kalam" font-size="11" fill="#3b0764">[3]</text></g>
+        <g transform="translate(413,168)"><rect x="0" y="0" width="35" height="24" rx="3" fill="#c4b5fd" stroke="#6d28d9" stroke-width="1"/><text x="17" y="16" text-anchor="middle" font-family="Kalam" font-size="11" fill="#3b0764">[9]</text></g>
+        <g transform="translate(453,168)"><rect x="0" y="0" width="40" height="24" rx="3" fill="#c4b5fd" stroke="#6d28d9" stroke-width="1"/><text x="20" y="16" text-anchor="middle" font-family="Kalam" font-size="11" fill="#3b0764">[82]</text></g>
+
+        <!-- MERGE phase label -->
+        <text x="5" y="215" font-family="Kalam" font-size="11" fill="#059669">MERGE ↑</text>
+
+        <!-- Merge results -->
+        <line x1="85" y1="194" x2="105" y2="213" stroke="#059669" stroke-width="1.2"/>
+        <line x1="135" y1="194" x2="105" y2="213" stroke="#059669" stroke-width="1.2"/>
+        <g transform="translate(55,213)"><rect x="0" y="0" width="100" height="24" rx="3" fill="#d1fae5" stroke="#059669" stroke-width="1.5"/><text x="50" y="16" text-anchor="middle" font-family="Kalam" font-size="11" fill="#065f46">[27, 38]</text></g>
+
+        <line x1="213" y1="194" x2="245" y2="213" stroke="#059669" stroke-width="1.2"/>
+        <line x1="258" y1="194" x2="245" y2="213" stroke="#059669" stroke-width="1.2"/>
+        <g transform="translate(197,213)"><rect x="0" y="0" width="100" height="24" rx="3" fill="#d1fae5" stroke="#059669" stroke-width="1.5"/><text x="50" y="16" text-anchor="middle" font-family="Kalam" font-size="11" fill="#065f46">[3, 43]</text></g>
+
+        <line x1="430" y1="194" x2="450" y2="213" stroke="#059669" stroke-width="1.2"/>
+        <line x1="473" y1="194" x2="450" y2="213" stroke="#059669" stroke-width="1.2"/>
+        <g transform="translate(410,213)"><rect x="0" y="0" width="100" height="24" rx="3" fill="#d1fae5" stroke="#059669" stroke-width="1.5"/><text x="50" y="16" text-anchor="middle" font-family="Kalam" font-size="11" fill="#065f46">[9, 10, 82]</text></g>
+
+        <!-- Final merge -->
+        <line x1="105" y1="238" x2="170" y2="255" stroke="#059669" stroke-width="1.5"/>
+        <line x1="247" y1="238" x2="170" y2="255" stroke="#059669" stroke-width="1.5"/>
+        <g transform="translate(50,255)"><rect x="0" y="0" width="220" height="24" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/><text x="110" y="16" text-anchor="middle" font-family="Kalam" font-size="12" fill="#14532d" font-weight="bold">[3, 27, 38, 43] ✓</text></g>
+
+        <line x1="460" y1="238" x2="600" y2="255" stroke="#059669" stroke-width="1.5"/>
+        <g transform="translate(540,255)"><rect x="0" y="0" width="120" height="24" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/><text x="60" y="16" text-anchor="middle" font-family="Kalam" font-size="12" fill="#14532d" font-weight="bold">[9, 10, 82]</text></g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="code-section">
+    <div class="code-label">C++ Code</div>
+    <pre class="code-block"><code>void merge(int arr[], int l, int m, int r) {
+    vector&lt;int&gt; L(arr+l, arr+m+1), R(arr+m+1, arr+r+1);
+    int i=0, j=0, k=l;
+    while(i&lt;L.size() &amp;&amp; j&lt;R.size())
+        arr[k++] = (L[i]&lt;=R[j]) ? L[i++] : R[j++];
+    while(i&lt;L.size()) arr[k++]=L[i++];
+    while(j&lt;R.size()) arr[k++]=R[j++];
+}
+void mergeSort(int arr[], int l, int r) {
+    if(l &lt; r) {
+        int m = l + (r-l)/2;
+        mergeSort(arr, l, m);
+        mergeSort(arr, m+1, r);
+        merge(arr, l, m, r);
+    }
+}</code></pre>
+  </div>
+  <div class="key-points-box">
+    <div class="box-label">💡 Key Points</div>
+    <ul class="key-list">
+      <li>Best for <strong>linked lists</strong> — no random access needed for merge</li>
+      <li>Used in <strong>external sorting</strong> (when data doesn't fit in RAM)</li>
+      <li>Basis of <strong>Timsort</strong> (Python/Java's built-in sort)</li>
+      <li>Merge step: compare heads, take smaller — O(n) per level</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== QUICK SORT ===== -->
+<div class="page algo-page" data-algo="05" data-name="Quick Sort">
+  <div class="page-header-line">
+    <span class="page-subject">Sorting Algorithms</span>
+    <span class="page-num">8</span>
+  </div>
+  <div class="algo-header">
+    <span class="algo-badge">05</span>
+    <h2>Quick Sort</h2>
+    <span class="difficulty-tag medium">Medium</span>
+    <div class="complexity-pill good-pill">O(n log n) avg</div>
+  </div>
+  <div class="two-col-notes">
+    <div>
+      <div class="note-box definition-box">
+        <div class="box-label">📖 Definition</div>
+        <p>Pick a <strong>pivot</strong> → Partition array so that elements &lt; pivot are left, elements &gt; pivot are right → Recursively sort both halves. Pivot ends up at its correct final position.</p>
+      </div>
+    </div>
+    <div class="complexity-table-wrap">
+      <div class="box-label">⚡ Complexity</div>
+      <table class="complexity-table">
+        <tr><th>Case</th><th>Time</th></tr>
+        <tr><td>Best/Avg</td><td class="good">O(n log n)</td></tr>
+        <tr><td>Worst</td><td class="bad">O(n²)</td></tr>
+        <tr><td>Space</td><td class="good">O(log n)</td></tr>
+      </table>
+      <div class="props-row">
+        <span class="prop-badge bad-b">✗ Unstable</span>
+        <span class="prop-badge good-b">✓ In-Place</span>
+        <span class="prop-badge good-b">✓ Cache-friendly</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="numerical-section">
+    <div class="numerical-header">🔢 Numerical — Partition step on [10, 80, 30, 90, 40, 50, 70], pivot = 70</div>
+    <div class="drawn-numerical">
+      <svg viewBox="0 0 680 200" width="100%" class="num-svg">
+        <defs>
+          <marker id="pivArr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L6,3 z" fill="#dc2626"/>
+          </marker>
+        </defs>
+        <!-- Initial array -->
+        <text x="5" y="18" font-family="Kalam" font-size="12" fill="#1e40af" font-weight="bold">Initial: i = low-1 = -1, j scans left to right</text>
+        <g transform="translate(5,25)">
+          <rect x="0" y="0" width="40" height="30" rx="3" fill="#f3f4f6" stroke="#6b7280" stroke-width="1"/>
+          <text x="20" y="20" text-anchor="middle" font-family="Kalam" font-size="13" fill="#374151">10</text>
+          <rect x="44" y="0" width="40" height="30" rx="3" fill="#f3f4f6" stroke="#6b7280" stroke-width="1"/>
+          <text x="64" y="20" text-anchor="middle" font-family="Kalam" font-size="13" fill="#374151">80</text>
+          <rect x="88" y="0" width="40" height="30" rx="3" fill="#f3f4f6" stroke="#6b7280" stroke-width="1"/>
+          <text x="108" y="20" text-anchor="middle" font-family="Kalam" font-size="13" fill="#374151">30</text>
+          <rect x="132" y="0" width="40" height="30" rx="3" fill="#f3f4f6" stroke="#6b7280" stroke-width="1"/>
+          <text x="152" y="20" text-anchor="middle" font-family="Kalam" font-size="13" fill="#374151">90</text>
+          <rect x="176" y="0" width="40" height="30" rx="3" fill="#f3f4f6" stroke="#6b7280" stroke-width="1"/>
+          <text x="196" y="20" text-anchor="middle" font-family="Kalam" font-size="13" fill="#374151">40</text>
+          <rect x="220" y="0" width="40" height="30" rx="3" fill="#f3f4f6" stroke="#6b7280" stroke-width="1"/>
+          <text x="240" y="20" text-anchor="middle" font-family="Kalam" font-size="13" fill="#374151">50</text>
+          <rect x="264" y="0" width="40" height="30" rx="3" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+          <text x="284" y="20" text-anchor="middle" font-family="Kalam" font-size="13" fill="#92400e" font-weight="bold">70</text>
+          <text x="284" y="46" text-anchor="middle" font-family="Caveat" font-size="11" fill="#d97706">PIVOT</text>
+        </g>
+
+        <!-- Partition trace -->
+        <text x="5" y="88" font-family="Kalam" font-size="12" fill="#1e40af" font-weight="bold">Partition Trace:</text>
+        <g transform="translate(5,95)">
+          <text x="0" y="14" font-family="Caveat" font-size="12" fill="#374151">j=0: arr[0]=10 ≤ 70 → i++ (i=0), swap arr[0]↔arr[0] → no change</text>
+          <text x="0" y="28" font-family="Caveat" font-size="12" fill="#374151">j=1: arr[1]=80 > 70 → skip</text>
+          <text x="0" y="42" font-family="Caveat" font-size="12" fill="#374151">j=2: arr[2]=30 ≤ 70 → i++ (i=1), swap arr[1]↔arr[2]</text>
+          <text x="0" y="56" font-family="Caveat" font-size="12" fill="#374151">j=3: arr[3]=90 > 70 → skip</text>
+          <text x="0" y="70" font-family="Caveat" font-size="12" fill="#374151">j=4: arr[4]=40 ≤ 70 → i++ (i=2), swap arr[2]↔arr[4]</text>
+          <text x="0" y="84" font-family="Caveat" font-size="12" fill="#374151">j=5: arr[5]=50 ≤ 70 → i++ (i=3), swap arr[3]↔arr[5]</text>
+          <text x="0" y="98" font-family="Caveat" font-size="12" fill="#374151">End: swap pivot arr[i+1=4] ↔ arr[6] (pivot)</text>
+        </g>
+
+        <!-- Result -->
+        <text x="5" y="208" font-family="Kalam" font-size="12" fill="#059669" font-weight="bold">After Partition:</text>
+        <g transform="translate(155,193)">
+          <rect x="0" y="0" width="40" height="28" rx="3" fill="#dcfce7" stroke="#059669" stroke-width="1.5"/>
+          <text x="20" y="18" text-anchor="middle" font-family="Kalam" font-size="12" fill="#065f46">10</text>
+          <rect x="44" y="0" width="40" height="28" rx="3" fill="#dcfce7" stroke="#059669" stroke-width="1.5"/>
+          <text x="64" y="18" text-anchor="middle" font-family="Kalam" font-size="12" fill="#065f46">30</text>
+          <rect x="88" y="0" width="40" height="28" rx="3" fill="#dcfce7" stroke="#059669" stroke-width="1.5"/>
+          <text x="108" y="18" text-anchor="middle" font-family="Kalam" font-size="12" fill="#065f46">40</text>
+          <rect x="132" y="0" width="40" height="28" rx="3" fill="#dcfce7" stroke="#059669" stroke-width="1.5"/>
+          <text x="152" y="18" text-anchor="middle" font-family="Kalam" font-size="12" fill="#065f46">50</text>
+          <rect x="176" y="0" width="40" height="28" rx="3" fill="#fef3c7" stroke="#d97706" stroke-width="2.5"/>
+          <text x="196" y="18" text-anchor="middle" font-family="Kalam" font-size="12" fill="#92400e" font-weight="bold">70</text>
+          <text x="196" y="42" text-anchor="middle" font-family="Caveat" font-size="11" fill="#d97706">✓ correct pos</text>
+          <rect x="220" y="0" width="40" height="28" rx="3" fill="#fee2e2" stroke="#ef4444" stroke-width="1.5"/>
+          <text x="240" y="18" text-anchor="middle" font-family="Kalam" font-size="12" fill="#dc2626">80</text>
+          <rect x="264" y="0" width="40" height="28" rx="3" fill="#fee2e2" stroke="#ef4444" stroke-width="1.5"/>
+          <text x="284" y="18" text-anchor="middle" font-family="Kalam" font-size="12" fill="#dc2626">90</text>
+          <text x="100" y="42" text-anchor="middle" font-family="Caveat" font-size="11" fill="#059669">all &lt; 70</text>
+          <text x="252" y="42" text-anchor="middle" font-family="Caveat" font-size="11" fill="#ef4444">all &gt; 70</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+  <div class="code-section">
+    <div class="code-label">C++ Code</div>
+    <pre class="code-block"><code>int partition(int arr[], int low, int high) {
+    int pivot = arr[high], i = low - 1;
+    for (int j = low; j &lt; high; j++)
+        if (arr[j] &lt;= pivot) swap(arr[++i], arr[j]);
+    swap(arr[i+1], arr[high]);
+    return i + 1;  // pivot's final index
+}
+void quickSort(int arr[], int low, int high) {
+    if (low &lt; high) {
+        int pi = partition(arr, low, high);
+        quickSort(arr, low, pi-1);   // left of pivot
+        quickSort(arr, pi+1, high);  // right of pivot
+    }
+}</code></pre>
+  </div>
+  <div class="key-points-box">
+    <div class="box-label">💡 Key Points</div>
+    <ul class="key-list">
+      <li>Worst case O(n²) when pivot is always min/max — use random pivot to avoid</li>
+      <li>Fastest in practice due to <strong>cache locality</strong></li>
+      <li>C++ <code>std::sort</code> uses Introsort = Quick + Heap + Insertion</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== DIJKSTRA ===== -->
+<div class="page algo-page" data-algo="14" data-name="Dijkstra">
+  <div class="page-header-line">
+    <span class="page-subject">Graph Algorithms</span>
+    <span class="page-num">21</span>
+  </div>
+  <div class="algo-header">
+    <span class="algo-badge">14</span>
+    <h2>Dijkstra's Algorithm</h2>
+    <span class="difficulty-tag medium">Medium</span>
+    <div class="complexity-pill good-pill">O((V+E) log V)</div>
+  </div>
+  <div class="two-col-notes">
+    <div>
+      <div class="note-box definition-box">
+        <div class="box-label">📖 Definition</div>
+        <p><strong>Single Source Shortest Path</strong> for graphs with <em>non-negative</em> weights. Uses a <strong>Min-Heap (priority queue)</strong>. Greedily selects nearest unvisited vertex and relaxes its edges.</p>
+      </div>
+      <div class="note-box formula-note">
+        <div class="box-label">📐 Relaxation</div>
+        <div class="math-formula">if dist[u] + w(u,v) &lt; dist[v]:<br/>   dist[v] = dist[u] + w(u,v)<br/><br/>⚠️ Fails with negative edges!</div>
+      </div>
+    </div>
+    <div class="complexity-table-wrap">
+      <div class="box-label">⚡ Complexity</div>
+      <table class="complexity-table">
+        <tr><th>Implementation</th><th>Time</th></tr>
+        <tr><td>Array</td><td class="warn">O(V²)</td></tr>
+        <tr><td>Binary Heap</td><td class="good">O((V+E)logV)</td></tr>
+        <tr><td>Space</td><td class="good">O(V)</td></tr>
+      </table>
+      <div class="props-row">
+        <span class="prop-badge good-b">✓ Greedy</span>
+        <span class="prop-badge bad-b">✗ No neg edges</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="numerical-section">
+    <div class="numerical-header">🔢 Numerical — Shortest path from node 0</div>
+    <div class="drawn-numerical">
+      <svg viewBox="0 0 680 260" width="100%" class="num-svg">
+        <defs>
+          <marker id="dijk" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L7,3 z" fill="#374151"/>
+          </marker>
+        </defs>
+
+        <!-- Graph drawing -->
+        <text x="5" y="18" font-family="Kalam" font-size="12" fill="#1e40af" font-weight="bold">Graph:</text>
+
+        <!-- Nodes -->
+        <circle cx="60" cy="80" r="22" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+        <text x="60" y="85" text-anchor="middle" font-family="Kalam" font-size="14" fill="#1e40af" font-weight="bold">0</text>
+
+        <circle cx="180" cy="40" r="22" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+        <text x="180" y="45" text-anchor="middle" font-family="Kalam" font-size="14" fill="#374151">1</text>
+
+        <circle cx="180" cy="130" r="22" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+        <text x="180" y="135" text-anchor="middle" font-family="Kalam" font-size="14" fill="#374151">2</text>
+
+        <circle cx="300" cy="80" r="22" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+        <text x="300" y="85" text-anchor="middle" font-family="Kalam" font-size="14" fill="#374151">3</text>
+
+        <!-- Edges with weights -->
+        <line x1="80" y1="68" x2="160" y2="48" stroke="#374151" stroke-width="1.5" marker-end="url(#dijk)"/>
+        <text x="113" y="50" font-family="Caveat" font-size="13" fill="#dc2626" font-weight="bold">4</text>
+
+        <line x1="80" y1="93" x2="160" y2="120" stroke="#374151" stroke-width="1.5" marker-end="url(#dijk)"/>
+        <text x="108" y="117" font-family="Caveat" font-size="13" fill="#dc2626" font-weight="bold">1</text>
+
+        <line x1="200" y1="48" x2="280" y2="72" stroke="#374151" stroke-width="1.5" marker-end="url(#dijk)"/>
+        <text x="242" y="55" font-family="Caveat" font-size="13" fill="#dc2626" font-weight="bold">1</text>
+
+        <line x1="200" y1="122" x2="280" y2="90" stroke="#374151" stroke-width="1.5" marker-end="url(#dijk)"/>
+        <text x="242" y="118" font-family="Caveat" font-size="13" fill="#dc2626" font-weight="bold">5</text>
+
+        <line x1="180" y1="62" x2="180" y2="108" stroke="#374151" stroke-width="1.5" marker-end="url(#dijk)"/>
+        <text x="186" y="92" font-family="Caveat" font-size="13" fill="#dc2626" font-weight="bold">2</text>
+
+        <!-- Table on right -->
+        <text x="380" y="18" font-family="Kalam" font-size="12" fill="#1e40af" font-weight="bold">Step-by-step dist[] table:</text>
+        <rect x="375" y="22" width="290" height="150" rx="4" fill="#f9fafb" stroke="#e5e7eb" stroke-width="1"/>
+
+        <!-- Table header -->
+        <rect x="375" y="22" width="290" height="22" rx="4" fill="#dbeafe" stroke="#e5e7eb" stroke-width="1"/>
+        <text x="410" y="37" font-family="Kalam" font-size="11" fill="#1e40af">Step</text>
+        <text x="460" y="37" font-family="Kalam" font-size="11" fill="#1e40af">dist[0]</text>
+        <text x="510" y="37" font-family="Kalam" font-size="11" fill="#1e40af">dist[1]</text>
+        <text x="560" y="37" font-family="Kalam" font-size="11" fill="#1e40af">dist[2]</text>
+        <text x="620" y="37" font-family="Kalam" font-size="11" fill="#1e40af">dist[3]</text>
+
+        <!-- Row: Init -->
+        <text x="395" y="56" font-family="Caveat" font-size="12" fill="#374151">Init</text>
+        <text x="470" y="56" font-family="Kalam" font-size="12" fill="#065f46" font-weight="bold">0</text>
+        <text x="515" y="56" font-family="Kalam" font-size="12" fill="#6b7280">∞</text>
+        <text x="565" y="56" font-family="Kalam" font-size="12" fill="#6b7280">∞</text>
+        <text x="625" y="56" font-family="Kalam" font-size="12" fill="#6b7280">∞</text>
+
+        <!-- Row: Pick 0 -->
+        <text x="385" y="74" font-family="Caveat" font-size="12" fill="#374151">Pick 0</text>
+        <text x="470" y="74" font-family="Kalam" font-size="12" fill="#065f46" font-weight="bold">0</text>
+        <text x="513" y="74" font-family="Kalam" font-size="12" fill="#dc2626" font-weight="bold">4</text>
+        <text x="563" y="74" font-family="Kalam" font-size="12" fill="#dc2626" font-weight="bold">1</text>
+        <text x="625" y="74" font-family="Kalam" font-size="12" fill="#6b7280">∞</text>
+        <text x="620" y="68" font-family="Caveat" font-size="9" fill="#059669">relax</text>
+
+        <!-- Row: Pick 2 -->
+        <text x="385" y="92" font-family="Caveat" font-size="12" fill="#374151">Pick 2</text>
+        <text x="470" y="92" font-family="Kalam" font-size="12" fill="#065f46">0</text>
+        <text x="510" y="92" font-family="Kalam" font-size="12" fill="#dc2626" font-weight="bold">3</text>
+        <text x="558" y="92" font-family="Kalam" font-size="12" fill="#065f46" font-weight="bold">1</text>
+        <text x="613" y="92" font-family="Kalam" font-size="12" fill="#dc2626" font-weight="bold">6</text>
+        <text x="507" y="86" font-family="Caveat" font-size="9" fill="#dc2626">1+2=3!</text>
+
+        <!-- Row: Pick 1 -->
+        <text x="385" y="110" font-family="Caveat" font-size="12" fill="#374151">Pick 1</text>
+        <text x="470" y="110" font-family="Kalam" font-size="12" fill="#065f46">0</text>
+        <text x="510" y="110" font-family="Kalam" font-size="12" fill="#065f46">3</text>
+        <text x="558" y="110" font-family="Kalam" font-size="12" fill="#065f46">1</text>
+        <text x="610" y="110" font-family="Kalam" font-size="12" fill="#dc2626" font-weight="bold">4</text>
+        <text x="608" y="104" font-family="Caveat" font-size="9" fill="#dc2626">3+1=4!</text>
+
+        <!-- Row: Pick 3 -->
+        <text x="385" y="128" font-family="Caveat" font-size="12" fill="#374151">Pick 3</text>
+        <text x="470" y="128" font-family="Kalam" font-size="12" fill="#065f46">0</text>
+        <text x="510" y="128" font-family="Kalam" font-size="12" fill="#065f46">3</text>
+        <text x="558" y="128" font-family="Kalam" font-size="12" fill="#065f46">1</text>
+        <text x="610" y="128" font-family="Kalam" font-size="12" fill="#065f46">4</text>
+
+        <!-- Row: Final -->
+        <rect x="375" y="150" width="290" height="22" rx="0" fill="#dcfce7" stroke="#059669" stroke-width="1"/>
+        <text x="385" y="165" font-family="Kalam" font-size="11" fill="#065f46" font-weight="bold">Final dist:</text>
+        <text x="468" y="165" font-family="Kalam" font-size="12" fill="#065f46" font-weight="bold">0</text>
+        <text x="510" y="165" font-family="Kalam" font-size="12" fill="#065f46" font-weight="bold">3</text>
+        <text x="558" y="165" font-family="Kalam" font-size="12" fill="#065f46" font-weight="bold">1</text>
+        <text x="608" y="165" font-family="Kalam" font-size="12" fill="#065f46" font-weight="bold">4</text>
+
+        <!-- Shortest paths explanation -->
+        <text x="5" y="185" font-family="Kalam" font-size="12" fill="#1e40af" font-weight="bold">Shortest Paths from 0:</text>
+        <text x="5" y="202" font-family="Caveat" font-size="13" fill="#374151">0→0 = 0 (trivial)</text>
+        <text x="5" y="218" font-family="Caveat" font-size="13" fill="#374151">0→1 = 3  via path: 0 → 2 → 1  (1 + 2 = 3, better than direct 4!)</text>
+        <text x="5" y="234" font-family="Caveat" font-size="13" fill="#374151">0→2 = 1  via path: 0 → 2</text>
+        <text x="5" y="250" font-family="Caveat" font-size="13" fill="#374151">0→3 = 4  via path: 0 → 2 → 1 → 3  (1 + 2 + 1 = 4)</text>
+      </svg>
+    </div>
+  </div>
+  <div class="code-section">
+    <div class="code-label">C++ Code (Min-Heap)</div>
+    <pre class="code-block"><code>void dijkstra(vector&lt;pair&lt;int,int&gt;&gt; adj[], int V, int src) {
+    vector&lt;int&gt; dist(V, INT_MAX);
+    priority_queue&lt;pair&lt;int,int&gt;,
+        vector&lt;pair&lt;int,int&gt;&gt;, greater&lt;&gt;&gt; pq;
+    dist[src] = 0;
+    pq.push({0, src});
+    while (!pq.empty()) {
+        auto [d, u] = pq.top(); pq.pop();
+        if (d > dist[u]) continue;  // outdated entry
+        for (auto [v, w] : adj[u])
+            if (dist[u]+w &lt; dist[v]) {
+                dist[v] = dist[u]+w;
+                pq.push({dist[v], v});
+            }
+    }
+}</code></pre>
+  </div>
+</div>
+
+<!-- ===== KRUSKAL MST ===== -->
+<div class="page algo-page" data-algo="16" data-name="Kruskal MST">
+  <div class="page-header-line">
+    <span class="page-subject">Graph Algorithms</span>
+    <span class="page-num">25</span>
+  </div>
+  <div class="algo-header">
+    <span class="algo-badge">16</span>
+    <h2>Kruskal's Algorithm (MST)</h2>
+    <span class="difficulty-tag medium">Medium</span>
+    <div class="complexity-pill good-pill">O(E log E)</div>
+  </div>
+  <div class="two-col-notes">
+    <div>
+      <div class="note-box definition-box">
+        <div class="box-label">📖 Definition</div>
+        <p>Finds <strong>Minimum Spanning Tree</strong>. Sort all edges by weight → Add edges one by one (greedily) → Skip edge if it forms a <strong>cycle</strong> (checked via Union-Find). Stop when V-1 edges added.</p>
+      </div>
+      <div class="note-box formula-note">
+        <div class="box-label">📐 MST Properties</div>
+        <div class="math-formula">MST has exactly V-1 edges<br/>Connects all V vertices<br/>Minimum total weight<br/>No cycles!</div>
+      </div>
+    </div>
+    <div class="complexity-table-wrap">
+      <div class="box-label">⚡ Complexity</div>
+      <table class="complexity-table">
+        <tr><th>Step</th><th>Time</th></tr>
+        <tr><td>Sort edges</td><td class="warn">O(E log E)</td></tr>
+        <tr><td>Union-Find</td><td class="good">O(α(V)) ≈ O(1)</td></tr>
+        <tr><td>Total</td><td class="warn">O(E log E)</td></tr>
+        <tr><td>Space</td><td class="good">O(V)</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="numerical-section">
+    <div class="numerical-header">🔢 Numerical — Find MST of graph (4 vertices)</div>
+    <div class="drawn-numerical">
+      <svg viewBox="0 0 680 230" width="100%" class="num-svg">
+        <defs>
+          <marker id="krusArr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L6,3 z" fill="#374151"/>
+          </marker>
+        </defs>
+
+        <!-- Graph -->
+        <text x="5" y="18" font-family="Kalam" font-size="12" fill="#1e40af" font-weight="bold">Graph:</text>
+        <circle cx="70" cy="60" r="20" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+        <text x="70" y="65" text-anchor="middle" font-family="Kalam" font-size="13" fill="#1e40af">0</text>
+        <circle cx="170" cy="30" r="20" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+        <text x="170" y="35" text-anchor="middle" font-family="Kalam" font-size="13" fill="#374151">1</text>
+        <circle cx="170" cy="95" r="20" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+        <text x="170" y="100" text-anchor="middle" font-family="Kalam" font-size="13" fill="#374151">2</text>
+        <circle cx="270" cy="60" r="20" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+        <text x="270" y="65" text-anchor="middle" font-family="Kalam" font-size="13" fill="#374151">3</text>
+
+        <!-- All edges -->
+        <line x1="88" y1="50" x2="152" y2="36" stroke="#6b7280" stroke-width="1" stroke-dasharray="4,2"/>
+        <text x="115" y="37" font-family="Caveat" font-size="13" fill="#374151">10</text>
+        <line x1="88" y1="70" x2="152" y2="88" stroke="#6b7280" stroke-width="1" stroke-dasharray="4,2"/>
+        <text x="112" y="88" font-family="Caveat" font-size="13" fill="#374151">6</text>
+        <line x1="170" y1="50" x2="170" y2="75" stroke="#6b7280" stroke-width="1" stroke-dasharray="4,2"/>
+        <text x="176" y="68" font-family="Caveat" font-size="13" fill="#374151">5</text>
+        <line x1="188" y1="38" x2="252" y2="54" stroke="#6b7280" stroke-width="1" stroke-dasharray="4,2"/>
+        <text x="222" y="40" font-family="Caveat" font-size="13" fill="#374151">15</text>
+        <line x1="188" y1="88" x2="252" y2="67" stroke="#6b7280" stroke-width="1" stroke-dasharray="4,2"/>
+        <text x="222" y="86" font-family="Caveat" font-size="13" fill="#374151">4</text>
+
+        <!-- Sorted edges table -->
+        <text x="330" y="18" font-family="Kalam" font-size="12" fill="#1e40af" font-weight="bold">Sorted Edges by Weight:</text>
+        <rect x="325" y="22" width="340" height="110" rx="4" fill="#f9fafb" stroke="#e5e7eb" stroke-width="1"/>
+        <rect x="325" y="22" width="340" height="22" rx="4" fill="#fef3c7" stroke="#e5e7eb" stroke-width="1"/>
+        <text x="350" y="37" font-family="Kalam" font-size="11" fill="#92400e">Edge</text>
+        <text x="415" y="37" font-family="Kalam" font-size="11" fill="#92400e">Weight</text>
+        <text x="490" y="37" font-family="Kalam" font-size="11" fill="#92400e">Add?</text>
+        <text x="535" y="37" font-family="Kalam" font-size="11" fill="#92400e">MST Cost</text>
+
+        <text x="346" y="56" font-family="Caveat" font-size="12" fill="#374151">2—3</text>
+        <text x="423" y="56" font-family="Kalam" font-size="12" fill="#374151">4</text>
+        <text x="492" y="56" font-family="Kalam" font-size="12" fill="#059669" font-weight="bold">✓ YES</text>
+        <text x="548" y="56" font-family="Kalam" font-size="12" fill="#059669">4</text>
+
+        <text x="346" y="74" font-family="Caveat" font-size="12" fill="#374151">1—2</text>
+        <text x="423" y="74" font-family="Kalam" font-size="12" fill="#374151">5</text>
+        <text x="492" y="74" font-family="Kalam" font-size="12" fill="#059669" font-weight="bold">✓ YES</text>
+        <text x="548" y="74" font-family="Kalam" font-size="12" fill="#059669">9</text>
+
+        <text x="346" y="92" font-family="Caveat" font-size="12" fill="#374151">0—2</text>
+        <text x="423" y="92" font-family="Kalam" font-size="12" fill="#374151">6</text>
+        <text x="492" y="92" font-family="Kalam" font-size="12" fill="#059669" font-weight="bold">✓ YES</text>
+        <text x="548" y="92" font-family="Kalam" font-size="12" fill="#059669">15</text>
+
+        <text x="346" y="110" font-family="Caveat" font-size="12" fill="#374151">0—1</text>
+        <text x="423" y="110" font-family="Kalam" font-size="12" fill="#374151">10</text>
+        <text x="492" y="110" font-family="Kalam" font-size="12" fill="#ef4444" font-weight="bold">✗ CYCLE</text>
+        <text x="548" y="110" font-family="Kalam" font-size="12" fill="#6b7280">—</text>
+
+        <text x="346" y="128" font-family="Caveat" font-size="12" fill="#374151">1—3</text>
+        <text x="423" y="128" font-family="Kalam" font-size="12" fill="#374151">15</text>
+        <text x="492" y="128" font-family="Kalam" font-size="12" fill="#ef4444" font-weight="bold">✗ CYCLE</text>
+        <text x="548" y="128" font-family="Kalam" font-size="12" fill="#6b7280">—</text>
+
+        <!-- MST Result -->
+        <text x="5" y="148" font-family="Kalam" font-size="12" fill="#059669" font-weight="bold">MST Result (V-1 = 3 edges):</text>
+
+        <!-- MST graph -->
+        <circle cx="70" cy="190" r="18" fill="#dcfce7" stroke="#059669" stroke-width="2"/>
+        <text x="70" y="195" text-anchor="middle" font-family="Kalam" font-size="13" fill="#065f46" font-weight="bold">0</text>
+        <circle cx="160" cy="165" r="18" fill="#dcfce7" stroke="#059669" stroke-width="2"/>
+        <text x="160" y="170" text-anchor="middle" font-family="Kalam" font-size="13" fill="#065f46" font-weight="bold">1</text>
+        <circle cx="160" cy="215" r="18" fill="#dcfce7" stroke="#059669" stroke-width="2"/>
+        <text x="160" y="220" text-anchor="middle" font-family="Kalam" font-size="13" fill="#065f46" font-weight="bold">2</text>
+        <circle cx="250" cy="215" r="18" fill="#dcfce7" stroke="#059669" stroke-width="2"/>
+        <text x="250" y="220" text-anchor="middle" font-family="Kalam" font-size="13" fill="#065f46" font-weight="bold">3</text>
+
+        <!-- MST edges (highlighted) -->
+        <line x1="86" y1="183" x2="144" y2="170" stroke="#059669" stroke-width="2.5"/>
+        <text x="110" y="170" font-family="Caveat" font-size="12" fill="#059669" font-weight="bold">6</text>
+        <line x1="160" y1="183" x2="160" y2="197" stroke="#059669" stroke-width="2.5"/>
+        <text x="166" y="195" font-family="Caveat" font-size="12" fill="#059669" font-weight="bold">5</text>
+        <line x1="177" y1="215" x2="233" y2="215" stroke="#059669" stroke-width="2.5"/>
+        <text x="200" y="210" font-family="Caveat" font-size="12" fill="#059669" font-weight="bold">4</text>
+
+        <rect x="290" y="152" width="200" height="70" rx="6" fill="#dcfce7" stroke="#059669" stroke-width="2"/>
+        <text x="390" y="172" text-anchor="middle" font-family="Kalam" font-size="13" fill="#065f46" font-weight="bold">MST Edges:</text>
+        <text x="310" y="190" font-family="Caveat" font-size="13" fill="#374151">0—2 (w=6)</text>
+        <text x="310" y="206" font-family="Caveat" font-size="13" fill="#374151">1—2 (w=5)</text>
+        <text x="310" y="222" font-family="Caveat" font-size="13" fill="#374151">2—3 (w=4)</text>
+        <text x="440" y="222" font-family="Kalam" font-size="14" fill="#065f46" font-weight="bold">Total = 15</text>
+      </svg>
+    </div>
+  </div>
+  <div class="code-section">
+    <div class="code-label">C++ Code (Union-Find)</div>
+    <pre class="code-block"><code>int find(int parent[], int i) {
+    return parent[i]==i ? i : parent[i]=find(parent,parent[i]);
+}
+void kruskal(vector&lt;tuple&lt;int,int,int&gt;&gt;&amp; edges, int V) {
+    sort(edges.begin(), edges.end()); // sort by weight
+    vector&lt;int&gt; parent(V);
+    iota(parent.begin(), parent.end(), 0);
+    int cost = 0, cnt = 0;
+    for (auto [w, u, v] : edges) {
+        int pu=find(parent.data(),u), pv=find(parent.data(),v);
+        if (pu != pv) {   // no cycle!
+            parent[pu] = pv;
+            cost += w; cnt++;
+            if (cnt == V-1) break;
+        }
+    }
+    cout &lt;&lt; "MST Cost = " &lt;&lt; cost;
+}</code></pre>
+  </div>
+</div>
+
+<!-- ===== HUFFMAN CODING ===== -->
+<div class="page algo-page" data-algo="09" data-name="Huffman Coding">
+  <div class="page-header-line">
+    <span class="page-subject">Greedy Algorithms</span>
+    <span class="page-num">15</span>
+  </div>
+  <div class="algo-header">
+    <span class="algo-badge">09</span>
+    <h2>Huffman Coding</h2>
+    <span class="difficulty-tag hard">Hard</span>
+    <div class="complexity-pill warn-pill">O(n log n)</div>
+  </div>
+  <div class="two-col-notes">
+    <div>
+      <div class="note-box definition-box">
+        <div class="box-label">📖 Definition</div>
+        <p><strong>Lossless data compression</strong> using greedy approach. Assigns <em>shorter binary codes</em> to more frequent characters. Build a <strong>min-heap</strong> tree bottom-up.</p>
+      </div>
+      <div class="note-box formula-note">
+        <div class="box-label">📐 Key Rules</div>
+        <ul class="note-list">
+          <li>Left child → 0, Right child → 1</li>
+          <li>Always merge 2 nodes with lowest freq</li>
+          <li>Result: <strong>Prefix-free codes</strong></li>
+          <li>No code is prefix of another</li>
+        </ul>
+      </div>
+    </div>
+    <div class="complexity-table-wrap">
+      <div class="box-label">⚡ Complexity</div>
+      <table class="complexity-table">
+        <tr><th>Step</th><th>Time</th></tr>
+        <tr><td>Build heap</td><td class="good">O(n)</td></tr>
+        <tr><td>Build tree</td><td class="warn">O(n log n)</td></tr>
+        <tr><td>Space</td><td class="warn">O(n)</td></tr>
+      </table>
+      <div class="props-row">
+        <span class="prop-badge good-b">✓ Lossless</span>
+        <span class="prop-badge good-b">✓ Optimal prefix</span>
+      </div>
+      <div class="use-cases">Used in: ZIP, JPEG, MP3, PNG</div>
+    </div>
+  </div>
+
+  <div class="numerical-section">
+    <div class="numerical-header">🔢 Numerical — Characters: a(5), b(9), c(12), d(13), e(16), f(45)</div>
+    <div class="drawn-numerical">
+      <svg viewBox="0 0 680 240" width="100%" class="num-svg">
+        <!-- Steps -->
+        <text x="5" y="16" font-family="Kalam" font-size="12" fill="#1e40af" font-weight="bold">Building Huffman Tree (Min-Heap merges):</text>
+
+        <!-- Step 1 -->
+        <text x="5" y="35" font-family="Caveat" font-size="12" fill="#374151">Step 1: Merge min a(5) + b(9) = node(14)</text>
+        <!-- Step 2 -->
+        <text x="5" y="52" font-family="Caveat" font-size="12" fill="#374151">Step 2: Merge min c(12) + d(13) = node(25)</text>
+        <!-- Step 3 -->
+        <text x="5" y="69" font-family="Caveat" font-size="12" fill="#374151">Step 3: Merge node(14) + e(16) = node(30)</text>
+        <!-- Step 4 -->
+        <text x="5" y="86" font-family="Caveat" font-size="12" fill="#374151">Step 4: Merge node(25) + node(30) = node(55)</text>
+        <!-- Step 5 -->
+        <text x="5" y="103" font-family="Caveat" font-size="12" fill="#374151">Step 5: Merge f(45) + node(55) = ROOT(100)</text>
+
+        <!-- Huffman Tree -->
+        <text x="5" y="126" font-family="Kalam" font-size="12" fill="#1e40af" font-weight="bold">Huffman Tree:</text>
+
+        <!-- Root 100 -->
+        <rect x="290" y="130" width="55" height="26" rx="4" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+        <text x="317" y="147" text-anchor="middle" font-family="Kalam" font-size="12" fill="#92400e" font-weight="bold">100</text>
+
+        <!-- Left: f(45) -->
+        <line x1="290" y1="143" x2="200" y2="165" stroke="#374151" stroke-width="1.5"/>
+        <text x="238" y="152" font-family="Caveat" font-size="11" fill="#059669" font-weight="bold">0</text>
+        <rect x="165" y="165" width="55" height="26" rx="4" fill="#dcfce7" stroke="#059669" stroke-width="2"/>
+        <text x="192" y="182" text-anchor="middle" font-family="Kalam" font-size="12" fill="#065f46" font-weight="bold">f:45</text>
+
+        <!-- Right: 55 -->
+        <line x1="345" y1="143" x2="430" y2="165" stroke="#374151" stroke-width="1.5"/>
+        <text x="393" y="152" font-family="Caveat" font-size="11" fill="#dc2626" font-weight="bold">1</text>
+        <rect x="405" y="165" width="50" height="26" rx="4" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+        <text x="430" y="182" text-anchor="middle" font-family="Kalam" font-size="12" fill="#92400e">55</text>
+
+        <!-- 55 Left: 25 -->
+        <line x1="405" y1="178" x2="348" y2="200" stroke="#374151" stroke-width="1.5"/>
+        <text x="370" y="188" font-family="Caveat" font-size="11" fill="#059669" font-weight="bold">0</text>
+        <rect x="318" y="200" width="50" height="26" rx="4" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+        <text x="343" y="217" text-anchor="middle" font-family="Kalam" font-size="12" fill="#92400e">25</text>
+
+        <!-- 55 Right: 30 -->
+        <line x1="455" y1="178" x2="510" y2="200" stroke="#374151" stroke-width="1.5"/>
+        <text x="487" y="188" font-family="Caveat" font-size="11" fill="#dc2626" font-weight="bold">1</text>
+        <rect x="483" y="200" width="50" height="26" rx="4" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+        <text x="508" y="217" text-anchor="middle" font-family="Kalam" font-size="12" fill="#92400e">30</text>
+
+        <!-- 25: c and d -->
+        <line x1="318" y1="213" x2="278" y2="228" stroke="#374151" stroke-width="1"/>
+        <text x="290" y="222" font-family="Caveat" font-size="10" fill="#059669">0</text>
+        <rect x="252" y="228" width="40" height="22" rx="3" fill="#dcfce7" stroke="#059669" stroke-width="1.5"/>
+        <text x="272" y="243" text-anchor="middle" font-family="Kalam" font-size="11" fill="#065f46" font-weight="bold">c:12</text>
+
+        <line x1="368" y1="213" x2="378" y2="228" stroke="#374151" stroke-width="1"/>
+        <text x="375" y="222" font-family="Caveat" font-size="10" fill="#dc2626">1</text>
+        <rect x="352" y="228" width="40" height="22" rx="3" fill="#dcfce7" stroke="#059669" stroke-width="1.5"/>
+        <text x="372" y="243" text-anchor="middle" font-family="Kalam" font-size="11" fill="#065f46" font-weight="bold">d:13</text>
+
+        <!-- 30: 14 and e -->
+        <line x1="483" y1="213" x2="450" y2="228" stroke="#374151" stroke-width="1"/>
+        <text x="460" y="222" font-family="Caveat" font-size="10" fill="#059669">0</text>
+        <rect x="430" y="228" width="36" height="22" rx="3" fill="#fef3c7" stroke="#d97706" stroke-width="1"/>
+        <text x="448" y="243" text-anchor="middle" font-family="Kalam" font-size="11" fill="#92400e">14</text>
+
+        <line x1="533" y1="213" x2="555" y2="228" stroke="#374151" stroke-width="1"/>
+        <text x="547" y="222" font-family="Caveat" font-size="10" fill="#dc2626">1</text>
+        <rect x="535" y="228" width="42" height="22" rx="3" fill="#dcfce7" stroke="#059669" stroke-width="1.5"/>
+        <text x="556" y="243" text-anchor="middle" font-family="Kalam" font-size="11" fill="#065f46" font-weight="bold">e:16</text>
+
+        <!-- Codes box -->
+        <rect x="5" y="128" width="155" height="110" rx="4" fill="#f0f9ff" stroke="#0ea5e9" stroke-width="1.5"/>
+        <text x="82" y="144" text-anchor="middle" font-family="Kalam" font-size="11" fill="#0c4a6e" font-weight="bold">Huffman Codes</text>
+        <text x="15" y="158" font-family="Kalam" font-size="11" fill="#374151">f → <tspan font-family="JetBrains Mono, monospace" fill="#059669" font-weight="bold">0</tspan>     (45, 1 bit)</text>
+        <text x="15" y="172" font-family="Kalam" font-size="11" fill="#374151">c → <tspan font-family="JetBrains Mono, monospace" fill="#059669" font-weight="bold">100</tspan>   (12, 3 bits)</text>
+        <text x="15" y="186" font-family="Kalam" font-size="11" fill="#374151">d → <tspan font-family="JetBrains Mono, monospace" fill="#059669" font-weight="bold">101</tspan>   (13, 3 bits)</text>
+        <text x="15" y="200" font-family="Kalam" font-size="11" fill="#374151">e → <tspan font-family="JetBrains Mono, monospace" fill="#059669" font-weight="bold">111</tspan>   (16, 3 bits)</text>
+        <text x="15" y="214" font-family="Kalam" font-size="11" fill="#374151">a → <tspan font-family="JetBrains Mono, monospace" fill="#059669" font-weight="bold">1100</tspan>  (5, 4 bits)</text>
+        <text x="15" y="228" font-family="Kalam" font-size="11" fill="#374151">b → <tspan font-family="JetBrains Mono, monospace" fill="#059669" font-weight="bold">1101</tspan>  (9, 4 bits)</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- ===== COMPLEXITY SUMMARY PAGE ===== -->
+<div class="page summary-page">
+  <div class="page-header-line">
+    <span class="page-subject">Algorithm Notes — Summary</span>
+    <span class="page-num">29</span>
+  </div>
+  <h2 class="summary-title">📊 Algorithm Complexity Quick Reference</h2>
+
+  <div class="summary-table-wrap">
+    <div class="summary-section-title">Sorting Algorithms</div>
+    <table class="summary-table">
+      <thead>
+        <tr><th>Algorithm</th><th>Best</th><th>Average</th><th>Worst</th><th>Space</th><th>Stable</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Bubble Sort</strong></td><td class="good">O(n)</td><td class="bad">O(n²)</td><td class="bad">O(n²)</td><td class="good">O(1)</td><td>✅</td><td>Simple, educational</td></tr>
+        <tr><td><strong>Selection Sort</strong></td><td class="bad">O(n²)</td><td class="bad">O(n²)</td><td class="bad">O(n²)</td><td class="good">O(1)</td><td>❌</td><td>Min swaps (n-1)</td></tr>
+        <tr><td><strong>Insertion Sort</strong></td><td class="good">O(n)</td><td class="bad">O(n²)</td><td class="bad">O(n²)</td><td class="good">O(1)</td><td>✅</td><td>Best for nearly sorted</td></tr>
+        <tr><td><strong>Merge Sort</strong></td><td class="good">O(n log n)</td><td class="good">O(n log n)</td><td class="good">O(n log n)</td><td class="warn">O(n)</td><td>✅</td><td>Linked lists, external</td></tr>
+        <tr><td><strong>Quick Sort</strong></td><td class="good">O(n log n)</td><td class="good">O(n log n)</td><td class="bad">O(n²)</td><td class="good">O(log n)</td><td>❌</td><td>Fastest in practice</td></tr>
+        <tr><td><strong>Heap Sort</strong></td><td class="good">O(n log n)</td><td class="good">O(n log n)</td><td class="good">O(n log n)</td><td class="good">O(1)</td><td>❌</td><td>Guaranteed O(n log n)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="summary-table-wrap">
+    <div class="summary-section-title">Graph Algorithms</div>
+    <table class="summary-table">
+      <thead>
+        <tr><th>Algorithm</th><th>Time</th><th>Space</th><th>Purpose</th><th>Key Limitation</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>BFS</strong></td><td class="good">O(V+E)</td><td class="good">O(V)</td><td>Shortest path (unweighted)</td><td>Queue needed</td></tr>
+        <tr><td><strong>DFS</strong></td><td class="good">O(V+E)</td><td class="good">O(V)</td><td>Cycle detect, Topo Sort</td><td>Not shortest path</td></tr>
+        <tr><td><strong>Dijkstra</strong></td><td class="good">O((V+E)logV)</td><td class="good">O(V)</td><td>SSSP non-neg weights</td><td>No negative edges!</td></tr>
+        <tr><td><strong>Bellman-Ford</strong></td><td class="warn">O(VE)</td><td class="good">O(V)</td><td>SSSP with neg weights</td><td>Slower than Dijkstra</td></tr>
+        <tr><td><strong>Floyd-Warshall</strong></td><td class="bad">O(V³)</td><td class="warn">O(V²)</td><td>All-pairs shortest path</td><td>Cubic time!</td></tr>
+        <tr><td><strong>Kruskal's</strong></td><td class="warn">O(E log E)</td><td class="good">O(V)</td><td>MST — sparse graphs</td><td>Union-Find needed</td></tr>
+        <tr><td><strong>Prim's</strong></td><td class="good">O(E log V)</td><td class="warn">O(V)</td><td>MST — dense graphs</td><td>Priority queue needed</td></tr>
+        <tr><td><strong>Topological Sort</strong></td><td class="good">O(V+E)</td><td class="good">O(V)</td><td>Ordering in DAG</td><td>DAG only!</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="summary-table-wrap">
+    <div class="summary-section-title">Greedy Algorithms</div>
+    <table class="summary-table">
+      <thead>
+        <tr><th>Algorithm</th><th>Time</th><th>Greedy Choice</th><th>Works?</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Activity Selection</strong></td><td class="warn">O(n log n)</td><td>Earliest finish time</td><td class="good">✅ Always optimal</td></tr>
+        <tr><td><strong>Fractional Knapsack</strong></td><td class="warn">O(n log n)</td><td>Highest value/weight ratio</td><td class="good">✅ Always optimal</td></tr>
+        <tr><td><strong>Huffman Coding</strong></td><td class="warn">O(n log n)</td><td>Merge 2 lowest freq nodes</td><td class="good">✅ Always optimal</td></tr>
+        <tr><td><strong>Job Sequencing</strong></td><td class="warn">O(n²)</td><td>Highest profit first</td><td class="good">✅ Always optimal</td></tr>
+        <tr><td><strong>Coin Change</strong></td><td class="good">O(n)</td><td>Largest coin first</td><td class="warn">⚠️ Canonical systems only</td></tr>
+        <tr><td><strong>0/1 Knapsack</strong></td><td class="bad">O(nW)</td><td>Greedy FAILS — use DP!</td><td class="bad">❌ Use DP</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="exam-tips-box">
+    <div class="box-label">🎯 Exam Tips</div>
+    <div class="tips-grid">
+      <div class="tip-item">📌 Negative edges → Bellman-Ford, NOT Dijkstra</div>
+      <div class="tip-item">📌 All pairs shortest path → Floyd-Warshall O(V³)</div>
+      <div class="tip-item">📌 MST: Kruskal (sparse), Prim (dense)</div>
+      <div class="tip-item">📌 Merge Sort: stable, O(n log n) guaranteed, extra O(n) space</div>
+      <div class="tip-item">📌 Quick Sort: fastest in practice, O(n²) worst case</div>
+      <div class="tip-item">📌 BFS = shortest path unweighted; DFS = cycle detect, topo sort</div>
+      <div class="tip-item">📌 Heap Sort: guaranteed O(n log n), in-place, unstable</div>
+      <div class="tip-item">📌 Insertion Sort: O(n) best for nearly-sorted arrays</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== NAV (Screen only) ===== -->
+<nav class="screen-nav" id="screenNav">
+  <button onclick="window.print()" class="nav-action print-btn">🖨️ Print Notes</button>
+  <div class="nav-tabs">
+    <button onclick="scrollToPage('cover-page')" class="tab-btn">Cover</button>
+    <button onclick="scrollToPage('sorting')" class="tab-btn">📊 Sorting</button>
+    <button onclick="scrollToPage('greedy')" class="tab-btn">💰 Greedy</button>
+    <button onclick="scrollToPage('graph')" class="tab-btn">🕸️ Graph</button>
+    <button onclick="scrollToPage('summary-page')" class="tab-btn">📋 Summary</button>
+  </div>
+</nav>
+
+<script src="script.js"></script>
+</body>
+</html>
