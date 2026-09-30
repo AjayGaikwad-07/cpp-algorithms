@@ -1,8 +1,9 @@
 import React from 'react';
-import { Network, Zap, Cpu, BarChart2, Search, ChevronRight } from 'lucide-react';
+import { Network, Zap, Cpu, BarChart2, Search, Undo2, ChevronRight } from 'lucide-react';
 
 export default function Sidebar({ algorithms, selectedAlgo, setSelectedAlgo, searchTerm }) {
   const categories = [
+    { key: 'backtracking', name: 'Backtracking', icon: Undo2, badgeClass: 'badge-backtracking' },
     { key: 'string', name: 'String Matching', icon: Search, badgeClass: 'badge-string' },
     { key: 'graph', name: 'Graph Algorithms', icon: Network, badgeClass: 'badge-graph' },
     { key: 'greedy', name: 'Greedy Algorithms', icon: Zap, badgeClass: 'badge-greedy' },

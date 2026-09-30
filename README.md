@@ -36,6 +36,12 @@ A collection of core algorithms implemented in C++, categorized by domain:
 - `2_kmp_string_matching.cpp` - Knuth-Morris-Pratt (KMP) Pattern Searching Algorithm with LPS Precomputation
 - `3_string_matching_analysis.cpp` - Empirical & Benchmark Performance Analysis comparing Naive vs KMP across average, worst-case repetitive, and genomic datasets
 
+### 🔹 Backtracking Algorithms (`/backtracking_algorithms`)
+- `1_n_queens.cpp` - N-Queens Problem (State-Space Tree exploration & conflict detection)
+- `2_graph_coloring.cpp` - Graph m-Coloring Problem (Vertex conflict avoidance)
+- `3_hamiltonian_path.cpp` - Hamiltonian Path & Circuit / Cycle Algorithm
+- `4_travelling_salesperson.cpp` - Travelling Salesperson Problem (Exact Backtracking with Branch & Bound Pruning)
+
 ---
 
 ## 🚀 How to Run

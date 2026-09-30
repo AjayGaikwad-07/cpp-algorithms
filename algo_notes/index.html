@@ -22,7 +22,7 @@
     <div class="hero-content">
       <div class="notebook-icon">📓</div>
       <h1 class="hero-title">Algorithm Notes</h1>
-      <p class="hero-sub">Sorting · Greedy · Graph · String Matching</p>
+      <p class="hero-sub">Sorting · Greedy · Graph · String Matching · Backtracking</p>
       <div class="hero-tags">
         <span class="tag">📊 Definitions</span>
         <span class="tag">🔢 Numericals</span>
@@ -45,6 +45,9 @@
     </button>
     <button class="nav-btn" data-section="string" onclick="showSection('string')">
       <span>🔍</span> String Matching
+    </button>
+    <button class="nav-btn" data-section="backtracking" onclick="showSection('backtracking')">
+      <span>🔙</span> Backtracking
     </button>
   </nav>
 
@@ -1985,11 +1988,212 @@ void kruskalMST(vector&lt;tuple&lt;int,int,int&gt;&gt;&amp; edges, int V) {
     </div>
   </section>
 
+  <!-- ===================== BACKTRACKING SECTION ===================== -->
+  <section id="backtracking" class="section">
+    <div class="section-header">
+      <h2>🔙 Backtracking Algorithms</h2>
+      <p>State-space tree exploration, constraint satisfaction, bounding & pruning!</p>
+    </div>
+
+    <!-- N-Queens Problem -->
+    <div class="algo-card" id="n-queens-card">
+      <div class="card-header bubble-theme">
+        <div class="algo-number">01</div>
+        <div>
+          <h3>N-Queens Problem</h3>
+          <span class="difficulty hard">Hard / NP-Hard</span>
+        </div>
+        <button class="expand-btn" onclick="toggleCard(this)">▼</button>
+      </div>
+      <div class="card-body">
+        <div class="two-col">
+          <div class="note-block handwritten">
+            <h4>📖 Problem Formulation</h4>
+            <p>Place $N$ chess queens on an $N \times N$ chessboard such that no two queens attack each other. Two queens attack if they share the same <strong>row</strong>, <strong>column</strong>, or <strong>diagonal</strong>.</p>
+            <div class="formula-box">
+              Diagonal Attack Condition:<br/>
+              $|\text{row}_1 - \text{row}_2| == |\text{col}_1 - \text{col}_2|$<br/>
+              State Space Tree Size: $N!$ leaves
+            </div>
+          </div>
+          <div class="complexity-card">
+            <h4>⚡ Complexity</h4>
+            <table class="comp-table">
+              <tr><th>Metric</th><th>Complexity</th></tr>
+              <tr><td>Time Complexity</td><td class="red">O(N!)</td></tr>
+              <tr><td>Space Complexity</td><td class="green">O(N) (Board Array)</td></tr>
+              <tr><td>Recursion Depth</td><td class="green">N</td></tr>
+            </table>
+            <div class="badge-row">
+              <span class="badge">State-Space Search ✅</span>
+              <span class="badge">Bounding Function ✅</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Numerical Problem: 4-Queens -->
+        <div class="problem-section">
+          <div class="problem-header">🔢 Numerical: 4-Queens Problem Dry Run</div>
+          <div class="problem-content">
+            <div class="problem-stmt">
+              <strong>Q1:</strong> Trace the complete State-Space Tree for the <strong>4-Queens Problem</strong> ($N = 4$). List all valid solution vectors $(c_0, c_1, c_2, c_3)$ where $c_r$ is the column index for row $r$.
+            </div>
+            <button class="sol-btn" onclick="toggleSolution('nqueens-sol')">💡 Show Solution</button>
+            <div class="solution" id="nqueens-sol">
+              <div class="pass-trace">
+                <div class="pass">
+                  <strong>State Space Tree Execution:</strong>
+                  <div class="arr-steps">
+                    <span>• Place Q0 at (0,0) $\to$ Q1 at (1,2) $\to$ Q2 has no safe column! $\implies$ <strong>Backtrack</strong></span><br/>
+                    <span>• Try Q1 at (1,3) $\to$ Q2 at (2,1) $\to$ Q3 has no safe column! $\implies$ <strong>Backtrack</strong></span><br/>
+                    <span>• Try Q0 at (0,1) $\to$ Q1 at (1,3) $\to$ Q2 at (2,0) $\to$ Q3 at (3,2) $\implies$ <strong>Valid Solution #1!</strong></span><br/>
+                    <span>• Try Q0 at (0,2) $\to$ Q1 at (1,0) $\to$ Q2 at (2,3) $\to$ Q3 at (3,1) $\implies$ <strong>Valid Solution #2!</strong></span><br/>
+                  </div>
+                  <div class="summary-box" style="margin-top: 10px;">
+                    <strong>Valid 4-Queen Solutions:</strong><br/>
+                    1. Board Vector: <code>[1, 3, 0, 2]</code> (Col 1, Col 3, Col 0, Col 2)<br/>
+                    2. Board Vector: <code>[2, 0, 3, 1]</code> (Col 2, Col 0, Col 3, Col 1)
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Graph m-Coloring -->
+    <div class="algo-card" id="graph-coloring-card">
+      <div class="card-header dijkstra-theme">
+        <div class="algo-number">02</div>
+        <div>
+          <h3>Graph m-Coloring Problem</h3>
+          <span class="difficulty medium">Medium</span>
+        </div>
+        <button class="expand-btn" onclick="toggleCard(this)">▼</button>
+      </div>
+      <div class="card-body">
+        <div class="two-col">
+          <div class="note-block handwritten">
+            <h4>📖 Core Intuition</h4>
+            <p>Determine whether vertices of graph $G(V, E)$ can be assigned colors from $\{1, 2, \dots, m\}$ such that for every edge $(u, v) \in E$, $\text{color}(u) \neq \text{color}(v)$.</p>
+            <div class="formula-box">
+              Safety Constraint:<br/>
+              $\forall (u, v) \in E \implies \text{color}[u] \neq \text{color}[v]$<br/>
+              Decision Tree Branching Factor = $m$
+            </div>
+          </div>
+          <div class="complexity-card">
+            <h4>⚡ Complexity</h4>
+            <table class="comp-table">
+              <tr><th>Metric</th><th>Complexity</th></tr>
+              <tr><td>Worst-Case Time</td><td class="red">O(m^V)</td></tr>
+              <tr><td>Space Complexity</td><td class="green">O(V)</td></tr>
+              <tr><td>Chromatic Number $\chi(G)$</td><td class="yellow">Min $m$ needed</td></tr>
+            </table>
+            <div class="badge-row">
+              <span class="badge">Register Allocation ✅</span>
+              <span class="badge">Timetable Scheduling ✅</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hamiltonian Cycle & Path -->
+    <div class="algo-card" id="hamiltonian-card">
+      <div class="card-header bubble-theme">
+        <div class="algo-number">03</div>
+        <div>
+          <h3>Hamiltonian Path & Cycle</h3>
+          <span class="difficulty hard">NP-Complete</span>
+        </div>
+        <button class="expand-btn" onclick="toggleCard(this)">▼</button>
+      </div>
+      <div class="card-body">
+        <div class="two-col">
+          <div class="note-block handwritten">
+            <h4>📖 Definition</h4>
+            <p>A <strong>Hamiltonian Path</strong> is a path in an undirected/directed graph that visits each vertex exactly once. A <strong>Hamiltonian Cycle</strong> is a closed loop visiting every vertex once and returning to the start vertex.</p>
+            <div class="formula-box">
+              Path Length = $V$<br/>
+              Cycle Condition: Edge $(v_{\text{last}}, v_{\text{start}}) \in E$
+            </div>
+          </div>
+          <div class="complexity-card">
+            <h4>⚡ Complexity</h4>
+            <table class="comp-table">
+              <tr><th>Case</th><th>Complexity</th></tr>
+              <tr><td>Time Complexity</td><td class="red">O(V!)</td></tr>
+              <tr><td>Auxiliary Space</td><td class="green">O(V) (Path array)</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Travelling Salesperson Problem -->
+    <div class="algo-card" id="tsp-card">
+      <div class="card-header dijkstra-theme">
+        <div class="algo-number">04</div>
+        <div>
+          <h3>Travelling Salesperson Problem (Exact TSP)</h3>
+          <span class="difficulty hard">NP-Hard / Optimization</span>
+        </div>
+        <button class="expand-btn" onclick="toggleCard(this)">▼</button>
+      </div>
+      <div class="card-body">
+        <div class="two-col">
+          <div class="note-block handwritten">
+            <h4>📖 Branch-and-Bound Backtracking</h4>
+            <p>Given $V$ cities and pairwise travel costs, find the tour that visits every city once with <strong>minimum total cost</strong>. Backtracking prunes any branch whose accumulated cost $\ge \text{minCost}$ found so far.</p>
+            <div class="formula-box">
+              Bounding Pruning Rule:<br/>
+              $\text{If } \text{currentCost} \ge \text{minCost} \implies \text{PRUNE BRANCH}$
+            </div>
+          </div>
+          <div class="complexity-card">
+            <h4>⚡ Complexity</h4>
+            <table class="comp-table">
+              <tr><th>Approach</th><th>Time</th><th>Space</th></tr>
+              <tr><td>Exact Backtracking</td><td class="red">O(V!)</td><td class="green">O(V)</td></tr>
+              <tr><td>Dynamic Programming (Held-Karp)</td><td class="yellow">O(V² 2^V)</td><td class="yellow">O(V 2^V)</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Backtracking Summary Table -->
+    <div class="comparison-card">
+      <h3>🔙 Backtracking Combinatorial Algorithms Summary</h3>
+      <div class="table-wrapper">
+        <table class="big-table">
+          <thead>
+            <tr><th>Algorithm</th><th>Decision State</th><th>Bounding Constraint</th><th>Time</th><th>Space</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>N-Queens</strong></td><td>Column choice for row $r$</td><td class="green">No column/diagonal attack</td><td class="red">O(N!)</td><td class="green">O(N)</td></tr>
+            <tr><td><strong>Graph m-Coloring</strong></td><td>Color $c \in [1..m]$ for vertex $v$</td><td class="green">No adjacent same-color vertices</td><td class="red">O(m^V)</td><td class="green">O(V)</td></tr>
+            <tr><td><strong>Hamiltonian Cycle</strong></td><td>Next unvisited vertex in sequence</td><td class="green">Edge exists & unvisited vertex</td><td class="red">O(V!)</td><td class="green">O(V)</td></tr>
+            <tr><td><strong>Exact TSP</strong></td><td>Next city in permutation tour</td><td class="green">Branch & Bound: currentCost &lt; minCost</td><td class="red">O(V!)</td><td class="green">O(V)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
   <!-- Quick Reference Card -->
   <div class="quick-ref" id="quickRef">
     <button class="quick-ref-btn" onclick="toggleQuickRef()">📌 Quick Ref</button>
     <div class="quick-ref-panel" id="quickRefPanel">
       <h4>⚡ Complexity Cheatsheet</h4>
+      <div class="cheat-section">
+        <strong>Backtracking</strong>
+        <div class="cheat-row"><span>N-Queens</span><span class="red">O(N!)</span></div>
+        <div class="cheat-row"><span>Graph m-Coloring</span><span class="red">O(m^V)</span></div>
+        <div class="cheat-row"><span>Hamiltonian / TSP</span><span class="red">O(V!)</span></div>
+      </div>
       <div class="cheat-section">
         <strong>String Matching</strong>
         <div class="cheat-row"><span>Naive Brute Force</span><span class="red">O(N × M)</span></div>

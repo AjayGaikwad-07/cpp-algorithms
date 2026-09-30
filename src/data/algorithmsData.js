@@ -1763,5 +1763,501 @@ int main() {
     return 0;
 }
 `
+  },
+  // -------------------------------------------------------------
+  // BACKTRACKING ALGORITHMS
+  // -------------------------------------------------------------
+  {
+    id: 'n_queens',
+    name: 'N-Queens Problem',
+    category: 'backtracking',
+    categoryName: 'Backtracking Algorithms',
+    filePath: 'backtracking_algorithms/1_n_queens.cpp',
+    timeComplexity: 'O(N!)',
+    spaceComplexity: 'O(N)',
+    description: 'Places N non-attacking queens on an N x N chessboard such that no two queens threaten each other along the same row, column, or diagonal using depth-first state-space search with backtracking.',
+    realWorld: [
+      'VLSI Chip Design (avoiding signal cross-talk and routing conflicts)',
+      'Parallel memory storage allocation and scheduling',
+      'Deadlock prevention in distributed operating systems'
+    ],
+    steps: [
+      'Start at row 0 of the N x N board.',
+      'Try placing a queen in column c from 0 to N - 1 in the current row.',
+      'Check if (row, c) is safe against all previously placed queens (same column, left diagonal, right diagonal).',
+      'If safe, record board[row] = c and recursively move to row + 1.',
+      'If row reaches N, record the valid solution configuration.',
+      'If no column in the current row is safe, backtrack to the previous row and try the next column.'
+    ],
+    pseudocode: [
+      'function solveNQueens(row, n, board):',
+      '  if row == n:',
+      '    printSolution(board)',
+      '    return',
+      '  for col = 0 to n - 1:',
+      '    if isSafe(board, row, col):',
+      '      board[row] = col',
+      '      solveNQueens(row + 1, n, board)',
+      '      board[row] = -1 // backtrack'
+    ],
+    defaultInput: '4',
+    code: `#include <iostream>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+// Check if a queen can be safely placed on board[row][col]
+bool isSafe(const vector<int>& board, int row, int col) {
+    for (int prevRow = 0; prevRow < row; prevRow++) {
+        int prevCol = board[prevRow];
+        // Check same column or diagonal attack
+        if (prevCol == col || abs(prevRow - row) == abs(prevCol - col)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void printBoard(const vector<int>& board, int n, int solutionNum) {
+    cout << "\\n--- Solution #" << solutionNum << " ---" << endl;
+    for (int r = 0; r < n; r++) {
+        for (int c = 0; c < n; c++) {
+            if (board[r] == c) {
+                cout << " Q ";
+            } else {
+                cout << " . ";
+            }
+        }
+        cout << "  (Row " << r << " -> Col " << board[r] << ")\\n";
+    }
+}
+
+void solveNQueens(int row, int n, vector<int>& board, int& totalSolutions, int& stateCount) {
+    stateCount++;
+    if (row == n) {
+        totalSolutions++;
+        printBoard(board, n, totalSolutions);
+        return;
+    }
+
+    for (int col = 0; col < n; col++) {
+        if (isSafe(board, row, col)) {
+            board[row] = col; // Place queen
+            solveNQueens(row + 1, n, board, totalSolutions, stateCount); // Recurse
+            board[row] = -1;  // Backtrack
+        }
+    }
+}
+
+int main() {
+    int n;
+    cout << "Enter number of Queens (N): ";
+    if (!(cin >> n) || n <= 0) {
+        n = 4;
+        cout << "Defaulting to N = 4" << endl;
+    }
+
+    cout << "========================================" << endl;
+    cout << "   N-QUEENS PROBLEM USING BACKTRACKING  " << endl;
+    cout << "========================================" << endl;
+
+    vector<int> board(n, -1);
+    int totalSolutions = 0;
+    int stateCount = 0;
+
+    solveNQueens(0, n, board, totalSolutions, stateCount);
+
+    cout << "\\n---------------- Result Summary ----------------" << endl;
+    cout << "Board Dimensions: " << n << " x " << n << endl;
+    cout << "State-Space Tree Nodes Explored: " << stateCount << endl;
+    cout << "Total Valid Solutions Found: " << totalSolutions << endl;
+
+    if (totalSolutions == 0) {
+        cout << "No valid configuration exists for N = " << n << endl;
+    }
+    return 0;
+}
+`
+  },
+  {
+    id: 'graph_coloring',
+    name: 'Graph m-Coloring',
+    category: 'backtracking',
+    categoryName: 'Backtracking Algorithms',
+    filePath: 'backtracking_algorithms/2_graph_coloring.cpp',
+    timeComplexity: 'O(m^V)',
+    spaceComplexity: 'O(V)',
+    description: 'Assigns at most m distinct colors to vertices of a graph such that no two adjacent vertices connected by an edge share the same color.',
+    realWorld: [
+      'Map Coloring in Cartography (Four Color Theorem)',
+      'Register Allocation in Compiler Optimization',
+      'Exam & Meeting Scheduling (Conflict-free timetable generation)',
+      'Mobile Wireless Frequency Assignment (preventing channel interference)'
+    ],
+    steps: [
+      'Start with vertex 0 and uncolored state (color[v] = 0).',
+      'Try assigning colors c = 1 to m to vertex v.',
+      'Check if color c is safe (no neighbor of v already has color c).',
+      'If safe, assign color[v] = c and recursively color vertex v + 1.',
+      'If all V vertices are successfully colored, return true.',
+      'If no color from 1 to m works for vertex v, backtrack (set color[v] = 0) and try alternate colors for vertex v - 1.'
+    ],
+    pseudocode: [
+      'function graphColoring(v, m, V, graph, color):',
+      '  if v == V: return true',
+      '  for c = 1 to m:',
+      '    if isSafe(v, graph, color, c):',
+      '      color[v] = c',
+      '      if graphColoring(v + 1, m, V, graph, color): return true',
+      '      color[v] = 0 // backtrack',
+      '  return false'
+    ],
+    defaultInput: '4 5 3\n0 1\n0 2\n0 3\n1 2\n2 3',
+    code: `#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+// Check if color assignment is safe for vertex v
+bool isSafeColor(int v, const vector<vector<int>>& graph, const vector<int>& color, int c, int V) {
+    for (int i = 0; i < V; i++) {
+        if (graph[v][i] && color[i] == c) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool graphColoringUtil(int v, int m, int V, const vector<vector<int>>& graph, vector<int>& color, int& statesExplored) {
+    statesExplored++;
+    if (v == V) {
+        return true; // All vertices successfully assigned
+    }
+
+    // Try assigning colors 1 to m
+    for (int c = 1; c <= m; c++) {
+        if (isSafeColor(v, graph, color, c, V)) {
+            color[v] = c;
+            if (graphColoringUtil(v + 1, m, V, graph, color, statesExplored)) {
+                return true;
+            }
+            color[v] = 0; // Backtrack
+        }
+    }
+    return false;
+}
+
+int main() {
+    int V, E, m;
+    cout << "Enter number of vertices (V): ";
+    if (!(cin >> V)) return 0;
+    cout << "Enter number of edges (E): ";
+    if (!(cin >> E)) return 0;
+    cout << "Enter maximum colors allowed (m): ";
+    if (!(cin >> m)) return 0;
+
+    vector<vector<int>> graph(V, vector<int>(V, 0));
+    cout << "Enter " << E << " edges (u v):" << endl;
+    for (int i = 0; i < E; i++) {
+        int u, v;
+        cin >> u >> v;
+        if (u >= 0 && u < V && v >= 0 && v < V) {
+            graph[u][v] = 1;
+            graph[v][u] = 1;
+        }
+    }
+
+    vector<int> color(V, 0);
+    int statesExplored = 0;
+
+    cout << "\\n========================================" << endl;
+    cout << "     GRAPH M-COLORING (BACKTRACKING)    " << endl;
+    cout << "========================================" << endl;
+
+    if (graphColoringUtil(0, m, V, graph, color, statesExplored)) {
+        cout << "\\nSolution exists! Assigned colors:" << endl;
+        string colorNames[] = {"None", "Red", "Green", "Blue", "Yellow", "Purple", "Cyan", "Orange"};
+        for (int i = 0; i < V; i++) {
+            cout << "Vertex " << i << " -> Color " << color[i];
+            if (color[i] <= 7) cout << " (" << colorNames[color[i]] << ")";
+            cout << "\\n";
+        }
+    } else {
+        cout << "\\nNo valid " << m << "-coloring configuration exists for this graph." << endl;
+    }
+
+    cout << "\\n---------------- Exploration Metrics ----------------" << endl;
+    cout << "Vertices: " << V << " | Edges: " << E << " | Max Colors (m): " << m << endl;
+    cout << "State-Space Tree Recursions: " << statesExplored << endl;
+
+    return 0;
+}
+`
+  },
+  {
+    id: 'hamiltonian_cycle',
+    name: 'Hamiltonian Path & Cycle',
+    category: 'backtracking',
+    categoryName: 'Backtracking Algorithms',
+    filePath: 'backtracking_algorithms/3_hamiltonian_path.cpp',
+    timeComplexity: 'O(V!)',
+    spaceComplexity: 'O(V)',
+    description: 'Determines whether an undirected graph contains a Hamiltonian Path (visiting every vertex exactly once) or a Hamiltonian Cycle (returning to the start vertex).',
+    realWorld: [
+      'Genome assembly sequencing & fragment reordering',
+      'Electronic PCB circuit drilling route planning',
+      'Robot exploration & coverage trajectory optimization',
+      'Network packet delivery routing without redundant node visits'
+    ],
+    steps: [
+      'Initialize path array of size V with -1, and fix start vertex path[0] = 0.',
+      'For position pos from 1 to V - 1, test candidate vertices v from 1 to V - 1.',
+      'Verify candidate vertex v is adjacent to path[pos - 1] and has not been visited yet in path.',
+      'If valid, assign path[pos] = v and recurse for pos + 1.',
+      'When pos == V, verify if there is an edge from path[V - 1] back to path[0]. If yes, cycle found.',
+      'If dead end is reached, backtrack: reset path[pos] = -1 and try alternate vertices.'
+    ],
+    pseudocode: [
+      'function hamCycle(pos, V, graph, path):',
+      '  if pos == V:',
+      '    return (graph[path[pos - 1]][path[0]] == 1)',
+      '  for v = 1 to V - 1:',
+      '    if isSafe(v, graph, path, pos):',
+      '      path[pos] = v',
+      '      if hamCycle(pos + 1, V, graph, path): return true',
+      '      path[pos] = -1 // backtrack',
+      '  return false'
+    ],
+    defaultInput: '5 7\n0 1\n0 3\n1 2\n1 3\n1 4\n2 4\n3 4',
+    code: `#include <iostream>
+#include <vector>
+
+using namespace std;
+
+// Check if adding vertex v to path[pos] is valid
+bool isSafeVertex(int v, const vector<vector<int>>& graph, const vector<int>& path, int pos) {
+    // Check if adjacent to previous vertex in path
+    if (graph[path[pos - 1]][v] == 0) {
+        return false;
+    }
+
+    // Check if vertex is already included
+    for (int i = 0; i < pos; i++) {
+        if (path[i] == v) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool solveHamiltonianCycle(int pos, int V, const vector<vector<int>>& graph, vector<int>& path, int& statesExplored) {
+    statesExplored++;
+
+    // Base Case: All vertices are included in path
+    if (pos == V) {
+        // Check if there is an edge from the last vertex back to the start vertex
+        if (graph[path[pos - 1]][path[0]] == 1) {
+            return true;
+        }
+        return false;
+    }
+
+    // Try candidate vertices for next position
+    for (int v = 1; v < V; v++) {
+        if (isSafeVertex(v, graph, path, pos)) {
+            path[pos] = v;
+            if (solveHamiltonianCycle(pos + 1, V, graph, path, statesExplored)) {
+                return true;
+            }
+            path[pos] = -1; // Backtrack
+        }
+    }
+    return false;
+}
+
+int main() {
+    int V, E;
+    cout << "Enter number of vertices (V): ";
+    if (!(cin >> V)) return 0;
+    cout << "Enter number of edges (E): ";
+    if (!(cin >> E)) return 0;
+
+    vector<vector<int>> graph(V, vector<int>(V, 0));
+    cout << "Enter " << E << " edges (u v):" << endl;
+    for (int i = 0; i < E; i++) {
+        int u, v;
+        cin >> u >> v;
+        if (u >= 0 && u < V && v >= 0 && v < V) {
+            graph[u][v] = 1;
+            graph[v][u] = 1;
+        }
+    }
+
+    vector<int> path(V, -1);
+    path[0] = 0; // Fix start vertex as 0 to avoid rotation duplicates
+    int statesExplored = 0;
+
+    cout << "\\n========================================" << endl;
+    cout << "   HAMILTONIAN CYCLE / PATH (BACKTRACKING)  " << endl;
+    cout << "========================================" << endl;
+
+    if (solveHamiltonianCycle(1, V, graph, path, statesExplored)) {
+        cout << "\\nHamiltonian Cycle Found!" << endl;
+        cout << "Cycle Sequence: ";
+        for (int i = 0; i < V; i++) {
+            cout << path[i] << " -> ";
+        }
+        cout << path[0] << endl;
+    } else {
+        cout << "\\nNo Hamiltonian Cycle exists for this graph configuration." << endl;
+    }
+
+    cout << "\\n---------------- Exploration Metrics ----------------" << endl;
+    cout << "Vertices: " << V << " | Edges: " << E << endl;
+    cout << "State-Space Tree Calls: " << statesExplored << endl;
+
+    return 0;
+}
+`
+  },
+  {
+    id: 'tsp_backtracking',
+    name: 'Travelling Salesperson (Exact)',
+    category: 'backtracking',
+    categoryName: 'Backtracking Algorithms',
+    filePath: 'backtracking_algorithms/4_travelling_salesperson.cpp',
+    timeComplexity: 'O(V!)',
+    spaceComplexity: 'O(V)',
+    description: 'Finds the exact minimum-weight tour that visits each city exactly once and returns to the origin city using Backtracking with Branch-and-Bound pruning.',
+    realWorld: [
+      'Logistics fleet dispatch & parcel delivery routing (Amazon, UPS, FedEx)',
+      'PCB drill head trajectory and semiconductor manufacturing optimization',
+      'Astronomical telescope observation re-pointing scheduling',
+      'DNA sequencing primer design minimization'
+    ],
+    steps: [
+      'Start tour at city 0 with currentCost = 0 and visited[0] = true.',
+      'Branch and Bound: if currentCost >= minCost found so far, prune branch immediately.',
+      'If all V cities are visited (count == V), check returning edge cost to city 0. Update minCost and bestTour.',
+      'Otherwise, explore all unvisited adjacent cities nextCity.',
+      'Mark visited[nextCity] = true, add to path, and recursively explore.',
+      'Backtrack state: unmark visited[nextCity] = false and pop from path to explore alternative routes.'
+    ],
+    pseudocode: [
+      'function tspBacktrack(city, count, currentCost):',
+      '  if currentCost >= minCost: return // Bounding / Pruning',
+      '  if count == V and hasEdge(city, start):',
+      '    minCost = min(minCost, currentCost + cost[city][start])',
+      '    return',
+      '  for nextCity in unvisited_neighbors(city):',
+      '    visited[nextCity] = true',
+      '    tspBacktrack(nextCity, count + 1, currentCost + cost[city][nextCity])',
+      '    visited[nextCity] = false // backtrack'
+    ],
+    defaultInput: '4\n0 10 15 20\n10 0 35 25\n15 35 0 30\n20 25 30 0',
+    code: `#include <iostream>
+#include <vector>
+#include <climits>
+#include <iomanip>
+
+using namespace std;
+
+#define INF 999999
+
+void tspBacktrack(int currCity, int count, int currentCost, int V,
+                  const vector<vector<int>>& costMatrix,
+                  vector<bool>& visited, vector<int>& currPath,
+                  int& minCost, vector<int>& bestTour,
+                  int& recursiveCalls, int& prunedBranches) {
+    recursiveCalls++;
+
+    // Prune branch if current cost already exceeds or equals the minimum cost found so far (Branch & Bound pruning)
+    if (currentCost >= minCost) {
+        prunedBranches++;
+        return;
+    }
+
+    // Base case: all cities have been visited
+    if (count == V) {
+        // Check if there is a returning edge from currCity to start city (0)
+        if (costMatrix[currCity][0] > 0 && costMatrix[currCity][0] != INF) {
+            int totalCost = currentCost + costMatrix[currCity][0];
+            if (totalCost < minCost) {
+                minCost = totalCost;
+                bestTour = currPath;
+                bestTour.push_back(0); // Complete cycle
+            }
+        }
+        return;
+    }
+
+    // Try visiting all unvisited adjacent cities
+    for (int nextCity = 0; nextCity < V; nextCity++) {
+        if (!visited[nextCity] && costMatrix[currCity][nextCity] > 0 && costMatrix[currCity][nextCity] != INF) {
+            visited[nextCity] = true;
+            currPath.push_back(nextCity);
+
+            tspBacktrack(nextCity, count + 1, currentCost + costMatrix[currCity][nextCity],
+                         V, costMatrix, visited, currPath, minCost, bestTour,
+                         recursiveCalls, prunedBranches);
+
+            // Backtrack state
+            visited[nextCity] = false;
+            currPath.pop_back();
+        }
+    }
+}
+
+int main() {
+    int V;
+    cout << "Enter number of cities (Vertices V): ";
+    if (!(cin >> V) || V <= 0) return 0;
+
+    vector<vector<int>> costMatrix(V, vector<int>(V, 0));
+    cout << "Enter " << V << " x " << V << " Cost Matrix (0 for self, -1 or 9999 for infinity):" << endl;
+    for (int i = 0; i < V; i++) {
+        for (int j = 0; j < V; j++) {
+            cin >> costMatrix[i][j];
+            if (costMatrix[i][j] < 0) costMatrix[i][j] = INF;
+        }
+    }
+
+    vector<bool> visited(V, false);
+    visited[0] = true;
+    vector<int> currPath = {0};
+    vector<int> bestTour;
+    int minCost = INT_MAX;
+    int recursiveCalls = 0;
+    int prunedBranches = 0;
+
+    cout << "\\n==================================================" << endl;
+    cout << "  TRAVELLING SALESPERSON (EXACT BACKTRACKING)     " << endl;
+    cout << "==================================================" << endl;
+
+    tspBacktrack(0, 1, 0, V, costMatrix, visited, currPath, minCost, bestTour, recursiveCalls, prunedBranches);
+
+    if (minCost != INT_MAX) {
+        cout << "\\nOptimal Tour Found!" << endl;
+        cout << "Minimum Cost: " << minCost << endl;
+        cout << "Tour Sequence: ";
+        for (size_t i = 0; i < bestTour.size(); i++) {
+            cout << bestTour[i];
+            if (i + 1 < bestTour.size()) cout << " -> ";
+        }
+        cout << endl;
+    } else {
+        cout << "\\nNo valid Hamiltonian Tour could be formed." << endl;
+    }
+
+    cout << "\\n---------------- Exploration Analytics ----------------" << endl;
+    cout << "Total Cities (V): " << V << endl;
+    cout << "State-Space Tree Calls: " << recursiveCalls << endl;
+    cout << "Branches Pruned (Bounding): " << prunedBranches << endl;
+
+    return 0;
+}
+`
   }
 ];

@@ -8,6 +8,7 @@ import GraphVisualizer from './components/Visualizers/GraphVisualizer';
 import GreedyVisualizer from './components/Visualizers/GreedyVisualizer';
 import DynamicProgrammingVisualizer from './components/Visualizers/DynamicProgrammingVisualizer';
 import StringMatchingVisualizer from './components/Visualizers/StringMatchingVisualizer';
+import BacktrackingVisualizer from './components/Visualizers/BacktrackingVisualizer';
 import { ALGORITHMS } from './data/algorithmsData';
 import { BookOpen, Activity, Terminal } from 'lucide-react';
 
@@ -27,6 +28,8 @@ export default function App() {
       return <DynamicProgrammingVisualizer algo={selectedAlgo} />;
     } else if (selectedAlgo.category === 'string') {
       return <StringMatchingVisualizer algo={selectedAlgo} />;
+    } else if (selectedAlgo.category === 'backtracking') {
+      return <BacktrackingVisualizer algo={selectedAlgo} />;
     }
     return null;
   };
