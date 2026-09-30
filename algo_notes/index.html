@@ -1,0 +1,2032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Algorithm Notes — Sorting, Greedy & Graph</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Animated Background -->
+  <div class="bg-orbs">
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+  </div>
+
+  <!-- Hero Header -->
+  <header class="hero">
+    <div class="hero-content">
+      <div class="notebook-icon">📓</div>
+      <h1 class="hero-title">Algorithm Notes</h1>
+      <p class="hero-sub">Sorting · Greedy · Graph · String Matching</p>
+      <div class="hero-tags">
+        <span class="tag">📊 Definitions</span>
+        <span class="tag">🔢 Numericals</span>
+        <span class="tag">💡 Insights</span>
+        <span class="tag">⚡ Complexity</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation -->
+  <nav class="main-nav" id="mainNav">
+    <button class="nav-btn active" data-section="sorting" onclick="showSection('sorting')">
+      <span>📊</span> Sorting Algos
+    </button>
+    <button class="nav-btn" data-section="greedy" onclick="showSection('greedy')">
+      <span>🤑</span> Greedy Algos
+    </button>
+    <button class="nav-btn" data-section="graph" onclick="showSection('graph')">
+      <span>🕸️</span> Graph Algos
+    </button>
+    <button class="nav-btn" data-section="string" onclick="showSection('string')">
+      <span>🔍</span> String Matching
+    </button>
+  </nav>
+
+  <!-- Progress Bar -->
+  <div class="progress-bar" id="progressBar"></div>
+
+  <!-- ===================== SORTING SECTION ===================== -->
+  <section id="sorting" class="section active">
+    <div class="section-header">
+      <h2>📊 Sorting Algorithms</h2>
+      <p>From basics to advanced — master every sort!</p>
+    </div>
+
+    <!-- Bubble Sort -->
+    <div class="algo-card" id="bubble-sort">
+      <div class="card-header bubble-theme">
+        <div class="algo-number">01</div>
+        <div>
+          <h3>Bubble Sort</h3>
+          <span class="difficulty easy">Easy</span>
+        </div>
+        <button class="expand-btn" onclick="toggleCard(this)">▼</button>
+      </div>
+      <div class="card-body">
+        <div class="two-col">
+          <div class="note-block handwritten">
+            <h4>📖 Definition</h4>
+            <p>Repeatedly compares adjacent elements and <strong>swaps</strong> them if they are in the wrong order. The largest element "bubbles up" to its correct position in each pass.</p>
+            <div class="formula-box">
+              Passes required = n - 1<br/>
+              Comparisons in pass i = n - i
+            </div>
+          </div>
+          <div class="complexity-card">
+            <h4>⚡ Complexity</h4>
+            <table class="comp-table">
+              <tr><th>Case</th><th>Time</th></tr>
+              <tr><td>Best</td><td class="green">O(n)</td></tr>
+              <tr><td>Average</td><td class="yellow">O(n²)</td></tr>
+              <tr><td>Worst</td><td class="red">O(n²)</td></tr>
+              <tr><td>Space</td><td class="green">O(1)</td></tr>
+            </table>
+            <div class="badge-row">
+              <span class="badge">Stable ✅</span>
+              <span class="badge">In-Place ✅</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Visual -->
+        <div class="visual-demo">
+          <h4>🎬 Visualize: Array [64, 34, 25, 12, 22]</h4>
+          <div class="sort-visual" id="bubbleViz">
+            <div class="bar-container" id="bubbleBars"></div>
+            <button class="demo-btn" onclick="startBubble()">▶ Run Bubble Sort</button>
+            <div class="step-info" id="bubbleStep">Press Run to start animation</div>
+          </div>
+        </div>
+
+        <!-- Numerical Problem -->
+        <div class="problem-section">
+          <div class="problem-header">🔢 Numerical Problem</div>
+          <div class="problem-content">
+            <div class="problem-stmt">
+              <strong>Q1:</strong> Sort the array <code>[29, 10, 14, 37, 13]</code> using Bubble Sort. Show all passes.
+            </div>
+            <button class="sol-btn" onclick="toggleSolution('bubble-sol')">💡 Show Solution</button>
+            <div class="solution" id="bubble-sol">
+              <div class="pass-trace">
+                <div class="pass">
+                  <strong>Pass 1:</strong>
+                  <div class="arr-steps">
+                    <span class="arr">[29, 10, 14, 37, 13]</span>
+                    <span class="arrow">→ swap 29,10 →</span>
+                    <span class="arr">[10, 29, 14, 37, 13]</span>
+                    <span class="arrow">→ swap 29,14 →</span>
+                    <span class="arr">[10, 14, 29, 37, 13]</span>
+                    <span class="arrow">→ no swap →</span>
+                    <span class="arr">[10, 14, 29, 37, 13]</span>
+                    <span class="arrow">→ swap 37,13 →</span>
+                    <span class="arr highlight-last">[10, 14, 29, 13, <span class="sorted">37</span>]</span>
+                  </div>
+                </div>
+                <div class="pass">
+                  <strong>Pass 2:</strong>
+                  <div class="arr-steps">
+                    <span class="arr">[10, 14, 29, 13, 37]</span>
+                    <span class="arrow">→ swap 29,13 →</span>
+                    <span class="arr">[10, 14, 13, <span class="sorted">29, 37</span>]</span>
+                  </div>
+                </div>
+                <div class="pass">
+                  <strong>Pass 3:</strong>
+                  <div class="arr-steps">
+                    <span class="arr">[10, 14, 13, 29, 37]</span>
+                    <span class="arrow">→ swap 14,13 →</span>
+                    <span class="arr">[10, 13, <span class="sorted">14, 29, 37</span>]</span>
+                  </div>
+                </div>
+                <div class="pass">
+                  <strong>Pass 4:</strong>
+                  <div class="arr-steps">
+                    <span class="arr">[10, 13, 14, 29, 37]</span>
+                    <span class="arrow">→ no swaps →</span>
+                    <span class="arr sorted-all">✅ [10, 13, 14, 29, 37]</span>
+                  </div>
+                </div>
+              </div>
+              <div class="key-insight">
+                💡 <strong>Key:</strong> Total swaps = 5. Array is sorted in 4 passes (n-1).
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Extra Info -->
+        <div class="extra-info">
+          <h4>🌟 Extra Information</h4>
+          <div class="info-grid">
+            <div class="info-item"><span>📌</span> Best case O(n) when array is already sorted (with optimization flag)</div>
+            <div class="info-item"><span>📌</span> Called "Bubble" because smaller elements rise to top like bubbles</div>
+            <div class="info-item"><span>📌</span> Used in educational contexts; rarely in production code</div>
+            <div class="info-item"><span>📌</span> Optimization: Stop early if no swaps occurred in a pass</div>
+          </div>
+        </div>
+
+        <!-- Code Snippet -->
+        <div class="code-block">
+          <div class="code-header"><span>C++ Implementation</span><button onclick="copyCode(this)">📋 Copy</button></div>
+          <pre><code>void bubbleSort(int arr[], int n) {
+    for (int i = 0; i &lt; n-1; i++) {
+        bool swapped = false;
+        for (int j = 0; j &lt; n-i-1; j++) {
+            if (arr[j] &gt; arr[j+1]) {
+                swap(arr[j], arr[j+1]);
+                swapped = true;
+            }
+        }
+        if (!swapped) break; // Optimization
+    }
+}</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Selection Sort -->
+    <div class="algo-card" id="selection-sort">
+      <div class="card-header selection-theme">
+        <div class="algo-number">02</div>
+        <div>
+          <h3>Selection Sort</h3>
+          <span class="difficulty easy">Easy</span>
+        </div>
+        <button class="expand-btn" onclick="toggleCard(this)">▼</button>
+      </div>
+      <div class="card-body">
+        <div class="two-col">
+          <div class="note-block handwritten">
+            <h4>📖 Definition</h4>
+            <p>Finds the <strong>minimum element</strong> from the unsorted part and places it at the beginning. Divides the array into sorted and unsorted partitions.</p>
+            <div class="formula-box">
+              Total comparisons = n(n-1)/2<br/>
+              Always exactly n-1 swaps
+            </div>
+          </div>
+          <div class="complexity-card">
+            <h4>⚡ Complexity</h4>
+            <table class="comp-table">
+              <tr><th>Case</th><th>Time</th></tr>
+              <tr><td>Best</td><td class="red">O(n²)</td></tr>
+              <tr><td>Average</td><td class="red">O(n²)</td></tr>
+              <tr><td>Worst</td><td class="red">O(n²)</td></tr>
+              <tr><td>Space</td><td class="green">O(1)</td></tr>
+            </table>
+            <div class="badge-row">
+              <span class="badge bad">Unstable ❌</span>
+              <span class="badge">In-Place ✅</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="problem-section">
+          <div class="problem-header">🔢 Numerical Problem</div>
+          <div class="problem-content">
+            <div class="problem-stmt">
+              <strong>Q1:</strong> Apply Selection Sort on <code>[64, 25, 12, 22, 11]</code>. Show each selection and swap.
+            </div>
+            <button class="sol-btn" onclick="toggleSolution('selection-sol')">💡 Show Solution</button>
+            <div class="solution" id="selection-sol">
+              <div class="pass-trace">
+                <div class="pass"><strong>Step 1:</strong> Min in [64,25,12,22,11] = <span class="highlight">11</span> → swap with 64 → <span class="sorted-all">[11</span>, 25, 12, 22, 64]</div>
+                <div class="pass"><strong>Step 2:</strong> Min in [25,12,22,64] = <span class="highlight">12</span> → swap with 25 → [11, <span class="sorted">12</span>, 25, 22, 64]</div>
+                <div class="pass"><strong>Step 3:</strong> Min in [25,22,64] = <span class="highlight">22</span> → swap with 25 → [11, 12, <span class="sorted">22</span>, 25, 64]</div>
+                <div class="pass"><strong>Step 4:</strong> Min in [25,64] = <span class="highlight">25</span> → no swap → [11, 12, 22, <span class="sorted">25, 64</span>]</div>
+                <div class="pass sorted-all">✅ Final: [11, 12, 22, 25, 64]</div>
+              </div>
+              <div class="key-insight">💡 Total swaps = 3 (much fewer than bubble sort!)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="extra-info">
+          <h4>🌟 Extra Information</h4>
+          <div class="info-grid">
+            <div class="info-item"><span>📌</span> Makes minimum number of swaps — good when memory write is costly</div>
+            <div class="info-item"><span>📌</span> NOT stable — equal elements may change relative order</div>
+            <div class="info-item"><span>📌</span> Performance doesn't improve for sorted arrays</div>
+            <div class="info-item"><span>📌</span> Useful for small arrays or embedded systems with limited writes</div>
+          </div>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header"><span>C++ Implementation</span><button onclick="copyCode(this)">📋 Copy</button></div>
+          <pre><code>void selectionSort(int arr[], int n) {
+    for (int i = 0; i &lt; n-1; i++) {
+        int minIdx = i;
+        for (int j = i+1; j &lt; n; j++)
+            if (arr[j] &lt; arr[minIdx])
+                minIdx = j;
+        swap(arr[minIdx], arr[i]);
+    }
+}</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Insertion Sort -->
+    <div class="algo-card" id="insertion-sort">
+      <div class="card-header insertion-theme">
+        <div class="algo-number">03</div>
+        <div>
+          <h3>Insertion Sort</h3>
+          <span class="difficulty easy">Easy</span>
+        </div>
+        <button class="expand-btn" onclick="toggleCard(this)">▼</button>
+      </div>
+      <div class="card-body">
+        <div class="two-col">
+          <div class="note-block handwritten">
+            <h4>📖 Definition</h4>
+            <p>Builds sorted array <strong>one element at a time</strong>. Picks each element and inserts it into its correct position among previously sorted elements — like sorting playing cards!</p>
+            <div class="formula-box">
+              Best: Already sorted → O(n)<br/>
+              Online algorithm — works on streams
+            </div>
+          </div>
+          <div class="complexity-card">
+            <h4>⚡ Complexity</h4>
+            <table class="comp-table">
+              <tr><th>Case</th><th>Time</th></tr>
+              <tr><td>Best</td><td class="green">O(n)</td></tr>
+              <tr><td>Average</td><td class="yellow">O(n²)</td></tr>
+              <tr><td>Worst</td><td class="red">O(n²)</td></tr>
+              <tr><td>Space</td><td class="green">O(1)</td></tr>
+            </table>
+            <div class="badge-row">
+              <span class="badge">Stable ✅</span>
+              <span class="badge">In-Place ✅</span>
+              <span class="badge">Online ✅</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="problem-section">
+          <div class="problem-header">🔢 Numerical Problem</div>
+          <div class="problem-content">
+            <div class="problem-stmt">
+              <strong>Q1:</strong> Sort <code>[12, 11, 13, 5, 6]</code> using Insertion Sort step by step.
+            </div>
+            <button class="sol-btn" onclick="toggleSolution('insertion-sol')">💡 Show Solution</button>
+            <div class="solution" id="insertion-sol">
+              <div class="pass-trace">
+                <div class="pass"><strong>i=1:</strong> key=11, 12>11 → shift → Insert 11 → [<span class="sorted">11, 12</span>, 13, 5, 6]</div>
+                <div class="pass"><strong>i=2:</strong> key=13, 12&lt;13 → no shift → [<span class="sorted">11, 12, 13</span>, 5, 6]</div>
+                <div class="pass"><strong>i=3:</strong> key=5, shift 13,12,11 → Insert 5 → [<span class="sorted">5, 11, 12, 13</span>, 6]</div>
+                <div class="pass"><strong>i=4:</strong> key=6, shift 13,12,11 → Insert 6 → <span class="sorted-all">[5, 6, 11, 12, 13]</span></div>
+              </div>
+              <div class="key-insight">💡 Key element is compared and shifted until correct position found</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="extra-info">
+          <h4>🌟 Extra Information</h4>
+          <div class="info-grid">
+            <div class="info-item"><span>📌</span> Excellent for nearly-sorted arrays (adaptive)</div>
+            <div class="info-item"><span>📌</span> Used in practice as part of Timsort (Python's built-in sort)</div>
+            <div class="info-item"><span>📌</span> Works well on small data sets (n ≤ 20)</div>
+            <div class="info-item"><span>📌</span> Online: can sort while receiving elements</div>
+          </div>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header"><span>C++ Implementation</span><button onclick="copyCode(this)">📋 Copy</button></div>
+          <pre><code>void insertionSort(int arr[], int n) {
+    for (int i = 1; i &lt; n; i++) {
+        int key = arr[i];
+        int j = i - 1;
+        while (j >= 0 &amp;&amp; arr[j] &gt; key) {
+            arr[j+1] = arr[j];
+            j--;
+        }
+        arr[j+1] = key;
+    }
+}</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Merge Sort -->
+    <div class="algo-card" id="merge-sort">
+      <div class="card-header merge-theme">
+        <div class="algo-number">04</div>
+        <div>
+          <h3>Merge Sort</h3>
+          <span class="difficulty medium">Medium</span>
+        </div>
+        <button class="expand-btn" onclick="toggleCard(this)">▼</button>
+      </div>
+      <div class="card-body">
+        <div class="two-col">
+          <div class="note-block handwritten">
+            <h4>📖 Definition</h4>
+            <p><strong>Divide & Conquer</strong> algorithm. Recursively splits array in half, sorts each half, then <strong>merges</strong> them back in sorted order.</p>
+            <div class="formula-box">
+              T(n) = 2T(n/2) + O(n)<br/>
+              By Master Theorem → O(n log n)
+            </div>
+          </div>
+          <div class="complexity-card">
+            <h4>⚡ Complexity</h4>
+            <table class="comp-table">
+              <tr><th>Case</th><th>Time</th></tr>
+              <tr><td>Best</td><td class="green">O(n log n)</td></tr>
+              <tr><td>Average</td><td class="green">O(n log n)</td></tr>
+              <tr><td>Worst</td><td class="green">O(n log n)</td></tr>
+              <tr><td>Space</td><td class="yellow">O(n)</td></tr>
+            </table>
+            <div class="badge-row">
+              <span class="badge">Stable ✅</span>
+              <span class="badge bad">Out-of-Place ❌</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tree-diagram">
+          <h4>🌲 Divide & Conquer Tree: [38, 27, 43, 3]</h4>
+          <div class="tree">
+            <div class="tree-level">
+              <div class="tree-node root-node">[38, 27, 43, 3]</div>
+            </div>
+            <div class="tree-level">
+              <div class="tree-node">[38, 27]</div>
+              <div class="tree-node">[43, 3]</div>
+            </div>
+            <div class="tree-level">
+              <div class="tree-node leaf">[38]</div>
+              <div class="tree-node leaf">[27]</div>
+              <div class="tree-node leaf">[43]</div>
+              <div class="tree-node leaf">[3]</div>
+            </div>
+            <div class="tree-level">
+              <div class="tree-node merge-node">[27, 38]</div>
+              <div class="tree-node merge-node">[3, 43]</div>
+            </div>
+            <div class="tree-level">
+              <div class="tree-node root-node sorted-node">[3, 27, 38, 43] ✅</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="problem-section">
+          <div class="problem-header">🔢 Numerical Problem</div>
+          <div class="problem-content">
+            <div class="problem-stmt">
+              <strong>Q1:</strong> Sort <code>[8, 3, 7, 1, 5]</code> using Merge Sort. Show complete divide and merge steps.
+            </div>
+            <button class="sol-btn" onclick="toggleSolution('merge-sol')">💡 Show Solution</button>
+            <div class="solution" id="merge-sol">
+              <div class="pass-trace">
+                <strong>Divide Phase:</strong>
+                <div class="pass">Level 0: [8, 3, 7, 1, 5]</div>
+                <div class="pass">Level 1: [8, 3, 7] | [1, 5]</div>
+                <div class="pass">Level 2: [8] [3, 7] | [1] [5]</div>
+                <div class="pass">Level 3: [8] [3] [7] [1] [5]</div>
+                <br/>
+                <strong>Merge Phase:</strong>
+                <div class="pass">Merge [3][7] → [3, 7]</div>
+                <div class="pass">Merge [8][3,7] → Compare: 3&lt;8,7&lt;8 → [3, 7, 8]</div>
+                <div class="pass">Merge [1][5] → [1, 5]</div>
+                <div class="pass">Merge [3,7,8][1,5]:
+                  <br/>→ 1&lt;3: take 1 → [1]
+                  <br/>→ 3&lt;5: take 3 → [1,3]
+                  <br/>→ 5&lt;7: take 5 → [1,3,5]
+                  <br/>→ take 7,8 → <span class="sorted-all">[1, 3, 5, 7, 8] ✅</span>
+                </div>
+              </div>
+              <div class="key-insight">💡 Merge operation always maintains sorted order by comparing heads</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="extra-info">
+          <h4>🌟 Extra Information</h4>
+          <div class="info-grid">
+            <div class="info-item"><span>📌</span> Preferred for linked lists — no random access needed</div>
+            <div class="info-item"><span>📌</span> Used in external sorting (data too large for RAM)</div>
+            <div class="info-item"><span>📌</span> Guaranteed O(n log n) — unlike QuickSort</div>
+            <div class="info-item"><span>📌</span> Used to count inversions in an array</div>
+          </div>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header"><span>C++ Implementation</span><button onclick="copyCode(this)">📋 Copy</button></div>
+          <pre><code>void merge(int arr[], int l, int m, int r) {
+    int n1 = m-l+1, n2 = r-m;
+    int L[n1], R[n2];
+    for(int i=0;i&lt;n1;i++) L[i]=arr[l+i];
+    for(int j=0;j&lt;n2;j++) R[j]=arr[m+1+j];
+    int i=0,j=0,k=l;
+    while(i&lt;n1 &amp;&amp; j&lt;n2)
+        arr[k++] = (L[i]&lt;=R[j]) ? L[i++] : R[j++];
+    while(i&lt;n1) arr[k++]=L[i++];
+    while(j&lt;n2) arr[k++]=R[j++];
+}
+void mergeSort(int arr[], int l, int r) {
+    if(l &lt; r) {
+        int m = l+(r-l)/2;
+        mergeSort(arr, l, m);
+        mergeSort(arr, m+1, r);
+        merge(arr, l, m, r);
+    }
+}</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Sort -->
+    <div class="algo-card" id="quick-sort">
+      <div class="card-header quick-theme">
+        <div class="algo-number">05</div>
+        <div>
+          <h3>Quick Sort</h3>
+          <span class="difficulty medium">Medium</span>
+        </div>
+        <button class="expand-btn" onclick="toggleCard(this)">▼</button>
+      </div>
+      <div class="card-body">
+        <div class="two-col">
+          <div class="note-block handwritten">
+            <h4>📖 Definition</h4>
+            <p>Selects a <strong>pivot</strong>, partitions array into elements smaller and larger than pivot, then recursively sorts each partition. Partition step is key!</p>
+            <div class="formula-box">
+              Partition: place pivot at correct index<br/>
+              Left part &lt; pivot &lt; Right part
+            </div>
+          </div>
+          <div class="complexity-card">
+            <h4>⚡ Complexity</h4>
+            <table class="comp-table">
+              <tr><th>Case</th><th>Time</th></tr>
+              <tr><td>Best</td><td class="green">O(n log n)</td></tr>
+              <tr><td>Average</td><td class="green">O(n log n)</td></tr>
+              <tr><td>Worst</td><td class="red">O(n²)</td></tr>
+              <tr><td>Space</td><td class="green">O(log n)</td></tr>
+            </table>
+            <div class="badge-row">
+              <span class="badge bad">Unstable ❌</span>
+              <span class="badge">In-Place ✅</span>
+              <span class="badge">Cache-friendly ✅</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="pivot-demo">
+          <h4>🎯 Partition Example: [10, 80, 30, 90, 40, 50, 70] pivot=70</h4>
+          <div class="partition-steps">
+            <div class="step-row">
+              <span class="step-label">Initial:</span>
+              <div class="partition-arr">
+                <span class="elem">10</span><span class="elem">80</span><span class="elem">30</span><span class="elem">90</span><span class="elem">40</span><span class="elem">50</span><span class="elem pivot-elem">70(P)</span>
+              </div>
+            </div>
+            <div class="step-row">
+              <span class="step-label">After partition:</span>
+              <div class="partition-arr">
+                <span class="elem small">10</span><span class="elem small">30</span><span class="elem small">40</span><span class="elem small">50</span><span class="elem pivot-elem">70</span><span class="elem large">80</span><span class="elem large">90</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="problem-section">
+          <div class="problem-header">🔢 Numerical Problem</div>
+          <div class="problem-content">
+            <div class="problem-stmt">
+              <strong>Q1:</strong> Sort <code>[3, 6, 8, 10, 1, 2, 1]</code> using Quick Sort with last element as pivot. Show partition step.
+            </div>
+            <button class="sol-btn" onclick="toggleSolution('quick-sol')">💡 Show Solution</button>
+            <div class="solution" id="quick-sol">
+              <div class="pass-trace">
+                <div class="pass"><strong>Pivot = 1</strong> (last element)</div>
+                <div class="pass">i = -1, scan array:
+                  <br/>j=0: 3>1, skip
+                  <br/>j=1: 6>1, skip
+                  <br/>j=2: 8>1, skip
+                  <br/>j=3: 10>1, skip
+                  <br/>j=4: 1≤1, i++→i=0, swap arr[0]↔arr[4] → [1,6,8,10,3,2,1]
+                  <br/>j=5: 2>1, skip
+                  <br/>j=6: pivot reached → swap arr[i+1]↔arr[6] → swap arr[1]↔arr[6]
+                </div>
+                <div class="pass">After partition: [1, <span class="pivot-elem">1</span>, 8, 10, 3, 2, 6]</div>
+                <div class="pass">Pivot (1) now at index 1. Recurse on [1] and [8,10,3,2,6]</div>
+                <div class="pass sorted-all">Final: [1, 1, 2, 3, 6, 8, 10] ✅</div>
+              </div>
+              <div class="key-insight">💡 Worst case O(n²) occurs when pivot is always min/max (sorted array)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="extra-info">
+          <h4>🌟 Extra Information</h4>
+          <div class="info-grid">
+            <div class="info-item"><span>📌</span> Fastest in practice due to cache locality</div>
+            <div class="info-item"><span>📌</span> Randomized pivot avoids worst case</div>
+            <div class="info-item"><span>📌</span> Used in C++ std::sort (Introsort = Quick + Heap + Insert)</div>
+            <div class="info-item"><span>📌</span> 3-way partition handles duplicate keys efficiently</div>
+          </div>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header"><span>C++ Implementation</span><button onclick="copyCode(this)">📋 Copy</button></div>
+          <pre><code>int partition(int arr[], int low, int high) {
+    int pivot = arr[high], i = low - 1;
+    for (int j = low; j &lt; high; j++)
+        if (arr[j] &lt;= pivot)
+            swap(arr[++i], arr[j]);
+    swap(arr[i+1], arr[high]);
+    return i + 1;
+}
+void quickSort(int arr[], int low, int high) {
+    if (low &lt; high) {
+        int pi = partition(arr, low, high);
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
+    }
+}</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Heap Sort -->
+    <div class="algo-card" id="heap-sort">
+      <div class="card-header heap-theme">
+        <div class="algo-number">06</div>
+        <div>
+          <h3>Heap Sort</h3>
+          <span class="difficulty hard">Hard</span>
+        </div>
+        <button class="expand-btn" onclick="toggleCard(this)">▼</button>
+      </div>
+      <div class="card-body">
+        <div class="two-col">
+          <div class="note-block handwritten">
+            <h4>📖 Definition</h4>
+            <p>Uses a <strong>Binary Max-Heap</strong> data structure. First builds a max-heap, then repeatedly extracts the maximum element to sort the array.</p>
+            <div class="formula-box">
+              Build Max-Heap: O(n)<br/>
+              Extract n times: O(n log n)<br/>
+              Total: O(n log n)
+            </div>
+          </div>
+          <div class="complexity-card">
+            <h4>⚡ Complexity</h4>
+            <table class="comp-table">
+              <tr><th>Case</th><th>Time</th></tr>
+              <tr><td>Best</td><td class="green">O(n log n)</td></tr>
+              <tr><td>Average</td><td class="green">O(n log n)</td></tr>
+              <tr><td>Worst</td><td class="green">O(n log n)</td></tr>
+              <tr><td>Space</td><td class="green">O(1)</td></tr>
+            </table>
+            <div class="badge-row">
+              <span class="badge bad">Unstable ❌</span>
+              <span class="badge">In-Place ✅</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="heap-visual">
+          <h4>🌳 Max-Heap Structure: [4, 10, 3, 5, 1]</h4>
+          <div class="heap-tree">
+            <div class="heap-level">
+              <div class="heap-node max">10</div>
+            </div>
+            <div class="heap-level">
+              <div class="heap-node">5</div>
+              <div class="heap-node">3</div>
+            </div>
+            <div class="heap-level">
+              <div class="heap-node">4</div>
+              <div class="heap-node">1</div>
+            </div>
+          </div>
+          <div class="heap-array">Array: [10, 5, 3, 4, 1] → Parent(i) = (i-1)/2</div>
+        </div>
+
+        <div class="problem-section">
+          <div class="problem-header">🔢 Numerical Problem</div>
+          <div class="problem-content">
+            <div class="problem-stmt">
+              <strong>Q1:</strong> Sort <code>[4, 10, 3, 5, 1]</code> using Heap Sort. Show heapify steps.
+            </div>
+            <button class="sol-btn" onclick="toggleSolution('heap-sol')">💡 Show Solution</button>
+            <div class="solution" id="heap-sol">
+              <div class="pass-trace">
+                <strong>Phase 1: Build Max-Heap</strong>
+                <div class="pass">Start from last non-leaf = index 1</div>
+                <div class="pass">Heapify(1): 10>5, 10>4 → no swap needed for 10</div>
+                <div class="pass">Heapify(0): 4&lt;10 → swap 4,10 → [10,4,3,5,1]</div>
+                <div class="pass">Heapify(0) again: 4&lt;5 → swap → [10,5,3,4,1] ← Max-Heap</div>
+                <br/>
+                <strong>Phase 2: Extract Max Repeatedly</strong>
+                <div class="pass">Swap arr[0]↔arr[4]: [1,5,3,4,|10] → Heapify → [5,4,3,1,|10]</div>
+                <div class="pass">Swap arr[0]↔arr[3]: [1,4,3,|5,10] → Heapify → [4,1,3,|5,10]</div>
+                <div class="pass">Swap arr[0]↔arr[2]: [3,1,|4,5,10] → Heapify → [3,1,|4,5,10]</div>
+                <div class="pass">Swap arr[0]↔arr[1]: [1,|3,4,5,10] → done</div>
+                <div class="pass sorted-all">✅ Final: [1, 3, 4, 5, 10]</div>
+              </div>
+              <div class="key-insight">💡 Heapify is O(log n). Building heap is O(n) not O(n log n)!</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="extra-info">
+          <h4>🌟 Extra Information</h4>
+          <div class="info-grid">
+            <div class="info-item"><span>📌</span> Guaranteed O(n log n) in all cases — advantage over QuickSort</div>
+            <div class="info-item"><span>📌</span> In-place sorting — advantage over MergeSort</div>
+            <div class="info-item"><span>📌</span> Not cache-friendly → slower in practice despite same complexity</div>
+            <div class="info-item"><span>📌</span> Used in Priority Queues and scheduling algorithms</div>
+          </div>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header"><span>C++ Implementation</span><button onclick="copyCode(this)">📋 Copy</button></div>
+          <pre><code>void heapify(int arr[], int n, int i) {
+    int largest = i, l = 2*i+1, r = 2*i+2;
+    if (l &lt; n &amp;&amp; arr[l] &gt; arr[largest]) largest = l;
+    if (r &lt; n &amp;&amp; arr[r] &gt; arr[largest]) largest = r;
+    if (largest != i) {
+        swap(arr[i], arr[largest]);
+        heapify(arr, n, largest);
+    }
+}
+void heapSort(int arr[], int n) {
+    for (int i = n/2-1; i >= 0; i--)
+        heapify(arr, n, i);   // Build max heap
+    for (int i = n-1; i > 0; i--) {
+        swap(arr[0], arr[i]); // Move root to end
+        heapify(arr, i, 0);   // Re-heapify
+    }
+}</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sorting Comparison Table -->
+    <div class="comparison-card">
+      <h3>📊 Sorting Algorithms Comparison</h3>
+      <div class="table-wrapper">
+        <table class="big-table">
+          <thead>
+            <tr><th>Algorithm</th><th>Best</th><th>Average</th><th>Worst</th><th>Space</th><th>Stable</th><th>Method</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Bubble</td><td class="green">O(n)</td><td class="red">O(n²)</td><td class="red">O(n²)</td><td class="green">O(1)</td><td>✅</td><td>Exchange</td></tr>
+            <tr><td>Selection</td><td class="red">O(n²)</td><td class="red">O(n²)</td><td class="red">O(n²)</td><td class="green">O(1)</td><td>❌</td><td>Selection</td></tr>
+            <tr><td>Insertion</td><td class="green">O(n)</td><td class="red">O(n²)</td><td class="red">O(n²)</td><td class="green">O(1)</td><td>✅</td><td>Insertion</td></tr>
+            <tr><td>Merge</td><td class="green">O(n log n)</td><td class="green">O(n log n)</td><td class="green">O(n log n)</td><td class="yellow">O(n)</td><td>✅</td><td>Divide</td></tr>
+            <tr><td>Quick</td><td class="green">O(n log n)</td><td class="green">O(n log n)</td><td class="red">O(n²)</td><td class="green">O(log n)</td><td>❌</td><td>Divide</td></tr>
+            <tr><td>Heap</td><td class="green">O(n log n)</td><td class="green">O(n log n)</td><td class="green">O(n log n)</td><td class="green">O(1)</td><td>❌</td><td>Selection</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== GREEDY SECTION ===================== -->
+  <section id="greedy" class="section">
+    <div class="section-header">
+      <h2>🤑 Greedy Algorithms</h2>
+      <p>Making locally optimal choices for globally optimal solutions</p>
+    </div>
+
+    <!-- Greedy Intro -->
+    <div class="intro-card">
+      <div class="intro-icon">💡</div>
+      <div>
+        <h3>What is Greedy?</h3>
+        <p>A greedy algorithm makes the <strong>locally optimal choice</strong> at each step with the hope that these local choices will lead to a <strong>globally optimal solution</strong>. It never reconsiders choices made in past steps.</p>
+        <div class="greedy-properties">
+          <span class="prop">✅ Greedy Choice Property</span>
+          <span class="prop">✅ Optimal Substructure</span>
+          <span class="prop">⚠️ May not always work</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Activity Selection -->
+    <div class="algo-card" id="activity-selection">
+      <div class="card-header activity-theme">
+        <div class="algo-number">01</div>
+        <div>
+          <h3>Activity Selection Problem</h3>
+          <span class="difficulty easy">Easy</span>
+        </div>
+        <button class="expand-btn" onclick="toggleCard(this)">▼</button>
+      </div>
+      <div class="card-body">
+        <div class="two-col">
+          <div class="note-block handwritten">
+            <h4>📖 Definition</h4>
+            <p>Given n activities with start and finish times, select the <strong>maximum number of non-overlapping activities</strong>. Sort by finish time and greedily pick activities that don't conflict.</p>
+            <div class="formula-box">
+              Greedy Choice: Always pick activity<br/>
+              with earliest finish time!
+            </div>
+          </div>
+          <div class="complexity-card">
+            <h4>⚡ Complexity</h4>
+            <table class="comp-table">
+              <tr><th>Operation</th><th>Time</th></tr>
+              <tr><td>Sorting</td><td class="yellow">O(n log n)</td></tr>
+              <tr><td>Selection</td><td class="green">O(n)</td></tr>
+              <tr><td>Total</td><td class="green">O(n log n)</td></tr>
+              <tr><td>Space</td><td class="green">O(1)</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="problem-section">
+          <div class="problem-header">🔢 Numerical Problem</div>
+          <div class="problem-content">
+            <div class="problem-stmt">
+              <strong>Q1:</strong> Given activities with start and finish times:<br/>
+              <code>A1(1,4), A2(3,5), A3(0,6), A4(5,7), A5(3,9), A6(5,9), A7(6,10), A8(8,11), A9(8,12), A10(2,14), A11(12,16)</code><br/>
+              Find the maximum number of activities.
+            </div>
+            <button class="sol-btn" onclick="toggleSolution('activity-sol')">💡 Show Solution</button>
+            <div class="solution" id="activity-sol">
+              <div class="pass-trace">
+                <strong>Step 1: Sort by finish time</strong>
+                <div class="pass">A1(1,4), A2(3,5), A3(0,6), A4(5,7), A5(3,9), A6(5,9), A7(6,10), A8(8,11), A9(8,12), A10(2,14), A11(12,16)</div>
+                <br/>
+                <strong>Step 2: Apply Greedy Selection</strong>
+                <div class="pass">Select <span class="highlight">A1(1,4)</span> ← first activity (earliest finish)</div>
+                <div class="pass">A2(3,5): start=3 &lt; finish=4 → SKIP (overlaps A1)</div>
+                <div class="pass">A3(0,6): start=0 &lt; finish=4 → SKIP</div>
+                <div class="pass">Select <span class="highlight">A4(5,7)</span> ← start=5 ≥ 4 ✅</div>
+                <div class="pass">A5,A6: start &lt; 7 → SKIP</div>
+                <div class="pass">Select <span class="highlight">A8(8,11)</span> ← start=8 ≥ 7 ✅</div>
+                <div class="pass">A9: start=8 &lt; 11 → SKIP</div>
+                <div class="pass">A10: start=2 &lt; 11 → SKIP</div>
+                <div class="pass">Select <span class="highlight">A11(12,16)</span> ← start=12 ≥ 11 ✅</div>
+              </div>
+              <div class="key-insight">✅ <strong>Maximum activities = 4</strong> → {A1, A4, A8, A11}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header"><span>C++ Implementation</span><button onclick="copyCode(this)">📋 Copy</button></div>
+          <pre><code>void activitySelection(int s[], int f[], int n) {
+    // Sort by finish time first
+    cout &lt;&lt; "Selected: A1"; // First activity always selected
+    int prev = 0;
+    for (int i = 1; i &lt; n; i++) {
+        if (s[i] >= f[prev]) {
+            cout &lt;&lt; ", A" &lt;&lt; i+1;
+            prev = i;
+        }
+    }
+}</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fractional Knapsack -->
+    <div class="algo-card" id="fractional-knapsack">
+      <div class="card-header knapsack-theme">
+        <div class="algo-number">02</div>
+        <div>
+          <h3>Fractional Knapsack</h3>
+          <span class="difficulty medium">Medium</span>
+        </div>
+        <button class="expand-btn" onclick="toggleCard(this)">▼</button>
+      </div>
+      <div class="card-body">
+        <div class="two-col">
+          <div class="note-block handwritten">
+            <h4>📖 Definition</h4>
+            <p>Given items with weights and values, and a knapsack with capacity W. Can take <strong>fractions</strong> of items. Goal: maximize total value. Greedy: sort by <strong>value/weight ratio</strong> and take greedily.</p>
+            <div class="formula-box">
+              Ratio = Value / Weight<br/>
+              Sort by ratio (descending)<br/>
+              Take items until bag is full
+            </div>
+          </div>
+          <div class="complexity-card">
+            <h4>⚡ Complexity</h4>
+            <table class="comp-table">
+              <tr><th>Operation</th><th>Time</th></tr>
+              <tr><td>Sorting</td><td class="yellow">O(n log n)</td></tr>
+              <tr><td>Filling</td><td class="green">O(n)</td></tr>
+              <tr><td>Total</td><td class="green">O(n log n)</td></tr>
+            </table>
+            <div class="badge-row">
+              <span class="badge">Greedy Works ✅</span>
+              <span class="badge bad">0/1 Knapsack uses DP</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="problem-section">
+          <div class="problem-header">🔢 Numerical Problem</div>
+          <div class="problem-content">
+            <div class="problem-stmt">
+              <strong>Q1:</strong> Knapsack capacity W=50. Items: (w=10,v=60), (w=20,v=100), (w=30,v=120). Find maximum value.
+            </div>
+            <button class="sol-btn" onclick="toggleSolution('knapsack-sol')">💡 Show Solution</button>
+            <div class="solution" id="knapsack-sol">
+              <div class="pass-trace">
+                <strong>Step 1: Calculate Value/Weight Ratios</strong>
+                <div class="pass">Item 1: 60/10 = <span class="highlight">6.0</span></div>
+                <div class="pass">Item 2: 100/20 = <span class="highlight">5.0</span></div>
+                <div class="pass">Item 3: 120/30 = <span class="highlight">4.0</span></div>
+                <br/>
+                <strong>Step 2: Sort by Ratio (desc): Item1 > Item2 > Item3</strong>
+                <br/><br/>
+                <strong>Step 3: Fill Greedily (W=50)</strong>
+                <div class="pass">Take all of Item1 (w=10): remaining=40, value=60</div>
+                <div class="pass">Take all of Item2 (w=20): remaining=20, value=160</div>
+                <div class="pass">Take 20/30 of Item3: value += (20/30)×120 = 80</div>
+                <div class="pass sorted-all">✅ Maximum Value = 60 + 100 + 80 = <strong>240</strong></div>
+              </div>
+              <div class="key-insight">💡 Fraction taken = (remaining capacity) / item weight × item value</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="extra-info">
+          <h4>🌟 Extra Information</h4>
+          <div class="info-grid">
+            <div class="info-item"><span>📌</span> Greedy works for FRACTIONAL but NOT 0/1 Knapsack</div>
+            <div class="info-item"><span>📌</span> 0/1 Knapsack requires Dynamic Programming</div>
+            <div class="info-item"><span>📌</span> Real world: cargo loading, investment portfolio</div>
+            <div class="info-item"><span>📌</span> Optimal substructure + greedy choice = greedy is optimal</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Huffman Coding -->
+    <div class="algo-card" id="huffman">
+      <div class="card-header huffman-theme">
+        <div class="algo-number">03</div>
+        <div>
+          <h3>Huffman Coding</h3>
+          <span class="difficulty hard">Hard</span>
+        </div>
+        <button class="expand-btn" onclick="toggleCard(this)">▼</button>
+      </div>
+      <div class="card-body">
+        <div class="two-col">
+          <div class="note-block handwritten">
+            <h4>📖 Definition</h4>
+            <p>A <strong>lossless data compression</strong> algorithm. Assigns shorter binary codes to more frequent characters using a greedy approach with a <strong>min-heap priority queue</strong>.</p>
+            <div class="formula-box">
+              Encode frequent chars with fewer bits<br/>
+              Build tree bottom-up (min freqs first)<br/>
+              Left=0, Right=1
+            </div>
+          </div>
+          <div class="complexity-card">
+            <h4>⚡ Complexity</h4>
+            <table class="comp-table">
+              <tr><th>Operation</th><th>Time</th></tr>
+              <tr><td>Build tree</td><td class="yellow">O(n log n)</td></tr>
+              <tr><td>Space</td><td class="yellow">O(n)</td></tr>
+            </table>
+            <div class="badge-row">
+              <span class="badge">Lossless ✅</span>
+              <span class="badge">Prefix-free codes ✅</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="problem-section">
+          <div class="problem-header">🔢 Numerical Problem</div>
+          <div class="problem-content">
+            <div class="problem-stmt">
+              <strong>Q1:</strong> Characters: a(5), b(9), c(12), d(13), e(16), f(45). Build Huffman tree and find codes.
+            </div>
+            <button class="sol-btn" onclick="toggleSolution('huffman-sol')">💡 Show Solution</button>
+            <div class="solution" id="huffman-sol">
+              <div class="pass-trace">
+                <strong>Step 1: Min-Heap = {a:5, b:9, c:12, d:13, e:16, f:45}</strong>
+                <div class="pass">Extract a(5)+b(9) → New node(14). Heap: {c:12, d:13, node:14, e:16, f:45}</div>
+                <div class="pass">Extract c(12)+d(13) → New node(25). Heap: {node:14, e:16, node:25, f:45}</div>
+                <div class="pass">Extract node(14)+e(16) → New node(30). Heap: {node:25, node:30, f:45}</div>
+                <div class="pass">Extract node(25)+node(30) → New node(55). Heap: {f:45, node:55}</div>
+                <div class="pass">Extract f(45)+node(55) → Root(100)</div>
+                <br/>
+                <strong>Codes (traverse tree):</strong>
+                <div class="code-table">
+                  <div class="code-row"><span>f</span><span class="code-val">0</span><span class="freq">(45 freq, 1 bit)</span></div>
+                  <div class="code-row"><span>c</span><span class="code-val">100</span><span class="freq">(12 freq)</span></div>
+                  <div class="code-row"><span>d</span><span class="code-val">101</span><span class="freq">(13 freq)</span></div>
+                  <div class="code-row"><span>a</span><span class="code-val">1100</span><span class="freq">(5 freq)</span></div>
+                  <div class="code-row"><span>b</span><span class="code-val">1101</span><span class="freq">(9 freq)</span></div>
+                  <div class="code-row"><span>e</span><span class="code-val">111</span><span class="freq">(16 freq)</span></div>
+                </div>
+                <div class="key-insight">✅ Total bits = 45×1 + 12×3 + 13×3 + 5×4 + 9×4 + 16×3 = 224 bits</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="extra-info">
+          <h4>🌟 Extra Information</h4>
+          <div class="info-grid">
+            <div class="info-item"><span>📌</span> Used in JPEG, PNG, MP3, ZIP file compression</div>
+            <div class="info-item"><span>📌</span> Prefix-free: no code is prefix of another → unambiguous decoding</div>
+            <div class="info-item"><span>📌</span> Optimal prefix code for given character frequencies</div>
+            <div class="info-item"><span>📌</span> Adaptive Huffman works without knowing frequencies upfront</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Job Sequencing -->
+    <div class="algo-card" id="job-sequencing">
+      <div class="card-header job-theme">
+        <div class="algo-number">04</div>
+        <div>
+          <h3>Job Sequencing with Deadlines</h3>
+          <span class="difficulty medium">Medium</span>
+        </div>
+        <button class="expand-btn" onclick="toggleCard(this)">▼</button>
+      </div>
+      <div class="card-body">
+        <div class="two-col">
+          <div class="note-block handwritten">
+            <h4>📖 Definition</h4>
+            <p>Given jobs with deadlines and profits, schedule jobs to <strong>maximize profit</strong>. Each job takes 1 unit time. Greedy: sort by profit (desc) and schedule each job in latest available slot before its deadline.</p>
+            <div class="formula-box">
+              Sort by profit (descending)<br/>
+              Try to assign job to latest free slot ≤ deadline
+            </div>
+          </div>
+          <div class="complexity-card">
+            <h4>⚡ Complexity</h4>
+            <table class="comp-table">
+              <tr><th>Operation</th><th>Time</th></tr>
+              <tr><td>Sorting</td><td class="yellow">O(n log n)</td></tr>
+              <tr><td>Scheduling</td><td class="yellow">O(n²)</td></tr>
+              <tr><td>Total</td><td class="yellow">O(n²)</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="problem-section">
+          <div class="problem-header">🔢 Numerical Problem</div>
+          <div class="problem-content">
+            <div class="problem-stmt">
+              <strong>Q1:</strong> Jobs: J1(d=2,p=100), J2(d=1,p=19), J3(d=2,p=27), J4(d=1,p=25), J5(d=3,p=15). Maximize profit.
+            </div>
+            <button class="sol-btn" onclick="toggleSolution('job-sol')">💡 Show Solution</button>
+            <div class="solution" id="job-sol">
+              <div class="pass-trace">
+                <strong>Sorted by profit:</strong> J1(100), J3(27), J4(25), J2(19), J5(15)
+                <div class="pass">Slots: [_, _, _] (max deadline = 3)</div>
+                <div class="pass">J1(d=2, p=100): assign to slot 2 → [_, J1, _]</div>
+                <div class="pass">J3(d=2, p=27): slot 2 taken → try slot 1 → [J3, J1, _]</div>
+                <div class="pass">J4(d=1, p=25): slot 1 taken, slot 0 taken → SKIP</div>
+                <div class="pass">J2(d=1, p=19): all slots ≤ 1 taken → SKIP</div>
+                <div class="pass">J5(d=3, p=15): assign slot 3 → [J3, J1, J5]</div>
+                <div class="pass sorted-all">✅ Schedule: [J3, J1, J5] → Profit = 27+100+15 = <strong>142</strong></div>
+              </div>
+              <div class="key-insight">💡 Always assign to LATEST available slot to leave earlier slots free</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Coin Change Greedy -->
+    <div class="algo-card" id="coin-change">
+      <div class="card-header coin-theme">
+        <div class="algo-number">05</div>
+        <div>
+          <h3>Coin Change (Greedy)</h3>
+          <span class="difficulty easy">Easy</span>
+        </div>
+        <button class="expand-btn" onclick="toggleCard(this)">▼</button>
+      </div>
+      <div class="card-body">
+        <div class="two-col">
+          <div class="note-block handwritten">
+            <h4>📖 Definition</h4>
+            <p>Given denominations and amount, find <strong>minimum number of coins</strong> to make the amount. Greedy: always use the largest denomination that fits. Works for canonical coin systems (like Indian/US coins).</p>
+            <div class="formula-box">
+              ⚠️ Greedy FAILS for arbitrary denominations!<br/>
+              Use DP for general coin change.
+            </div>
+          </div>
+          <div class="complexity-card">
+            <h4>⚡ Complexity</h4>
+            <table class="comp-table">
+              <tr><th>Operation</th><th>Time</th></tr>
+              <tr><td>Greedy</td><td class="green">O(n)</td></tr>
+              <tr><td>DP solution</td><td class="yellow">O(nW)</td></tr>
+            </table>
+            <div class="badge-row">
+              <span class="badge bad">Not always optimal</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="problem-section">
+          <div class="problem-header">🔢 Numerical Problem</div>
+          <div class="problem-content">
+            <div class="problem-stmt">
+              <strong>Q1:</strong> Denominations = {1, 5, 6, 9}. Amount = 11.<br/>
+              <strong>Q2:</strong> Indian coins = {1,2,5,10,20,50,100,500}. Amount = 93.
+            </div>
+            <button class="sol-btn" onclick="toggleSolution('coin-sol')">💡 Show Solution</button>
+            <div class="solution" id="coin-sol">
+              <strong>Q1 — Greedy FAILS:</strong>
+              <div class="pass-trace">
+                <div class="pass">Greedy picks: 9 + 1 + 1 = 3 coins ❌</div>
+                <div class="pass red-text">Optimal: 5 + 6 = 2 coins ✅ (Greedy failed!)</div>
+              </div>
+              <br/>
+              <strong>Q2 — Indian Coins (Greedy Works):</strong>
+              <div class="pass-trace">
+                <div class="pass">Amount=93: take 50 → rem=43</div>
+                <div class="pass">rem=43: take 20 → rem=23</div>
+                <div class="pass">rem=23: take 20 → rem=3</div>
+                <div class="pass">rem=3: take 2 → rem=1</div>
+                <div class="pass">rem=1: take 1 → rem=0</div>
+                <div class="pass sorted-all">✅ Coins: {50,20,20,2,1} = 5 coins</div>
+              </div>
+              <div class="key-insight">💡 Greedy works when denominations form canonical system (each coin is multiple of smaller)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== GRAPH SECTION ===================== -->
+  <section id="graph" class="section">
+    <div class="section-header">
+      <h2>🕸️ Graph Algorithms</h2>
+      <p>BFS, DFS, Shortest Paths & Minimum Spanning Trees</p>
+    </div>
+
+    <!-- Graph Intro -->
+    <div class="intro-card">
+      <div class="intro-icon">🔗</div>
+      <div>
+        <h3>Graph Terminology</h3>
+        <div class="term-grid">
+          <div class="term-item"><strong>Vertex (V):</strong> Node in graph</div>
+          <div class="term-item"><strong>Edge (E):</strong> Connection between nodes</div>
+          <div class="term-item"><strong>Degree:</strong> Number of edges at vertex</div>
+          <div class="term-item"><strong>Path:</strong> Sequence of vertices</div>
+          <div class="term-item"><strong>Cycle:</strong> Path that returns to start</div>
+          <div class="term-item"><strong>DAG:</strong> Directed Acyclic Graph</div>
+          <div class="term-item"><strong>Weighted:</strong> Edges have costs/weights</div>
+          <div class="term-item"><strong>Connected:</strong> Path exists between all pairs</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BFS -->
+    <div class="algo-card" id="bfs">
+      <div class="card-header bfs-theme">
+        <div class="algo-number">01</div>
+        <div>
+          <h3>Breadth-First Search (BFS)</h3>
+          <span class="difficulty easy">Easy</span>
+        </div>
+        <button class="expand-btn" onclick="toggleCard(this)">▼</button>
+      </div>
+      <div class="card-body">
+        <div class="two-col">
+          <div class="note-block handwritten">
+            <h4>📖 Definition</h4>
+            <p>Explores graph <strong>level by level</strong> using a <strong>Queue</strong>. Visits all neighbors of a node before going deeper. Finds shortest path in unweighted graphs.</p>
+            <div class="formula-box">
+              Uses QUEUE (FIFO)<br/>
+              Level 0 → Level 1 → Level 2...<br/>
+              Shortest path in unweighted graph
+            </div>
+          </div>
+          <div class="complexity-card">
+            <h4>⚡ Complexity</h4>
+            <table class="comp-table">
+              <tr><th>Representation</th><th>Time</th></tr>
+              <tr><td>Adjacency List</td><td class="green">O(V+E)</td></tr>
+              <tr><td>Adjacency Matrix</td><td class="yellow">O(V²)</td></tr>
+              <tr><td>Space</td><td class="yellow">O(V)</td></tr>
+            </table>
+            <div class="badge-row">
+              <span class="badge">Shortest path ✅</span>
+              <span class="badge">Level traversal ✅</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="graph-visual">
+          <h4>🎯 BFS Traversal Example</h4>
+          <div class="graph-container">
+            <svg viewBox="0 0 400 200" class="graph-svg" id="bfsSvg">
+              <!-- Edges -->
+              <line x1="100" y1="80" x2="200" y2="40" stroke="#6366f1" stroke-width="2"/>
+              <line x1="100" y1="80" x2="200" y2="120" stroke="#6366f1" stroke-width="2"/>
+              <line x1="200" y1="40" x2="300" y2="40" stroke="#6366f1" stroke-width="2"/>
+              <line x1="200" y1="120" x2="300" y2="120" stroke="#6366f1" stroke-width="2"/>
+              <line x1="300" y1="40" x2="300" y2="120" stroke="#6366f1" stroke-width="2"/>
+              <!-- Nodes -->
+              <circle cx="100" cy="80" r="20" class="graph-node" id="bfsN0"/>
+              <text x="100" y="85" text-anchor="middle" fill="white" font-size="12">0</text>
+              <circle cx="200" cy="40" r="20" class="graph-node" id="bfsN1"/>
+              <text x="200" y="45" text-anchor="middle" fill="white" font-size="12">1</text>
+              <circle cx="200" cy="120" r="20" class="graph-node" id="bfsN2"/>
+              <text x="200" y="125" text-anchor="middle" fill="white" font-size="12">2</text>
+              <circle cx="300" cy="40" r="20" class="graph-node" id="bfsN3"/>
+              <text x="300" y="45" text-anchor="middle" fill="white" font-size="12">3</text>
+              <circle cx="300" cy="120" r="20" class="graph-node" id="bfsN4"/>
+              <text x="300" y="125" text-anchor="middle" fill="white" font-size="12">4</text>
+            </svg>
+            <button class="demo-btn" onclick="animateBFS()">▶ Animate BFS</button>
+            <div class="step-info" id="bfsStepInfo">BFS from node 0</div>
+          </div>
+        </div>
+
+        <div class="problem-section">
+          <div class="problem-header">🔢 Numerical Problem</div>
+          <div class="problem-content">
+            <div class="problem-stmt">
+              <strong>Q1:</strong> Graph with edges: 0-1, 0-2, 1-3, 1-4, 2-4. Perform BFS from vertex 0. Show queue state at each step.
+            </div>
+            <button class="sol-btn" onclick="toggleSolution('bfs-sol')">💡 Show Solution</button>
+            <div class="solution" id="bfs-sol">
+              <div class="pass-trace">
+                <div class="pass"><strong>Init:</strong> Queue=[0], Visited={0}</div>
+                <div class="pass"><strong>Step 1:</strong> Dequeue 0, Visit neighbors 1,2 → Queue=[1,2], Visited={0,1,2}, Output: 0</div>
+                <div class="pass"><strong>Step 2:</strong> Dequeue 1, Visit neighbors 3,4 → Queue=[2,3,4], Visited={0,1,2,3,4}, Output: 0 1</div>
+                <div class="pass"><strong>Step 3:</strong> Dequeue 2, neighbor 4 already visited → Queue=[3,4], Output: 0 1 2</div>
+                <div class="pass"><strong>Step 4:</strong> Dequeue 3 → Queue=[4], Output: 0 1 2 3</div>
+                <div class="pass"><strong>Step 5:</strong> Dequeue 4 → Queue=[], Output: 0 1 2 3 4</div>
+                <div class="pass sorted-all">✅ BFS Order: 0 → 1 → 2 → 3 → 4</div>
+              </div>
+              <div class="key-insight">💡 BFS gives shortest path (in terms of edges) from source to all vertices</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header"><span>C++ Implementation</span><button onclick="copyCode(this)">📋 Copy</button></div>
+          <pre><code>void BFS(vector&lt;vector&lt;int&gt;&gt;&amp; adj, int start, int V) {
+    vector&lt;bool&gt; visited(V, false);
+    queue&lt;int&gt; q;
+    visited[start] = true;
+    q.push(start);
+    while (!q.empty()) {
+        int v = q.front(); q.pop();
+        cout &lt;&lt; v &lt;&lt; " ";
+        for (int u : adj[v])
+            if (!visited[u]) {
+                visited[u] = true;
+                q.push(u);
+            }
+    }
+}</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- DFS -->
+    <div class="algo-card" id="dfs">
+      <div class="card-header dfs-theme">
+        <div class="algo-number">02</div>
+        <div>
+          <h3>Depth-First Search (DFS)</h3>
+          <span class="difficulty easy">Easy</span>
+        </div>
+        <button class="expand-btn" onclick="toggleCard(this)">▼</button>
+      </div>
+      <div class="card-body">
+        <div class="two-col">
+          <div class="note-block handwritten">
+            <h4>📖 Definition</h4>
+            <p>Explores graph by going as <strong>deep as possible</strong> before backtracking. Uses a <strong>Stack</strong> (or recursion). Used for cycle detection, topological sort, SCC.</p>
+            <div class="formula-box">
+              Uses STACK (LIFO) / Recursion<br/>
+              Go deep → backtrack<br/>
+              DFS Tree has Tree & Back edges
+            </div>
+          </div>
+          <div class="complexity-card">
+            <h4>⚡ Complexity</h4>
+            <table class="comp-table">
+              <tr><th>Representation</th><th>Time</th></tr>
+              <tr><td>Adjacency List</td><td class="green">O(V+E)</td></tr>
+              <tr><td>Adjacency Matrix</td><td class="yellow">O(V²)</td></tr>
+              <tr><td>Space (recursion)</td><td class="yellow">O(V)</td></tr>
+            </table>
+            <div class="badge-row">
+              <span class="badge">Cycle detection ✅</span>
+              <span class="badge">Topo sort ✅</span>
+              <span class="badge">SCC ✅</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="problem-section">
+          <div class="problem-header">🔢 Numerical Problem</div>
+          <div class="problem-content">
+            <div class="problem-stmt">
+              <strong>Q1:</strong> Graph: 0-1, 0-2, 1-3, 2-3, 3-4. DFS from vertex 0. Show stack and visited at each step.
+            </div>
+            <button class="sol-btn" onclick="toggleSolution('dfs-sol')">💡 Show Solution</button>
+            <div class="solution" id="dfs-sol">
+              <div class="pass-trace">
+                <div class="pass"><strong>Call DFS(0):</strong> Visit 0, visited={0}, Output: 0</div>
+                <div class="pass"><strong>Call DFS(1):</strong> Visit 1, visited={0,1}, Output: 0 1</div>
+                <div class="pass"><strong>Call DFS(3):</strong> Visit 3, visited={0,1,3}, Output: 0 1 3</div>
+                <div class="pass"><strong>Call DFS(2):</strong> 2 not visited, visit 2, visited={0,1,2,3}, Output: 0 1 3 2</div>
+                <div class="pass"><strong>Back:</strong> 3's neighbors done → backtrack to 1 → backtrack to 0</div>
+                <div class="pass"><strong>Call DFS(4):</strong> Visit 4, Output: 0 1 3 2 4</div>
+                <div class="pass sorted-all">✅ DFS Order: 0 → 1 → 3 → 2 → 4</div>
+              </div>
+              <div class="key-insight">💡 DFS explores one branch completely before exploring another</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header"><span>C++ Implementation</span><button onclick="copyCode(this)">📋 Copy</button></div>
+          <pre><code>void DFS(vector&lt;vector&lt;int&gt;&gt;&amp; adj, int v, vector&lt;bool&gt;&amp; visited) {
+    visited[v] = true;
+    cout &lt;&lt; v &lt;&lt; " ";
+    for (int u : adj[v])
+        if (!visited[u])
+            DFS(adj, u, visited);
+}</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dijkstra -->
+    <div class="algo-card" id="dijkstra">
+      <div class="card-header dijkstra-theme">
+        <div class="algo-number">03</div>
+        <div>
+          <h3>Dijkstra's Algorithm</h3>
+          <span class="difficulty medium">Medium</span>
+        </div>
+        <button class="expand-btn" onclick="toggleCard(this)">▼</button>
+      </div>
+      <div class="card-body">
+        <div class="two-col">
+          <div class="note-block handwritten">
+            <h4>📖 Definition</h4>
+            <p>Finds <strong>shortest path</strong> from a source to all vertices in a graph with <strong>non-negative weights</strong>. Uses a <strong>min-heap (priority queue)</strong>. Greedy — always relaxes the closest unvisited vertex.</p>
+            <div class="formula-box">
+              dist[v] = min(dist[v], dist[u] + w(u,v))<br/>
+              ⚠️ Fails with negative edges!
+            </div>
+          </div>
+          <div class="complexity-card">
+            <h4>⚡ Complexity</h4>
+            <table class="comp-table">
+              <tr><th>Implementation</th><th>Time</th></tr>
+              <tr><td>Array</td><td class="yellow">O(V²)</td></tr>
+              <tr><td>Binary Heap</td><td class="green">O((V+E) log V)</td></tr>
+              <tr><td>Fibonacci Heap</td><td class="green">O(E + V log V)</td></tr>
+            </table>
+            <div class="badge-row">
+              <span class="badge bad">No negative edges ❌</span>
+              <span class="badge">Greedy ✅</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="problem-section">
+          <div class="problem-header">🔢 Numerical Problem</div>
+          <div class="problem-content">
+            <div class="problem-stmt">
+              <strong>Q1:</strong> Find shortest paths from vertex 0.<br/>
+              Graph: 0→1(4), 0→2(1), 2→1(2), 1→3(1), 2→3(5)
+            </div>
+            <button class="sol-btn" onclick="toggleSolution('dijkstra-sol')">💡 Show Solution</button>
+            <div class="solution" id="dijkstra-sol">
+              <div class="pass-trace">
+                <strong>Init:</strong> dist[] = [0, ∞, ∞, ∞], PQ={(0,0)}
+                <div class="pass"><strong>Extract (0,0):</strong>
+                  <br/>Relax 0→1: dist[1]=min(∞,0+4)=4
+                  <br/>Relax 0→2: dist[2]=min(∞,0+1)=1
+                  <br/>PQ={(1,2),(4,1)}
+                </div>
+                <div class="pass"><strong>Extract (1,2) [dist=1]:</strong>
+                  <br/>Relax 2→1: dist[1]=min(4,1+2)=3 ← <span class="highlight">Updated!</span>
+                  <br/>Relax 2→3: dist[3]=min(∞,1+5)=6
+                  <br/>PQ={(3,1),(4,1),(6,3)}
+                </div>
+                <div class="pass"><strong>Extract (3,1) [dist=3]:</strong>
+                  <br/>Relax 1→3: dist[3]=min(6,3+1)=4 ← <span class="highlight">Updated!</span>
+                  <br/>PQ={(4,1),(4,3),(6,3)}
+                </div>
+                <div class="pass"><strong>Extract remaining:</strong> dist[3]=4 already optimal</div>
+                <div class="pass sorted-all">✅ Shortest distances from 0: [0→0, 1→3, 2→1, 3→4]</div>
+              </div>
+              <div class="key-insight">💡 Paths: 0→1 via (0→2→1)=3, 0→3 via (0→2→1→3)=4</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="extra-info">
+          <h4>🌟 Extra Information</h4>
+          <div class="info-grid">
+            <div class="info-item"><span>📌</span> Used in GPS navigation, network routing (OSPF protocol)</div>
+            <div class="info-item"><span>📌</span> Fails for negative weight edges — use Bellman-Ford instead</div>
+            <div class="info-item"><span>📌</span> Single-source shortest path algorithm</div>
+            <div class="info-item"><span>📌</span> For all-pairs shortest paths, use Floyd-Warshall</div>
+          </div>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header"><span>C++ Implementation</span><button onclick="copyCode(this)">📋 Copy</button></div>
+          <pre><code>void dijkstra(vector&lt;pair&lt;int,int&gt;&gt; adj[], int V, int src) {
+    vector&lt;int&gt; dist(V, INT_MAX);
+    priority_queue&lt;pair&lt;int,int&gt;, vector&lt;pair&lt;int,int&gt;&gt;, greater&lt;&gt;&gt; pq;
+    dist[src] = 0;
+    pq.push({0, src});
+    while (!pq.empty()) {
+        auto [d, u] = pq.top(); pq.pop();
+        if (d > dist[u]) continue;
+        for (auto [v, w] : adj[u])
+            if (dist[u]+w &lt; dist[v]) {
+                dist[v] = dist[u]+w;
+                pq.push({dist[v], v});
+            }
+    }
+}</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bellman-Ford -->
+    <div class="algo-card" id="bellman-ford">
+      <div class="card-header bellman-theme">
+        <div class="algo-number">04</div>
+        <div>
+          <h3>Bellman-Ford Algorithm</h3>
+          <span class="difficulty medium">Medium</span>
+        </div>
+        <button class="expand-btn" onclick="toggleCard(this)">▼</button>
+      </div>
+      <div class="card-body">
+        <div class="two-col">
+          <div class="note-block handwritten">
+            <h4>📖 Definition</h4>
+            <p>Finds shortest paths from a single source, even with <strong>negative weight edges</strong>. Relaxes all edges <strong>V-1 times</strong>. Also <strong>detects negative cycles</strong>.</p>
+            <div class="formula-box">
+              Repeat V-1 times:<br/>
+              For each edge (u,v,w):<br/>
+              dist[v] = min(dist[v], dist[u]+w)
+            </div>
+          </div>
+          <div class="complexity-card">
+            <h4>⚡ Complexity</h4>
+            <table class="comp-table">
+              <tr><th>Operation</th><th>Time</th></tr>
+              <tr><td>Time</td><td class="yellow">O(VE)</td></tr>
+              <tr><td>Space</td><td class="green">O(V)</td></tr>
+            </table>
+            <div class="badge-row">
+              <span class="badge">Negative edges ✅</span>
+              <span class="badge">Neg cycle detect ✅</span>
+              <span class="badge bad">Slower than Dijkstra</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="problem-section">
+          <div class="problem-header">🔢 Numerical Problem</div>
+          <div class="problem-content">
+            <div class="problem-stmt">
+              <strong>Q1:</strong> Graph (directed): 0→1(6), 0→2(7), 1→2(8), 1→3(-4), 1→4(5), 2→4(-3), 3→0(2), 4→3(7). Source=0. Find shortest distances.
+            </div>
+            <button class="sol-btn" onclick="toggleSolution('bellman-sol')">💡 Show Solution</button>
+            <div class="solution" id="bellman-sol">
+              <div class="pass-trace">
+                <strong>Init:</strong> dist = [0, ∞, ∞, ∞, ∞]
+                <div class="pass"><strong>Iteration 1:</strong>
+                  <br/>0→1(6): dist[1]=6
+                  <br/>0→2(7): dist[2]=7
+                  <br/>1→3(-4): dist[3]=6+(-4)=2
+                  <br/>1→4(5): dist[4]=6+5=11
+                  <br/>2→4(-3): dist[4]=min(11,7+(-3))=4
+                  <br/>dist = [0, 6, 7, 2, 4]
+                </div>
+                <div class="pass"><strong>Iteration 2:</strong>
+                  <br/>3→0(2): 2+2=4 > 0, no update
+                  <br/>4→3(7): 4+7=11 > 2, no update
+                  <br/>No changes → converged!
+                </div>
+                <div class="pass sorted-all">✅ Shortest distances: 0→0=0, 0→1=6, 0→2=7, 0→3=2, 0→4=4</div>
+              </div>
+              <div class="key-insight">💡 If any update happens in V-th iteration → Negative cycle detected!</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="extra-info">
+          <h4>🌟 Extra Information</h4>
+          <div class="info-grid">
+            <div class="info-item"><span>📌</span> Used in routing protocols like RIP (Routing Information Protocol)</div>
+            <div class="info-item"><span>📌</span> Can handle negative weights — Dijkstra cannot</div>
+            <div class="info-item"><span>📌</span> Detects negative cycles — runs 1 extra iteration to check</div>
+            <div class="info-item"><span>📌</span> Dynamic Programming approach (unlike Dijkstra's greedy)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Kruskal's MST -->
+    <div class="algo-card" id="kruskal">
+      <div class="card-header kruskal-theme">
+        <div class="algo-number">05</div>
+        <div>
+          <h3>Kruskal's Algorithm (MST)</h3>
+          <span class="difficulty medium">Medium</span>
+        </div>
+        <button class="expand-btn" onclick="toggleCard(this)">▼</button>
+      </div>
+      <div class="card-body">
+        <div class="two-col">
+          <div class="note-block handwritten">
+            <h4>📖 Definition</h4>
+            <p>Finds <strong>Minimum Spanning Tree</strong> using greedy approach. Sort edges by weight, add edge to MST if it doesn't form a cycle. Uses <strong>Union-Find (Disjoint Set)</strong> for cycle detection.</p>
+            <div class="formula-box">
+              MST: V-1 edges connecting all V vertices<br/>
+              Sort edges → Add if no cycle<br/>
+              |E| log|E| for sorting dominates
+            </div>
+          </div>
+          <div class="complexity-card">
+            <h4>⚡ Complexity</h4>
+            <table class="comp-table">
+              <tr><th>Operation</th><th>Time</th></tr>
+              <tr><td>Sort edges</td><td class="yellow">O(E log E)</td></tr>
+              <tr><td>Union-Find</td><td class="green">O(α(V)) ≈ O(1)</td></tr>
+              <tr><td>Total</td><td class="yellow">O(E log E)</td></tr>
+            </table>
+            <div class="badge-row">
+              <span class="badge">MST ✅</span>
+              <span class="badge">Greedy ✅</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="problem-section">
+          <div class="problem-header">🔢 Numerical Problem</div>
+          <div class="problem-content">
+            <div class="problem-stmt">
+              <strong>Q1:</strong> Find MST using Kruskal's.<br/>
+              Edges: (0-1,4), (0-7,8), (1-2,8), (1-7,11), (2-3,7), (2-5,4), (2-8,2), (3-4,9), (3-5,14), (4-5,10), (5-6,2), (6-7,1), (6-8,6), (7-8,7)
+            </div>
+            <button class="sol-btn" onclick="toggleSolution('kruskal-sol')">💡 Show Solution</button>
+            <div class="solution" id="kruskal-sol">
+              <div class="pass-trace">
+                <strong>Sorted Edges:</strong> (6-7,1),(2-8,2),(5-6,2),(0-1,4),(2-5,4),(2-3,7),(0-7,8)...
+                <div class="pass">Add (6-7,1): {6,7} — no cycle ✅ MST weight+=1</div>
+                <div class="pass">Add (2-8,2): {2,8} — no cycle ✅ MST weight+=2</div>
+                <div class="pass">Add (5-6,2): {5,6,7} — no cycle ✅ MST weight+=2</div>
+                <div class="pass">Add (0-1,4): {0,1} — no cycle ✅ MST weight+=4</div>
+                <div class="pass">Add (2-5,4): {2,5,6,7,8} — no cycle ✅ MST weight+=4</div>
+                <div class="pass">Add (2-3,7): {2,3,5,6,7,8} — no cycle ✅ MST weight+=7</div>
+                <div class="pass">Add (0-7,8): {0,1,2,3,5,6,7,8} — no cycle ✅ MST weight+=8</div>
+                <div class="pass">Add (1-2,8): CYCLE → SKIP ❌</div>
+                <div class="pass">Add (3-4,9): {all 9 nodes} — no cycle ✅ MST weight+=9</div>
+                <div class="pass sorted-all">✅ MST Total Weight = 37, Edges = 8 (= V-1)</div>
+              </div>
+              <div class="key-insight">💡 MST always has exactly V-1 edges for V vertices</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header"><span>C++ Implementation (Union-Find)</span><button onclick="copyCode(this)">📋 Copy</button></div>
+          <pre><code>int find(int parent[], int i) {
+    if (parent[i] != i) parent[i] = find(parent, parent[i]);
+    return parent[i];
+}
+void kruskalMST(vector&lt;tuple&lt;int,int,int&gt;&gt;&amp; edges, int V) {
+    sort(edges.begin(), edges.end()); // Sort by weight
+    vector&lt;int&gt; parent(V), rank(V,0);
+    iota(parent.begin(), parent.end(), 0);
+    int cost = 0;
+    for (auto [w, u, v] : edges) {
+        int pu = find(parent.data(), u);
+        int pv = find(parent.data(), v);
+        if (pu != pv) { // No cycle
+            cost += w;
+            if (rank[pu] &lt; rank[pv]) swap(pu, pv);
+            parent[pv] = pu;
+            if (rank[pu] == rank[pv]) rank[pu]++;
+        }
+    }
+    cout &lt;&lt; "MST cost: " &lt;&lt; cost;
+}</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Prim's MST -->
+    <div class="algo-card" id="prims">
+      <div class="card-header prims-theme">
+        <div class="algo-number">06</div>
+        <div>
+          <h3>Prim's Algorithm (MST)</h3>
+          <span class="difficulty medium">Medium</span>
+        </div>
+        <button class="expand-btn" onclick="toggleCard(this)">▼</button>
+      </div>
+      <div class="card-body">
+        <div class="two-col">
+          <div class="note-block handwritten">
+            <h4>📖 Definition</h4>
+            <p>Grows MST from a <strong>single starting vertex</strong>. At each step, add the <strong>minimum weight edge</strong> that connects a vertex in the MST to one outside it. Similar to Dijkstra.</p>
+            <div class="formula-box">
+              key[v] = min edge weight to reach v<br/>
+              from current MST<br/>
+              Always pick min key vertex
+            </div>
+          </div>
+          <div class="complexity-card">
+            <h4>⚡ Complexity</h4>
+            <table class="comp-table">
+              <tr><th>Implementation</th><th>Time</th></tr>
+              <tr><td>Adjacency Matrix</td><td class="yellow">O(V²)</td></tr>
+              <tr><td>Binary Heap</td><td class="green">O(E log V)</td></tr>
+              <tr><td>Fibonacci Heap</td><td class="green">O(E + V log V)</td></tr>
+            </table>
+            <div class="badge-row">
+              <span class="badge">Dense graphs ✅</span>
+              <span class="badge">Vertex-based ✅</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="problem-section">
+          <div class="problem-header">🔢 Numerical Problem</div>
+          <div class="problem-content">
+            <div class="problem-stmt">
+              <strong>Q1:</strong> Graph (5 vertices, 0-indexed):<br/>
+              0-1(2), 0-3(6), 1-2(3), 1-3(8), 1-4(5), 2-4(7), 3-4(9). Find MST using Prim's starting from vertex 0.
+            </div>
+            <button class="sol-btn" onclick="toggleSolution('prims-sol')">💡 Show Solution</button>
+            <div class="solution" id="prims-sol">
+              <div class="pass-trace">
+                <strong>key[]=[0,∞,∞,∞,∞], MST={}</strong>
+                <div class="pass">Pick 0 (key=0): Update neighbors → key[1]=2, key[3]=6</div>
+                <div class="pass">Pick 1 (key=2 min): MST edge 0-1(2). Update: key[2]=3,key[3]=min(6,8)=6,key[4]=5</div>
+                <div class="pass">Pick 2 (key=3): MST edge 1-2(3). Update: key[4]=min(5,7)=5</div>
+                <div class="pass">Pick 4 (key=5): MST edge 1-4(5). Update: key[3]=min(6,9)=6</div>
+                <div class="pass">Pick 3 (key=6): MST edge 0-3(6)</div>
+                <div class="pass sorted-all">✅ MST edges: 0-1(2), 1-2(3), 1-4(5), 0-3(6) → Total = 16</div>
+              </div>
+              <div class="key-insight">💡 Prim's is better for dense graphs; Kruskal's for sparse graphs</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="extra-info">
+          <h4>🌟 Extra Information</h4>
+          <div class="info-grid">
+            <div class="info-item"><span>📌</span> Both Prim's and Kruskal's give optimal MST</div>
+            <div class="info-item"><span>📌</span> MST applications: network design, clustering, approx TSP</div>
+            <div class="info-item"><span>📌</span> Prim's works better with adjacency matrix (dense graphs)</div>
+            <div class="info-item"><span>📌</span> Kruskal's works better with edge list (sparse graphs)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Floyd-Warshall -->
+    <div class="algo-card" id="floyd-warshall">
+      <div class="card-header floyd-theme">
+        <div class="algo-number">07</div>
+        <div>
+          <h3>Floyd-Warshall Algorithm</h3>
+          <span class="difficulty hard">Hard</span>
+        </div>
+        <button class="expand-btn" onclick="toggleCard(this)">▼</button>
+      </div>
+      <div class="card-body">
+        <div class="two-col">
+          <div class="note-block handwritten">
+            <h4>📖 Definition</h4>
+            <p><strong>All-pairs shortest path</strong> algorithm using Dynamic Programming. Updates shortest distance between every pair (i,j) considering each vertex k as intermediate.</p>
+            <div class="formula-box">
+              dist[i][j] = min(dist[i][j],<br/>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dist[i][k] + dist[k][j])<br/>
+              For each k from 0 to V-1
+            </div>
+          </div>
+          <div class="complexity-card">
+            <h4>⚡ Complexity</h4>
+            <table class="comp-table">
+              <tr><th>Metric</th><th>Value</th></tr>
+              <tr><td>Time</td><td class="red">O(V³)</td></tr>
+              <tr><td>Space</td><td class="yellow">O(V²)</td></tr>
+            </table>
+            <div class="badge-row">
+              <span class="badge">All pairs ✅</span>
+              <span class="badge">Negative edges ✅</span>
+              <span class="badge bad">No neg cycles</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="problem-section">
+          <div class="problem-header">🔢 Numerical Problem</div>
+          <div class="problem-content">
+            <div class="problem-stmt">
+              <strong>Q1:</strong> 4-vertex graph. Distance matrix:<br/>
+              <code>[[0,3,∞,7],[8,0,2,∞],[5,∞,0,1],[2,∞,∞,0]]</code>.<br/>
+              Find all-pairs shortest paths.
+            </div>
+            <button class="sol-btn" onclick="toggleSolution('floyd-sol')">💡 Show Solution</button>
+            <div class="solution" id="floyd-sol">
+              <div class="pass-trace">
+                <strong>Initial Matrix (∞ = no direct edge):</strong>
+                <div class="matrix-grid">
+                  <div class="matrix-row"><span class="m-cell header"></span><span class="m-cell header">0</span><span class="m-cell header">1</span><span class="m-cell header">2</span><span class="m-cell header">3</span></div>
+                  <div class="matrix-row"><span class="m-cell header">0</span><span class="m-cell">0</span><span class="m-cell">3</span><span class="m-cell">∞</span><span class="m-cell">7</span></div>
+                  <div class="matrix-row"><span class="m-cell header">1</span><span class="m-cell">8</span><span class="m-cell">0</span><span class="m-cell">2</span><span class="m-cell">∞</span></div>
+                  <div class="matrix-row"><span class="m-cell header">2</span><span class="m-cell">5</span><span class="m-cell">∞</span><span class="m-cell">0</span><span class="m-cell">1</span></div>
+                  <div class="matrix-row"><span class="m-cell header">3</span><span class="m-cell">2</span><span class="m-cell">∞</span><span class="m-cell">∞</span><span class="m-cell">0</span></div>
+                </div>
+                <div class="pass"><strong>k=0 (via vertex 0):</strong> Update paths going through 0</div>
+                <div class="pass">d[1][3]=min(∞,8+7)=15, d[3][1]=min(∞,2+3)=5, d[3][2]=min(∞,2+∞)=∞</div>
+                <div class="pass"><strong>k=1 (via vertex 1):</strong> d[0][2]=min(∞,3+2)=5, d[3][2]=min(∞,5+2)=7</div>
+                <div class="pass"><strong>k=2 (via vertex 2):</strong> d[0][3]=min(7,5+1)=6, d[1][3]=min(15,2+1)=3</div>
+                <div class="pass"><strong>k=3 (via vertex 3):</strong> Update remaining paths</div>
+                <br/>
+                <strong>Final Matrix:</strong>
+                <div class="matrix-grid">
+                  <div class="matrix-row"><span class="m-cell header"></span><span class="m-cell header">0</span><span class="m-cell header">1</span><span class="m-cell header">2</span><span class="m-cell header">3</span></div>
+                  <div class="matrix-row"><span class="m-cell header">0</span><span class="m-cell sorted">0</span><span class="m-cell sorted">3</span><span class="m-cell sorted">5</span><span class="m-cell sorted">6</span></div>
+                  <div class="matrix-row"><span class="m-cell header">1</span><span class="m-cell sorted">5</span><span class="m-cell sorted">0</span><span class="m-cell sorted">2</span><span class="m-cell sorted">3</span></div>
+                  <div class="matrix-row"><span class="m-cell header">2</span><span class="m-cell sorted">3</span><span class="m-cell sorted">6</span><span class="m-cell sorted">0</span><span class="m-cell sorted">1</span></div>
+                  <div class="matrix-row"><span class="m-cell header">3</span><span class="m-cell sorted">2</span><span class="m-cell sorted">5</span><span class="m-cell sorted">7</span><span class="m-cell sorted">0</span></div>
+                </div>
+              </div>
+              <div class="key-insight">💡 If dist[i][i] < 0 after algorithm → Negative cycle exists!</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header"><span>C++ Implementation</span><button onclick="copyCode(this)">📋 Copy</button></div>
+          <pre><code>void floydWarshall(int dist[][V]) {
+    for (int k = 0; k &lt; V; k++)
+        for (int i = 0; i &lt; V; i++)
+            for (int j = 0; j &lt; V; j++)
+                if (dist[i][k] != INF &amp;&amp; dist[k][j] != INF)
+                    dist[i][j] = min(dist[i][j], dist[i][k]+dist[k][j]);
+    // Check negative cycles:
+    for (int i = 0; i &lt; V; i++)
+        if (dist[i][i] &lt; 0) cout &lt;&lt; "Negative cycle!";
+}</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Topological Sort -->
+    <div class="algo-card" id="topological-sort">
+      <div class="card-header topo-theme">
+        <div class="algo-number">08</div>
+        <div>
+          <h3>Topological Sort</h3>
+          <span class="difficulty medium">Medium</span>
+        </div>
+        <button class="expand-btn" onclick="toggleCard(this)">▼</button>
+      </div>
+      <div class="card-body">
+        <div class="two-col">
+          <div class="note-block handwritten">
+            <h4>📖 Definition</h4>
+            <p>Linear ordering of vertices in a <strong>DAG</strong> such that for every edge u→v, vertex u comes before v. Used for <strong>task scheduling, dependency resolution</strong>.</p>
+            <div class="formula-box">
+              Only for DAG (no cycles!)<br/>
+              DFS-based: add to stack on finish<br/>
+              Kahn's: use in-degree (BFS)
+            </div>
+          </div>
+          <div class="complexity-card">
+            <h4>⚡ Complexity</h4>
+            <table class="comp-table">
+              <tr><th>Metric</th><th>Value</th></tr>
+              <tr><td>Time</td><td class="green">O(V+E)</td></tr>
+              <tr><td>Space</td><td class="green">O(V)</td></tr>
+            </table>
+            <div class="badge-row">
+              <span class="badge">DAG only ✅</span>
+              <span class="badge">Multiple valid orders ✅</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="problem-section">
+          <div class="problem-header">🔢 Numerical Problem</div>
+          <div class="problem-content">
+            <div class="problem-stmt">
+              <strong>Q1:</strong> DAG edges: 5→2, 5→0, 4→0, 4→1, 2→3, 3→1. Find topological order using Kahn's algorithm.
+            </div>
+            <button class="sol-btn" onclick="toggleSolution('topo-sol')">💡 Show Solution</button>
+            <div class="solution" id="topo-sol">
+              <div class="pass-trace">
+                <strong>Step 1: Calculate In-degrees</strong>
+                <div class="pass">0: in-deg=2 (from 5,4), 1: in-deg=2 (from 4,3), 2: in-deg=1 (from 5), 3: in-deg=1 (from 2), 4: in-deg=0, 5: in-deg=0</div>
+                <div class="pass"><strong>Step 2:</strong> Queue = [4, 5] (in-degree = 0)</div>
+                <div class="pass"><strong>Dequeue 4:</strong> Output: 4. Reduce: in-deg[0]→1, in-deg[1]→1. Queue=[5]</div>
+                <div class="pass"><strong>Dequeue 5:</strong> Output: 5. Reduce: in-deg[0]→0, in-deg[2]→0. Queue=[0,2]</div>
+                <div class="pass"><strong>Dequeue 0:</strong> Output: 0. Queue=[2]</div>
+                <div class="pass"><strong>Dequeue 2:</strong> Output: 2. Reduce in-deg[3]→0. Queue=[3]</div>
+                <div class="pass"><strong>Dequeue 3:</strong> Output: 3. Reduce in-deg[1]→0. Queue=[1]</div>
+                <div class="pass"><strong>Dequeue 1:</strong> Output: 1.</div>
+                <div class="pass sorted-all">✅ Topological Order: 4 → 5 → 0 → 2 → 3 → 1</div>
+              </div>
+              <div class="key-insight">💡 If queue is empty before processing all vertices → Graph has a cycle!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Graph Algorithms Comparison -->
+    <div class="comparison-card">
+      <h3>🕸️ Graph Algorithms Summary</h3>
+      <div class="table-wrapper">
+        <table class="big-table">
+          <thead>
+            <tr><th>Algorithm</th><th>Purpose</th><th>Time</th><th>Space</th><th>Notes</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>BFS</td><td>Traversal / Shortest path (unweighted)</td><td class="green">O(V+E)</td><td class="green">O(V)</td><td>Queue</td></tr>
+            <tr><td>DFS</td><td>Traversal / Cycle / Topo Sort</td><td class="green">O(V+E)</td><td class="green">O(V)</td><td>Stack/Recursion</td></tr>
+            <tr><td>Dijkstra</td><td>SSSP (non-negative weights)</td><td class="green">O((V+E)logV)</td><td class="green">O(V)</td><td>Min-Heap</td></tr>
+            <tr><td>Bellman-Ford</td><td>SSSP (negative weights)</td><td class="yellow">O(VE)</td><td class="green">O(V)</td><td>Detects neg cycles</td></tr>
+            <tr><td>Floyd-Warshall</td><td>All-pairs shortest path</td><td class="red">O(V³)</td><td class="yellow">O(V²)</td><td>DP approach</td></tr>
+            <tr><td>Kruskal</td><td>MST (edge-based)</td><td class="yellow">O(E log E)</td><td class="green">O(V)</td><td>Union-Find</td></tr>
+            <tr><td>Prim's</td><td>MST (vertex-based)</td><td class="green">O(E log V)</td><td class="yellow">O(V)</td><td>Priority Queue</td></tr>
+            <tr><td>Topological Sort</td><td>Ordering in DAG</td><td class="green">O(V+E)</td><td class="green">O(V)</td><td>DAG only</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== STRING MATCHING SECTION ===================== -->
+  <section id="string" class="section">
+    <div class="section-header">
+      <h2>🔍 String Matching Algorithms</h2>
+      <p>Pattern searching, preprocessing tables, and linear-time string matching!</p>
+    </div>
+
+    <!-- Naive String Matching -->
+    <div class="algo-card" id="naive-string-matching">
+      <div class="card-header bubble-theme">
+        <div class="algo-number">01</div>
+        <div>
+          <h3>Naive String Matching (Brute Force)</h3>
+          <span class="difficulty easy">Easy</span>
+        </div>
+        <button class="expand-btn" onclick="toggleCard(this)">▼</button>
+      </div>
+      <div class="card-body">
+        <div class="two-col">
+          <div class="note-block handwritten">
+            <h4>📖 Definition & Concept</h4>
+            <p>Slides pattern $P$ of length $M$ over text $T$ of length $N$ one character at a time. At every shift $s \in [0, N-M]$, compares characters from left to right until a mismatch occurs or full pattern matches.</p>
+            <div class="formula-box">
+              Valid Shifts: $s = 0, 1, 2, \dots, N-M$<br/>
+              Total Shift Windows: $N - M + 1$<br/>
+              Worst-Case Comparisons: $(N - M + 1) \times M \approx O(N \times M)$
+            </div>
+          </div>
+          <div class="complexity-card">
+            <h4>⚡ Complexity</h4>
+            <table class="comp-table">
+              <tr><th>Case</th><th>Time</th></tr>
+              <tr><td>Best Case</td><td class="green">O(N)</td></tr>
+              <tr><td>Average Case</td><td class="yellow">O(N)</td></tr>
+              <tr><td>Worst Case</td><td class="red">O((N-M+1) × M)</td></tr>
+              <tr><td>Space</td><td class="green">O(1)</td></tr>
+            </table>
+            <div class="badge-row">
+              <span class="badge">No Preprocessing ✅</span>
+              <span class="badge">Backtracks text pointer ⚠️</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Numerical Problem -->
+        <div class="problem-section">
+          <div class="problem-header">🔢 Numerical / Dry-Run Problem</div>
+          <div class="problem-content">
+            <div class="problem-stmt">
+              <strong>Q1:</strong> Find all occurrences and count total character comparisons for Text $T = \text{"AABAACAADAABAABA"}$ and Pattern $P = \text{"AABA"}$ using the Naive approach.
+            </div>
+            <button class="sol-btn" onclick="toggleSolution('naive-sol')">💡 Show Solution</button>
+            <div class="solution" id="naive-sol">
+              <div class="pass-trace">
+                <div class="pass">
+                  <strong>Step-by-Step Shift Trace:</strong>
+                  <div class="arr-steps">
+                    <span>• Shift 0: Compares 'A','A','B','A' with $T[0..3]$ $\to$ <strong>Match at index 0!</strong> (4 comps)</span><br/>
+                    <span>• Shift 1: $T[1]='A' == P[0]='A'$, $T[2]='B' \neq P[1]='A'$ $\to$ Mismatch at $j=1$ (2 comps)</span><br/>
+                    <span>• Shift 2: $T[2]='B' \neq P[0]='A'$ $\to$ Mismatch at $j=0$ (1 comp)</span><br/>
+                    <span>• Shift 3: $T[3]='A'$, $T[4]='A'$, $T[5]='C' \neq P[2]='B'$ $\to$ Mismatch at $j=2$ (3 comps)</span><br/>
+                    <span>• Shift 9: Compares with $T[9..12]$ $\to$ <strong>Match at index 9!</strong> (4 comps)</span><br/>
+                    <span>• Shift 12: Compares with $T[12..15]$ $\to$ <strong>Match at index 12!</strong> (4 comps)</span><br/>
+                  </div>
+                  <div class="summary-box" style="margin-top: 10px;">
+                    <strong>Total Matches Found:</strong> Indices 0, 9, 12<br/>
+                    <strong>Total Comparisons:</strong> 26 comparisons
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Knuth-Morris-Pratt (KMP) Algorithm -->
+    <div class="algo-card" id="kmp-algorithm">
+      <div class="card-header dijkstra-theme">
+        <div class="algo-number">02</div>
+        <div>
+          <h3>Knuth-Morris-Pratt (KMP) Algorithm</h3>
+          <span class="difficulty hard">Optimal / Advanced</span>
+        </div>
+        <button class="expand-btn" onclick="toggleCard(this)">▼</button>
+      </div>
+      <div class="card-body">
+        <div class="two-col">
+          <div class="note-block handwritten">
+            <h4>📖 Core Intuition & LPS Array</h4>
+            <p>KMP achieves strictly linear time $O(N + M)$ by taking advantage of the pattern's self-similarity. It builds the <strong>LPS (Longest Proper Prefix which is also Suffix)</strong> table $\pi[0 \dots M-1]$ during preprocessing so that the text pointer $i$ <strong>never backtracks</strong>.</p>
+            <div class="formula-box">
+              Mismatch at $P[j] \neq T[i]$:<br/>
+              • If $j > 0 \implies j \leftarrow \text{LPS}[j-1]$ (text index $i$ stays unchanged!)<br/>
+              • If $j == 0 \implies i \leftarrow i + 1$
+            </div>
+          </div>
+          <div class="complexity-card">
+            <h4>⚡ Complexity</h4>
+            <table class="comp-table">
+              <tr><th>Phase</th><th>Time</th><th>Space</th></tr>
+              <tr><td>LPS Preprocessing</td><td class="green">O(M)</td><td class="green">O(M)</td></tr>
+              <tr><td>Search Phase</td><td class="green">O(N)</td><td class="green">O(1)</td></tr>
+              <tr><td>Total Worst-Case</td><td class="green">O(N + M)</td><td class="green">O(M)</td></tr>
+            </table>
+            <div class="badge-row">
+              <span class="badge">Strict Linear Time ✅</span>
+              <span class="badge">Zero Text Backtracking ✅</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Numerical on LPS Table Computation -->
+        <div class="problem-section">
+          <div class="problem-header">🔢 Numerical: Compute LPS ($\pi$) Array</div>
+          <div class="problem-content">
+            <div class="problem-stmt">
+              <strong>Q2:</strong> Construct the complete LPS (Longest Prefix Suffix) table for the pattern $P = \text{"ABABCABAB"}$.
+            </div>
+            <button class="sol-btn" onclick="toggleSolution('lps-sol')">💡 Show Solution</button>
+            <div class="solution" id="lps-sol">
+              <div class="pass-trace">
+                <div class="pass">
+                  <table class="comp-table" style="width: 100%; text-align: center; margin: 10px 0;">
+                    <tr><th>Index $j$</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th></tr>
+                    <tr><th>$P[j]$</th><td>A</td><td>B</td><td>A</td><td>B</td><td>C</td><td>A</td><td>B</td><td>A</td><td>B</td></tr>
+                    <tr><th>LPS$[j]$</th><td class="green">0</td><td class="green">0</td><td class="yellow">1</td><td class="yellow">2</td><td class="green">0</td><td class="yellow">1</td><td class="yellow">2</td><td class="yellow">3</td><td class="green">4</td></tr>
+                  </table>
+                  <p style="font-size: 0.9rem; line-height: 1.6; margin-top: 8px;">
+                    <strong>Explanation:</strong><br/>
+                    • $P[0..2] = \text{"ABA"} \implies$ Proper prefix "A" == suffix "A" (len 1).<br/>
+                    • $P[0..3] = \text{"ABAB"} \implies$ Proper prefix "AB" == suffix "AB" (len 2).<br/>
+                    • $P[0..4] = \text{"ABABC"} \implies$ No proper prefix matches suffix $\implies \text{LPS}[4] = 0$.<br/>
+                    • $P[0..8] = \text{"ABABCABAB"} \implies$ Prefix "ABAB" matches suffix "ABAB" (len 4).
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- String Matching Summary Table -->
+    <div class="comparison-card">
+      <h3>🔍 String Matching Algorithms Summary & Performance Analysis</h3>
+      <div class="table-wrapper">
+        <table class="big-table">
+          <thead>
+            <tr><th>Algorithm</th><th>Preprocessing</th><th>Matching Time</th><th>Space</th><th>Advantage & Best Use Case</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Naive (Brute Force)</strong></td><td>None</td><td class="red">O((N-M+1) × M)</td><td class="green">O(1)</td><td>Simple, small patterns & random text.</td></tr>
+            <tr><td><strong>Knuth-Morris-Pratt (KMP)</strong></td><td class="green">O(M)</td><td class="green">O(N + M)</td><td class="yellow">O(M)</td><td>Zero text backtracking, ideal for stream processing & repetitive alphabets (DNA).</td></tr>
+            <tr><td><strong>Rabin-Karp</strong></td><td class="green">O(M)</td><td class="green">O(N + M) avg, O(NM) worst</td><td class="green">O(1)</td><td>Rolling hash; ideal for multiple pattern searches simultaneously.</td></tr>
+            <tr><td><strong>Boyer-Moore</strong></td><td class="yellow">O(M + Σ)</td><td class="green">O(N / M) sub-linear best</td><td class="yellow">O(Σ)</td><td>Fastest in practice for long patterns using bad-character heuristics.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Reference Card -->
+  <div class="quick-ref" id="quickRef">
+    <button class="quick-ref-btn" onclick="toggleQuickRef()">📌 Quick Ref</button>
+    <div class="quick-ref-panel" id="quickRefPanel">
+      <h4>⚡ Complexity Cheatsheet</h4>
+      <div class="cheat-section">
+        <strong>String Matching</strong>
+        <div class="cheat-row"><span>Naive Brute Force</span><span class="red">O(N × M)</span></div>
+        <div class="cheat-row"><span>KMP Algorithm</span><span class="green">O(N + M)</span></div>
+        <div class="cheat-row"><span>Rabin-Karp (avg)</span><span class="green">O(N + M)</span></div>
+      </div>
+      <div class="cheat-section">
+        <strong>Sorting</strong>
+        <div class="cheat-row"><span>Bubble/Selection/Insertion</span><span class="red">O(n²)</span></div>
+        <div class="cheat-row"><span>Merge/Heap</span><span class="green">O(n log n)</span></div>
+        <div class="cheat-row"><span>Quick (avg)</span><span class="green">O(n log n)</span></div>
+      </div>
+      <div class="cheat-section">
+        <strong>Graph</strong>
+        <div class="cheat-row"><span>BFS/DFS</span><span class="green">O(V+E)</span></div>
+        <div class="cheat-row"><span>Dijkstra</span><span class="green">O(E log V)</span></div>
+        <div class="cheat-row"><span>Bellman-Ford</span><span class="yellow">O(VE)</span></div>
+        <div class="cheat-row"><span>Floyd-Warshall</span><span class="red">O(V³)</span></div>
+        <div class="cheat-row"><span>Kruskal/Prim</span><span class="yellow">O(E log E)</span></div>
+      </div>
+      <div class="cheat-section">
+        <strong>Greedy</strong>
+        <div class="cheat-row"><span>Activity/Job Seq</span><span class="green">O(n log n)</span></div>
+        <div class="cheat-row"><span>Huffman</span><span class="yellow">O(n log n)</span></div>
+        <div class="cheat-row"><span>Fractional KS</span><span class="yellow">O(n log n)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <p>📓 Algorithm Notes — Sorting · Greedy · Graph</p>
+      <p class="footer-sub">Made with ❤️ for Computer Science Students</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

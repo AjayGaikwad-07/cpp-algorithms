@@ -1342,5 +1342,426 @@ int main() {
     return 0;
 }
 `
+  },
+  // -------------------------------------------------------------
+  // STRING MATCHING ALGORITHMS
+  // -------------------------------------------------------------
+  {
+    id: 'naive_matching',
+    name: 'Naive String Matching',
+    category: 'string',
+    categoryName: 'String Matching Algorithms',
+    filePath: 'string_matching_algorithms/1_naive_string_matching.cpp',
+    timeComplexity: 'O((N - M + 1) * M)',
+    spaceComplexity: 'O(1)',
+    description: 'A straightforward brute-force pattern matching algorithm that checks for occurrences of a pattern P of length M in a text T of length N by sliding the pattern character by character across all valid shift positions from 0 to N-M.',
+    realWorld: [
+      'Simple text editor search functions with short queries',
+      'Small configuration parameter and keyword matching',
+      'Baseline benchmark reference for advanced pattern matching engines'
+    ],
+    steps: [
+      'Set text index i from 0 to N - M.',
+      'For each shift position i, compare pattern characters pattern[j] with text[i + j] for j = 0 to M - 1.',
+      'If all M characters match (j == M), record shift i as a valid occurrence.',
+      'If a mismatch occurs at any character (pattern[j] != text[i + j]), stop inner loop and slide pattern by 1 position (increment i).',
+      'Repeat until all N - M + 1 window positions are examined.'
+    ],
+    pseudocode: [
+      'n = text.length, m = pattern.length',
+      'for i = 0 to n - m:',
+      '  j = 0',
+      '  while j < m and text[i + j] == pattern[j]:',
+      '    j = j + 1',
+      '  if j == m:',
+      '    print "Pattern found at index " + i'
+    ],
+    defaultInput: 'AABAACAADAABAABA\nAABA',
+    code: `#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+void naiveStringMatch(const string& text, const string& pattern) {
+    int n = text.length();
+    int m = pattern.length();
+    vector<int> matches;
+    int comparisons = 0;
+
+    cout << "--- Step-by-Step Naive String Matching ---" << endl;
+    for (int i = 0; i <= n - m; i++) {
+        int j = 0;
+        while (j < m) {
+            comparisons++;
+            if (text[i + j] != pattern[j]) {
+                break;
+            }
+            j++;
+        }
+
+        if (j == m) {
+            matches.push_back(i);
+            cout << "Shift " << i << ": Pattern found at index " << i << endl;
+        } else {
+            cout << "Shift " << i << ": Mismatch at pattern index " << j 
+                 << " ('" << text[i + j] << "' != '" << pattern[j] << "')" << endl;
+        }
+    }
+
+    cout << "\\n---------------- Result Summary ----------------" << endl;
+    cout << "Text Length (N): " << n << endl;
+    cout << "Pattern Length (M): " << m << endl;
+    cout << "Total Character Comparisons: " << comparisons << endl;
+
+    if (matches.empty()) {
+        cout << "Pattern not found in the given text." << endl;
+    } else {
+        cout << "Pattern found " << matches.size() << " time(s) at 0-based index: ";
+        for (int idx : matches) {
+            cout << idx << " ";
+        }
+        cout << endl;
+    }
+}
+
+int main() {
+    string text, pattern;
+    cout << "Enter Text: ";
+    if (!(cin >> text)) return 0;
+    cout << "Enter Pattern: ";
+    if (!(cin >> pattern)) return 0;
+
+    naiveStringMatch(text, pattern);
+    return 0;
+}
+`
+  },
+  {
+    id: 'kmp_matching',
+    name: 'Knuth-Morris-Pratt (KMP)',
+    category: 'string',
+    categoryName: 'String Matching Algorithms',
+    filePath: 'string_matching_algorithms/2_kmp_string_matching.cpp',
+    timeComplexity: 'O(N + M)',
+    spaceComplexity: 'O(M)',
+    description: 'An optimal linear-time string matching algorithm that avoids re-examining previously matched characters by precomputing a Longest Proper Prefix which is also Suffix (LPS / π) table for the pattern, ensuring the text index never backtracks.',
+    realWorld: [
+      'Bioinformatics & Genomic Sequence Alignment (DNA/RNA substring analysis)',
+      'Intrusion Detection Systems (Snort, network packet payload pattern inspection)',
+      'Search Engines & High-Throughput Stream Parsing (grep, text indexing engines)',
+      'Digital Forensics & Plagiarism Detection Software'
+    ],
+    steps: [
+      'Precompute the LPS (Longest Prefix Suffix) array of size M in O(M) time.',
+      'Initialize text pointer i = 0 and pattern pointer j = 0.',
+      'Compare text[i] and pattern[j]: if they match, increment both i and j.',
+      'If j == M, report a full match at index (i - j), then update j = LPS[j - 1] to find overlapping matches.',
+      'If a mismatch occurs after j matches (pattern[j] != text[i]):',
+      '  - If j != 0, set j = LPS[j - 1] (skip redundant prefix comparisons without resetting i).',
+      '  - If j == 0, advance text pointer i by 1.',
+      'Repeat until text pointer i reaches N.'
+    ],
+    pseudocode: [
+      'lps = computeLPSArray(pattern)',
+      'i = 0, j = 0',
+      'while i < text.length:',
+      '  if pattern[j] == text[i]: i++, j++',
+      '  if j == pattern.length:',
+      '    print "Match found at " + (i - j)',
+      '    j = lps[j - 1]',
+      '  else if i < text.length and pattern[j] != text[i]:',
+      '    if j != 0: j = lps[j - 1]',
+      '    else: i++'
+    ],
+    defaultInput: 'ABABDABACDABABCABAB\nABABCABAB',
+    code: `#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+// Function to compute the Longest Proper Prefix which is also Suffix (LPS) Array
+vector<int> computeLPSArray(const string& pattern, int& lpsComparisons) {
+    int m = pattern.length();
+    vector<int> lps(m, 0);
+    int len = 0; // length of previous longest prefix suffix
+    int i = 1;
+
+    while (i < m) {
+        lpsComparisons++;
+        if (pattern[i] == pattern[len]) {
+            len++;
+            lps[i] = len;
+            i++;
+        } else {
+            if (len != 0) {
+                len = lps[len - 1]; // fallback without incrementing i
+            } else {
+                lps[i] = 0;
+                i++;
+            }
+        }
+    }
+    return lps;
+}
+
+void KMPSearch(const string& text, const string& pattern) {
+    int n = text.length();
+    int m = pattern.length();
+
+    int lpsComparisons = 0;
+    vector<int> lps = computeLPSArray(pattern, lpsComparisons);
+
+    cout << "--- Computed LPS (Longest Prefix Suffix) Array ---" << endl;
+    cout << "Index   : ";
+    for (int k = 0; k < m; k++) cout << k << " ";
+    cout << "\\nPattern : ";
+    for (int k = 0; k < m; k++) cout << pattern[k] << " ";
+    cout << "\\nLPS     : ";
+    for (int k = 0; k < m; k++) cout << lps[k] << " ";
+    cout << "\\nLPS Preprocessing Comparisons: " << lpsComparisons << "\\n" << endl;
+
+    cout << "--- KMP Matching Execution ---" << endl;
+    int i = 0; // index for text
+    int j = 0; // index for pattern
+    int searchComparisons = 0;
+    vector<int> matches;
+
+    while (i < n) {
+        searchComparisons++;
+        if (pattern[j] == text[i]) {
+            i++;
+            j++;
+        }
+
+        if (j == m) {
+            int matchIdx = i - j;
+            matches.push_back(matchIdx);
+            cout << "Found match at text index " << matchIdx << endl;
+            j = lps[j - 1]; // Use LPS to avoid redundant backtracking
+        } else if (i < n && pattern[j] != text[i]) {
+            if (j != 0) {
+                // Skip matching characters using LPS value
+                cout << "Mismatch at text index " << i << " (pattern index " << j 
+                     << ") -> Resetting pattern index to " << lps[j - 1] << " using LPS" << endl;
+                j = lps[j - 1];
+            } else {
+                cout << "Mismatch at text index " << i << " with first char -> Advancing text index" << endl;
+                i++;
+            }
+        }
+    }
+
+    cout << "\\n---------------- Result Summary ----------------" << endl;
+    cout << "Text Length (N): " << n << endl;
+    cout << "Pattern Length (M): " << m << endl;
+    cout << "Search Phase Comparisons: " << searchComparisons << endl;
+    cout << "Total Comparisons (LPS + Search): " << (lpsComparisons + searchComparisons) << endl;
+
+    if (matches.empty()) {
+        cout << "Pattern not found in the given text." << endl;
+    } else {
+        cout << "Pattern found " << matches.size() << " time(s) at 0-based index: ";
+        for (int idx : matches) {
+            cout << idx << " ";
+        }
+        cout << endl;
+    }
+}
+
+int main() {
+    string text, pattern;
+    cout << "Enter Text: ";
+    if (!(cin >> text)) return 0;
+    cout << "Enter Pattern: ";
+    if (!(cin >> pattern)) return 0;
+
+    KMPSearch(text, pattern);
+    return 0;
+}
+`
+  },
+  {
+    id: 'string_analysis',
+    name: 'Matching Performance Benchmark',
+    category: 'string',
+    categoryName: 'String Matching Algorithms',
+    filePath: 'string_matching_algorithms/3_string_matching_analysis.cpp',
+    timeComplexity: 'O(N + M) vs O(N * M)',
+    spaceComplexity: 'O(M) vs O(1)',
+    description: 'Empirical benchmark and performance analysis suite comparing Naive Pattern Matching vs Knuth-Morris-Pratt (KMP) across Best, Average, Worst-case repetitive patterns, and Genomic DNA datasets.',
+    realWorld: [
+      'Comparative benchmarking for database text search engines',
+      'Algorithmic performance evaluation in high-speed network packet inspection',
+      'Big Data pattern searching scalability analysis'
+    ],
+    steps: [
+      'Execute Standard / Natural Language text test case and compare total character comparisons.',
+      'Execute Heavy Repetitive Pattern test case (e.g., A...AB in A...B) where Naive experiences worst-case degradation.',
+      'Execute Genomic DNA Sequence test case with dense overlapping motifs.',
+      'Measure microsecond CPU execution time and percentage comparison reduction by KMP.'
+    ],
+    pseudocode: [
+      'for each scenario (natural, repetitive_worst_case, genomic):',
+      '  comp_naive, time_naive = benchmark(naive_search, text, pattern)',
+      '  comp_kmp, time_kmp = benchmark(kmp_search, text, pattern)',
+      '  speedup = (comp_naive - comp_kmp) / comp_naive * 100',
+      '  print_comparison_table(scenario, comp_naive, comp_kmp, speedup)'
+    ],
+    defaultInput: '',
+    code: `#include <iostream>
+#include <string>
+#include <vector>
+#include <chrono>
+#include <iomanip>
+
+using namespace std;
+
+// Naive Pattern Matching with comparison counter
+int naiveMatching(const string& text, const string& pattern, vector<int>& matches) {
+    int n = text.length();
+    int m = pattern.length();
+    int comparisons = 0;
+    matches.clear();
+
+    for (int i = 0; i <= n - m; i++) {
+        int j = 0;
+        while (j < m) {
+            comparisons++;
+            if (text[i + j] != pattern[j]) break;
+            j++;
+        }
+        if (j == m) {
+            matches.push_back(i);
+        }
+    }
+    return comparisons;
+}
+
+// KMP LPS computation
+vector<int> buildLPS(const string& pattern, int& lpsComparisons) {
+    int m = pattern.length();
+    vector<int> lps(m, 0);
+    int len = 0;
+    int i = 1;
+    lpsComparisons = 0;
+
+    while (i < m) {
+        lpsComparisons++;
+        if (pattern[i] == pattern[len]) {
+            len++;
+            lps[i] = len;
+            i++;
+        } else {
+            if (len != 0) {
+                len = lps[len - 1];
+            } else {
+                lps[i] = 0;
+                i++;
+            }
+        }
+    }
+    return lps;
+}
+
+// KMP Matching with comparison counter
+int kmpMatching(const string& text, const string& pattern, vector<int>& matches) {
+    int n = text.length();
+    int m = pattern.length();
+    int lpsComparisons = 0;
+    vector<int> lps = buildLPS(pattern, lpsComparisons);
+
+    int i = 0;
+    int j = 0;
+    int searchComparisons = 0;
+    matches.clear();
+
+    while (i < n) {
+        searchComparisons++;
+        if (pattern[j] == text[i]) {
+            i++;
+            j++;
+        }
+
+        if (j == m) {
+            matches.push_back(i - j);
+            j = lps[j - 1];
+        } else if (i < n && pattern[j] != text[i]) {
+            if (j != 0) {
+                j = lps[j - 1];
+            } else {
+                i++;
+            }
+        }
+    }
+    return lpsComparisons + searchComparisons;
+}
+
+void runBenchmark(const string& testName, const string& text, const string& pattern) {
+    vector<int> naiveMatches, kmpMatches;
+
+    auto t1 = chrono::high_resolution_clock::now();
+    int naiveComp = naiveMatching(text, pattern, naiveMatches);
+    auto t2 = chrono::high_resolution_clock::now();
+    double naiveTime = chrono::duration<double, micro>(t2 - t1).count();
+
+    auto t3 = chrono::high_resolution_clock::now();
+    int kmpComp = kmpMatching(text, pattern, kmpMatches);
+    auto t4 = chrono::high_resolution_clock::now();
+    double kmpTime = chrono::duration<double, micro>(t4 - t3).count();
+
+    cout << "================================================================" << endl;
+    cout << "Test Scenario: " << testName << endl;
+    cout << "Text Length (N): " << text.length() << " | Pattern Length (M): " << pattern.length() << endl;
+    cout << "Matches Found  : " << kmpMatches.size() << endl;
+    cout << "----------------------------------------------------------------" << endl;
+    cout << left << setw(18) << "Algorithm" 
+         << setw(20) << "Comparisons" 
+         << setw(16) << "Time (microsec)" 
+         << setw(14) << "Complexity" << endl;
+    cout << "----------------------------------------------------------------" << endl;
+    cout << left << setw(18) << "Naive Approach" 
+         << setw(20) << naiveComp 
+         << setw(16) << fixed << setprecision(2) << naiveTime 
+         << setw(14) << "O((N-M+1)*M)" << endl;
+    cout << left << setw(18) << "KMP Algorithm" 
+         << setw(20) << kmpComp 
+         << setw(16) << fixed << setprecision(2) << kmpTime 
+         << setw(14) << "O(N + M)" << endl;
+    cout << "----------------------------------------------------------------" << endl;
+    
+    double reduction = (naiveComp > 0) ? ((double)(naiveComp - kmpComp) / naiveComp * 100.0) : 0;
+    if (reduction > 0) {
+        cout << ">> KMP reduced character comparisons by: " << fixed << setprecision(2) << reduction << "%\\n";
+    } else {
+        cout << ">> Naive performed comparably for this simple pattern.\\n";
+    }
+    cout << endl;
+}
+
+int main() {
+    cout << "================================================================" << endl;
+    cout << "  PATTERN MATCHING PERFORMANCE & COMPLEXITY ANALYSIS BENCHMARK  " << endl;
+    cout << "================================================================\\n" << endl;
+
+    // 1. Average Case: Natural Language text
+    string text1 = "A_QUICK_BROWN_FOX_JUMPS_OVER_THE_LAZY_DOG_WHILE_SEARCHING_PATTERN";
+    string pat1 = "SEARCH";
+    runBenchmark("1. Standard / Average Case (Natural String)", text1, pat1);
+
+    // 2. Worst Case for Naive: Highly repetitive text with pattern mismatch at end
+    string text2 = string(2000, 'A') + "B";
+    string pat2 = string(50, 'A') + "B";
+    runBenchmark("2. Worst Case for Naive (Heavy Repetition A...AB)", text2, pat2);
+
+    // 3. DNA / Genomic Sequence with overlapping repeats
+    string text3 = "AGCTAGCTAGCTAGGCTAAGCTAGCTAGCTAGCTACGGATCGATCGATC";
+    string pat3 = "AGCTAGCTA";
+    runBenchmark("3. Genomic Pattern with Overlapping Substrings", text3, pat3);
+
+    return 0;
+}
+`
   }
 ];

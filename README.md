@@ -31,6 +31,11 @@ A collection of core algorithms implemented in C++, categorized by domain:
 - `4_floyd_warshall.cpp` - Floyd-Warshall All-Pairs Shortest Paths
 - `5_bellman_ford.cpp` - Bellman-Ford Single-Source Shortest Paths
 
+### 🔹 String Matching Algorithms (`/string_matching_algorithms`)
+- `1_naive_string_matching.cpp` - Naive String Matching Algorithm (Brute Force)
+- `2_kmp_string_matching.cpp` - Knuth-Morris-Pratt (KMP) Pattern Searching Algorithm with LPS Precomputation
+- `3_string_matching_analysis.cpp` - Empirical & Benchmark Performance Analysis comparing Naive vs KMP across average, worst-case repetitive, and genomic datasets
+
 ---
 
 ## 🚀 How to Run
