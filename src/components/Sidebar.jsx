@@ -1,8 +1,10 @@
 import React from 'react';
-import { Network, Zap, Cpu, BarChart2, Search, Undo2, ChevronRight } from 'lucide-react';
+import { Network, Zap, Cpu, BarChart2, Search, Undo2, ChevronRight, Scissors, Droplets } from 'lucide-react';
 
 export default function Sidebar({ algorithms, selectedAlgo, setSelectedAlgo, searchTerm }) {
   const categories = [
+    { key: 'network_flow', name: 'Network Flow', icon: Droplets, badgeClass: 'badge-network-flow' },
+    { key: 'branch_and_bound', name: 'Branch and Bound', icon: Scissors, badgeClass: 'badge-branch-and-bound' },
     { key: 'backtracking', name: 'Backtracking', icon: Undo2, badgeClass: 'badge-backtracking' },
     { key: 'string', name: 'String Matching', icon: Search, badgeClass: 'badge-string' },
     { key: 'graph', name: 'Graph Algorithms', icon: Network, badgeClass: 'badge-graph' },

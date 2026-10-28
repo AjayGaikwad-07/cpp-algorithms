@@ -9,6 +9,8 @@ import GreedyVisualizer from './components/Visualizers/GreedyVisualizer';
 import DynamicProgrammingVisualizer from './components/Visualizers/DynamicProgrammingVisualizer';
 import StringMatchingVisualizer from './components/Visualizers/StringMatchingVisualizer';
 import BacktrackingVisualizer from './components/Visualizers/BacktrackingVisualizer';
+import BranchAndBoundVisualizer from './components/Visualizers/BranchAndBoundVisualizer';
+import NetworkFlowVisualizer from './components/Visualizers/NetworkFlowVisualizer';
 import { ALGORITHMS } from './data/algorithmsData';
 import { BookOpen, Activity, Terminal } from 'lucide-react';
 
@@ -30,6 +32,10 @@ export default function App() {
       return <StringMatchingVisualizer algo={selectedAlgo} />;
     } else if (selectedAlgo.category === 'backtracking') {
       return <BacktrackingVisualizer algo={selectedAlgo} />;
+    } else if (selectedAlgo.category === 'branch_and_bound') {
+      return <BranchAndBoundVisualizer algo={selectedAlgo} />;
+    } else if (selectedAlgo.category === 'network_flow') {
+      return <NetworkFlowVisualizer algo={selectedAlgo} />;
     }
     return null;
   };

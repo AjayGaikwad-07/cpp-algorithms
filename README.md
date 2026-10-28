@@ -42,6 +42,15 @@ A collection of core algorithms implemented in C++, categorized by domain:
 - `3_hamiltonian_path.cpp` - Hamiltonian Path & Circuit / Cycle Algorithm
 - `4_travelling_salesperson.cpp` - Travelling Salesperson Problem (Exact Backtracking with Branch & Bound Pruning)
 
+### 🔹 Branch and Bound Algorithms (`/branch_and_bound`)
+- `1_01_knapsack_branch_and_bound.cpp` - 0/1 Knapsack Problem (Least-Cost / Max-Profit Best-First Search with Fractional Knapsack Upper Bound & Pruning)
+- `2_tsp_branch_and_bound.cpp` - Travelling Salesperson Problem (TSP) using LCBB with Reduced Cost Matrix & Lower Bound Pruning
+
+### 🔹 Network Flow Algorithms (`/network_flow_algorithms`)
+- `1_ford_fulkerson.cpp` - Ford-Fulkerson Algorithm (Edmonds-Karp BFS Augmenting Path Method)
+- `2_push_relabel.cpp` - Push-Relabel Maximum Flow Algorithm (Goldberg-Tarjan Preflow-Push Method)
+- `3_network_flow_analysis.cpp` - Performance, Operations & Complexity Analysis of Network Flow Algorithms
+
 ---
 
 ## 🚀 How to Run

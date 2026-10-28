@@ -2259,5 +2259,739 @@ int main() {
     return 0;
 }
 `
+  },
+  // -------------------------------------------------------------
+  // BRANCH AND BOUND ALGORITHMS
+  // -------------------------------------------------------------
+  {
+    id: 'knapsack_branch_and_bound',
+    name: '0/1 Knapsack (Branch & Bound)',
+    category: 'branch_and_bound',
+    categoryName: 'Branch and Bound',
+    filePath: 'branch_and_bound/1_01_knapsack_branch_and_bound.cpp',
+    timeComplexity: 'O(2^n) worst case, exponential but heavily pruned',
+    spaceComplexity: 'O(2^n) priority queue state-space tree',
+    description: 'Solves the 0/1 Knapsack problem using Least-Cost / Best-First Branch and Bound. Employs a Max-Heap Priority Queue prioritized by an optimistic Upper Bound calculated via Greedy Fractional Knapsack relaxation, pruning unpromising subtrees.',
+    realWorld: [
+      'Cargo container & aerospace payload loading under weight limits',
+      'Financial capital budgeting and high-yield investment portfolio selection',
+      'Resource allocation in distributed cloud clusters & job scheduling',
+      'Bandwidth and packet allocation in network routers'
+    ],
+    steps: [
+      'Sort all items in descending order of value-to-weight ratio (val / wt).',
+      'Initialize Root node with level = -1, profit = 0, weight = 0, and compute optimistic Upper Bound using Fractional Knapsack relaxation.',
+      'Insert Root into Max-Heap Priority Queue prioritized by Upper Bound.',
+      'Pop top node from Priority Queue. If node.bound <= maxProfit, prune immediately.',
+      'Branch on next item into two children: Left Child (INCLUDE item if weight <= capacity) and Right Child (EXCLUDE item).',
+      'For each child, compute weight, profit, and Upper Bound. If feasible and bound > maxProfit, push to Priority Queue.',
+      'Repeat until Priority Queue is empty. Return optimal max profit and selected items.'
+    ],
+    pseudocode: [
+      'sort items by (value / weight) descending',
+      'PQ.push(root(level=-1, profit=0, weight=0, bound=calcBound(root)))',
+      'while PQ is not empty:',
+      '  u = PQ.top(), PQ.pop()',
+      '  if u.bound <= maxProfit: continue // PRUNE',
+      '  // Left child: Include item[u.level + 1]',
+      '  left = child(u, include=true)',
+      '  if left.weight <= W and left.profit > maxProfit:',
+      '    maxProfit = left.profit',
+      '  if left.bound > maxProfit: PQ.push(left)',
+      '  // Right child: Exclude item[u.level + 1]',
+      '  right = child(u, include=false)',
+      '  if right.bound > maxProfit: PQ.push(right)'
+    ],
+    defaultInput: '4\n40 2\n30 5\n50 10\n10 5\n16',
+    code: `#include <iostream>
+#include <vector>
+#include <queue>
+#include <algorithm>
+#include <iomanip>
+
+using namespace std;
+
+struct Item {
+    int id;
+    int weight;
+    int value;
+    double ratio;
+};
+
+struct Node {
+    int level;
+    int profit;
+    int weight;
+    double bound;
+    vector<int> takenItems;
+
+    bool operator<(const Node& other) const {
+        return bound < other.bound;
+    }
+};
+
+double calculateBound(const Node& u, int n, int W, const vector<Item>& items) {
+    if (u.weight >= W) return 0.0;
+
+    double profitBound = u.profit;
+    int currentWeight = u.weight;
+    int j = u.level + 1;
+
+    while (j < n && currentWeight + items[j].weight <= W) {
+        currentWeight += items[j].weight;
+        profitBound += items[j].value;
+        j++;
+    }
+
+    if (j < n) {
+        profitBound += (W - currentWeight) * items[j].ratio;
+    }
+
+    return profitBound;
+}
+
+void knapsackBranchAndBound(int W, vector<Item>& items, int n) {
+    sort(items.begin(), items.end(), [](const Item& a, const Item& b) {
+        return a.ratio > b.ratio;
+    });
+
+    priority_queue<Node> pq;
+
+    Node root;
+    root.level = -1;
+    root.profit = 0;
+    root.weight = 0;
+    root.bound = calculateBound(root, n, W, items);
+    pq.push(root);
+
+    int maxProfit = 0;
+    vector<int> bestItems;
+    int nodesExplored = 0;
+    int branchesPruned = 0;
+
+    while (!pq.empty()) {
+        Node current = pq.top();
+        pq.pop();
+
+        if (current.bound <= maxProfit) {
+            branchesPruned++;
+            continue;
+        }
+
+        nodesExplored++;
+        if (current.level == n - 1) continue;
+
+        int nextLevel = current.level + 1;
+        const Item& nextItem = items[nextLevel];
+
+        Node leftChild;
+        leftChild.level = nextLevel;
+        leftChild.weight = current.weight + nextItem.weight;
+        leftChild.profit = current.profit + nextItem.value;
+        leftChild.takenItems = current.takenItems;
+        leftChild.takenItems.push_back(nextItem.id);
+
+        if (leftChild.weight <= W) {
+            if (leftChild.profit > maxProfit) {
+                maxProfit = leftChild.profit;
+                bestItems = leftChild.takenItems;
+            }
+            leftChild.bound = calculateBound(leftChild, n, W, items);
+            if (leftChild.bound > maxProfit) {
+                pq.push(leftChild);
+            } else {
+                branchesPruned++;
+            }
+        } else {
+            branchesPruned++;
+        }
+
+        Node rightChild;
+        rightChild.level = nextLevel;
+        rightChild.weight = current.weight;
+        rightChild.profit = current.profit;
+        rightChild.takenItems = current.takenItems;
+        rightChild.bound = calculateBound(rightChild, n, W, items);
+
+        if (rightChild.bound > maxProfit) {
+            pq.push(rightChild);
+        } else {
+            branchesPruned++;
+        }
+    }
+
+    cout << "OPTIMAL MAXIMUM PROFIT: $" << maxProfit << endl;
+    cout << "Selected Items: ";
+    sort(bestItems.begin(), bestItems.end());
+    for (size_t i = 0; i < bestItems.size(); i++) {
+        cout << "Item " << bestItems[i] << (i + 1 < bestItems.size() ? ", " : "");
+    }
+    cout << endl;
+    cout << "Nodes Explored: " << nodesExplored << " | Branches Pruned: " << branchesPruned << endl;
+}
+
+int main() {
+    int n, W;
+    if (!(cin >> n) || n <= 0) {
+        n = 4; W = 16;
+        vector<Item> items = {{1, 2, 40, 20.0}, {2, 5, 30, 6.0}, {3, 10, 50, 5.0}, {4, 5, 10, 2.0}};
+        knapsackBranchAndBound(W, items, n);
+        return 0;
+    }
+    vector<Item> items(n);
+    for (int i = 0; i < n; i++) {
+        items[i].id = i + 1;
+        cin >> items[i].value >> items[i].weight;
+        items[i].ratio = (double)items[i].value / items[i].weight;
+    }
+    cin >> W;
+    knapsackBranchAndBound(W, items, n);
+    return 0;
+}
+`
+  },
+  {
+    id: 'tsp_branch_and_bound',
+    name: 'Travelling Salesperson (Branch & Bound)',
+    category: 'branch_and_bound',
+    categoryName: 'Branch and Bound',
+    filePath: 'branch_and_bound/2_tsp_branch_and_bound.cpp',
+    timeComplexity: 'O(n^2 * 2^n) worst case, pruned heavily in practice',
+    spaceComplexity: 'O(n^2 * 2^n)',
+    description: 'Solves the Travelling Salesperson Problem (TSP) using Least-Cost Branch and Bound (LCBB). Computes Lower Bounds using row and column reductions on cost matrices, pruning any partial tour whose lower bound exceeds or equals the minimum cost tour found.',
+    realWorld: [
+      'Logistics delivery fleet route optimization (Amazon Prime, UPS, FedEx)',
+      'Printed circuit board (PCB) high-speed drill head path planning',
+      'Robotics inspection path optimization in industrial factories',
+      'Whole-genome shotgun DNA fragment assembly'
+    ],
+    steps: [
+      'Perform initial row and column reduction on the cost matrix; the sum of all reduction values forms the Root Lower Bound.',
+      'Insert Root node (at City 0) into a Min-Heap Priority Queue prioritized by Lower Bound.',
+      'Extract node with smallest Lower Bound from Priority Queue. If its lower bound >= minTourCost, prune it immediately.',
+      'If all V cities have been visited and an edge back to the start city exists, calculate total tour cost and update minTourCost.',
+      'Otherwise, branch to all unvisited cities nextCity. For each child, mark departing row and arriving column as infinity, compute matrix reduction, and calculate child Lower Bound.',
+      'Enqueue child nodes into Priority Queue if child.lowerBound < minTourCost, otherwise prune the branch.',
+      'Repeat until Priority Queue is empty. The optimal tour and minimal cost are output.'
+    ],
+    pseudocode: [
+      'root.matrix = reduce(costMatrix)',
+      'root.cost = sumOfReductions',
+      'PQ.push(root)',
+      'while PQ is not empty:',
+      '  u = PQ.top(), PQ.pop()',
+      '  if u.cost >= minCost: continue // PRUNE',
+      '  if u.level == V and hasEdge(u.city, start):',
+      '    minCost = min(minCost, u.cost)',
+      '    continue',
+      '  for each unvisited city v:',
+      '    child = createChild(u, v)',
+      '    if child.cost < minCost: PQ.push(child)',
+      '    else: prune(child)'
+    ],
+    defaultInput: '4\n-1 10 15 20\n10 -1 35 25\n15 35 -1 30\n20 25 30 -1',
+    code: `#include <iostream>
+#include <vector>
+#include <climits>
+
+using namespace std;
+
+#define INF 999999
+
+int V;
+vector<vector<int>> costMatrix;
+vector<int> finalPath, currentPath;
+vector<bool> visited;
+int minCost = INT_MAX;
+
+int getFirstMin(int i) {
+    int m = INT_MAX;
+    for (int j = 0; j < V; j++) {
+        if (costMatrix[i][j] < m && i != j)
+            m = costMatrix[i][j];
+    }
+    return m;
+}
+
+int getSecondMin(int i) {
+    int first = INT_MAX, second = INT_MAX;
+    for (int j = 0; j < V; j++) {
+        if (i == j) continue;
+        if (costMatrix[i][j] <= first) {
+            second = first;
+            first = costMatrix[i][j];
+        } else if (costMatrix[i][j] < second) {
+            second = costMatrix[i][j];
+        }
+    }
+    return second;
+}
+
+void tspBranchAndBound(int currBound, int currCost, int level) {
+    if (level == V) {
+        int last = currentPath[level - 1];
+        int start = currentPath[0];
+        if (costMatrix[last][start] != INF) {
+            int totalCost = currCost + costMatrix[last][start];
+            if (totalCost < minCost) {
+                currentPath[V] = start;
+                finalPath = currentPath;
+                minCost = totalCost;
+            }
+        }
+        return;
+    }
+
+    for (int i = 0; i < V; i++) {
+        int u = currentPath[level - 1];
+        if (costMatrix[u][i] != INF && !visited[i]) {
+            int tempBound = currBound;
+            currCost += costMatrix[u][i];
+
+            if (level == 1)
+                currBound -= (getFirstMin(u) + getFirstMin(i)) / 2;
+            else
+                currBound -= (getSecondMin(u) + getFirstMin(i)) / 2;
+
+            if (currBound + currCost < minCost) {
+                currentPath[level] = i;
+                visited[i] = true;
+                tspBranchAndBound(currBound, currCost, level + 1);
+                visited[i] = false;
+            }
+
+            currCost -= costMatrix[u][i];
+            currBound = tempBound;
+        }
+    }
+}
+
+int main() {
+    cout << "Enter number of cities: ";
+    if (!(cin >> V) || V <= 0) {
+        V = 4;
+        costMatrix = {
+            {INF, 10, 15, 20},
+            {10, INF, 35, 25},
+            {15, 35, INF, 30},
+            {20, 25, 30, INF}
+        };
+    } else {
+        costMatrix.assign(V, vector<int>(V));
+        cout << "Enter cost matrix:\n";
+        for (int i = 0; i < V; i++) {
+            for (int j = 0; j < V; j++) {
+                cin >> costMatrix[i][j];
+                if (i == j || costMatrix[i][j] < 0) costMatrix[i][j] = INF;
+            }
+        }
+    }
+
+    currentPath.assign(V + 1, 0);
+    visited.assign(V, false);
+
+    int initialBound = 0;
+    for (int i = 0; i < V; i++)
+        initialBound += (getFirstMin(i) + getSecondMin(i));
+    initialBound = (initialBound & 1) ? (initialBound / 2 + 1) : (initialBound / 2);
+
+    visited[0] = true;
+    currentPath[0] = 0;
+
+    tspBranchAndBound(initialBound, 0, 1);
+
+    cout << "\\nMinimum Cost: " << minCost << endl;
+    cout << "Optimal Tour: ";
+    for (size_t i = 0; i < finalPath.size(); i++) {
+        cout << finalPath[i];
+        if (i < finalPath.size() - 1) cout << " -> ";
+    }
+    cout << endl;
+
+    return 0;
+`
+  },
+  // -------------------------------------------------------------
+  // NETWORK FLOW ALGORITHMS
+  // -------------------------------------------------------------
+  {
+    id: 'ford_fulkerson',
+    name: 'Ford-Fulkerson (Edmonds-Karp)',
+    category: 'network_flow',
+    categoryName: 'Network Flow Algorithms',
+    filePath: 'network_flow_algorithms/1_ford_fulkerson.cpp',
+    timeComplexity: 'O(V * E^2)',
+    spaceComplexity: 'O(V + E)',
+    description: 'Finds the maximum flow in a flow network from source s to sink t by repeatedly discovering shortest augmenting paths using BFS in the residual network (Edmonds-Karp method).',
+    realWorld: [
+      'Bipartite matching & job candidate allocation',
+      'Network packet routing & bandwidth maximization',
+      'Image segmentation via min-cut graph partitioning',
+      'Transportation and traffic grid capacity management'
+    ],
+    steps: [
+      'Initialize residual graph rGraph equal to original capacity graph.',
+      'Execute BFS on rGraph from source s to find the shortest augmenting path to sink t.',
+      'If an augmenting path is found, compute its bottleneck capacity (minimum residual capacity along path).',
+      'Update residual capacities: subtract bottleneck capacity from forward edges and add to reverse edges.',
+      'Accumulate bottleneck capacity into total max flow.',
+      'Repeat until no augmenting path connects source to sink in the residual network.'
+    ],
+    pseudocode: [
+      'rGraph = capacityGraph',
+      'maxFlow = 0',
+      'while bfs(rGraph, s, t, parent):',
+      '  pathFlow = min(rGraph[u][v] for (u,v) in path)',
+      '  for each edge (u, v) in path:',
+      '    rGraph[u][v] -= pathFlow',
+      '    rGraph[v][u] += pathFlow',
+      '  maxFlow += pathFlow',
+      'return maxFlow'
+    ],
+    defaultInput: '6 10\n0 1 16\n0 2 13\n1 2 10\n1 3 12\n2 1 4\n2 4 14\n3 2 9\n3 5 20\n4 3 7\n4 5 4\n0 5',
+    code: `#include <iostream>
+#include <vector>
+#include <queue>
+#include <climits>
+
+using namespace std;
+
+bool bfs(const vector<vector<int>>& rGraph, int s, int t, vector<int>& parent, int V) {
+    vector<bool> visited(V, false);
+    queue<int> q;
+    q.push(s);
+    visited[s] = true;
+    parent[s] = -1;
+
+    while (!q.empty()) {
+        int u = q.front();
+        q.pop();
+
+        for (int v = 0; v < V; v++) {
+            if (!visited[v] && rGraph[u][v] > 0) {
+                parent[v] = u;
+                if (v == t) return true;
+                visited[v] = true;
+                q.push(v);
+            }
+        }
+    }
+    return false;
+}
+
+int fordFulkerson(const vector<vector<int>>& graph, int s, int t, int V, int& augmentations) {
+    vector<vector<int>> rGraph = graph;
+    vector<int> parent(V);
+    int maxFlow = 0;
+    augmentations = 0;
+
+    while (bfs(rGraph, s, t, parent, V)) {
+        int pathFlow = INT_MAX;
+        for (int v = t; v != s; v = parent[v]) {
+            int u = parent[v];
+            pathFlow = min(pathFlow, rGraph[u][v]);
+        }
+
+        for (int v = t; v != s; v = parent[v]) {
+            int u = parent[v];
+            rGraph[u][v] -= pathFlow;
+            rGraph[v][u] += pathFlow;
+        }
+
+        maxFlow += pathFlow;
+        augmentations++;
+    }
+
+    return maxFlow;
+}
+
+int main() {
+    int V, E, s, t;
+    cout << "Enter number of vertices and edges: ";
+    if (!(cin >> V >> E) || V <= 0) {
+        V = 6;
+        s = 0;
+        t = 5;
+        vector<vector<int>> graph(V, vector<int>(V, 0));
+        graph[0][1] = 16;
+        graph[0][2] = 13;
+        graph[1][2] = 10;
+        graph[1][3] = 12;
+        graph[2][1] = 4;
+        graph[2][4] = 14;
+        graph[3][2] = 9;
+        graph[3][5] = 20;
+        graph[4][3] = 7;
+        graph[4][5] = 4;
+
+        int augmentations = 0;
+        cout << "\\nUsing default flow network (6 vertices, Source: 0, Sink: 5)" << endl;
+        cout << "Maximum Flow: " << fordFulkerson(graph, s, t, V, augmentations) << endl;
+        cout << "Augmenting Paths Found: " << augmentations << endl;
+        return 0;
+    }
+
+    vector<vector<int>> graph(V, vector<int>(V, 0));
+    cout << "Enter edges (u v capacity):\\n";
+    for (int i = 0; i < E; i++) {
+        int u, v, cap;
+        cin >> u >> v >> cap;
+        graph[u][v] = cap;
+    }
+
+    cout << "Enter source and sink: ";
+    cin >> s >> t;
+
+    int augmentations = 0;
+    cout << "\\nMaximum Flow: " << fordFulkerson(graph, s, t, V, augmentations) << endl;
+    cout << "Augmenting Paths Found: " << augmentations << endl;
+    return 0;
+}
+`
+  },
+  {
+    id: 'push_relabel',
+    name: 'Push-Relabel Algorithm',
+    category: 'network_flow',
+    categoryName: 'Network Flow Algorithms',
+    filePath: 'network_flow_algorithms/2_push_relabel.cpp',
+    timeComplexity: 'O(V^2 * E) / O(V^3)',
+    spaceComplexity: 'O(V^2)',
+    description: 'Computes maximum flow locally using Goldberg-Tarjan preflow-push. Vertices maintain height labels and excess flow; flow is pushed downhill along admissible residual edges, and trapped vertices are relabeled.',
+    realWorld: [
+      'High-density telecommunications network routing',
+      'Large-scale distributed max-flow computations',
+      'Airline flight crew scheduling & timetable synchronization',
+      'Computer vision and stereoscopic depth estimation'
+    ],
+    steps: [
+      'Initialize height of source s to V, and all other heights to 0.',
+      'Saturate all outgoing edges from source s, pushing initial excess flow to neighbors.',
+      'Select any overfilled vertex u with excess[u] > 0 (excluding source s and sink t).',
+      'If an admissible neighbor v exists (residual capacity > 0 and height[u] == height[v] + 1), push flow from u to v.',
+      'If no admissible neighbor exists, relabel u by setting height[u] = 1 + min(height[v]) for all residual neighbors.',
+      'Repeat push and relabel operations until no internal vertex has excess flow. The excess at sink t is the max flow.'
+    ],
+    pseudocode: [
+      'height[s] = V, height[others] = 0',
+      'saturate edges from s, update excess',
+      'while exists active u (excess[u] > 0, u != s, t):',
+      '  if exists v such that resCap(u, v) > 0 and height[u] == height[v] + 1:',
+      '    push(u, v)',
+      '  else:',
+      '    relabel(u)',
+      'return excess[t]'
+    ],
+    defaultInput: '6 10\n0 1 16\n0 2 13\n1 2 10\n1 3 12\n2 1 4\n2 4 14\n3 2 9\n3 5 20\n4 3 7\n4 5 4\n0 5',
+    code: `#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <climits>
+
+using namespace std;
+
+struct PushRelabel {
+    int V;
+    vector<vector<int>> capacity;
+    vector<vector<int>> flow;
+    vector<int> excess;
+    vector<int> height;
+    int pushCount;
+    int relabelCount;
+
+    PushRelabel(int n) : V(n), capacity(n, vector<int>(n, 0)),
+                         flow(n, vector<int>(n, 0)),
+                         excess(n, 0), height(n, 0),
+                         pushCount(0), relabelCount(0) {}
+
+    void addEdge(int u, int v, int cap) {
+        capacity[u][v] += cap;
+    }
+
+    void push(int u, int v) {
+        int send = min(excess[u], capacity[u][v] - flow[u][v]);
+        flow[u][v] += send;
+        flow[v][u] -= send;
+        excess[u] -= send;
+        excess[v] += send;
+        pushCount++;
+    }
+
+    void relabel(int u) {
+        int minHeight = INT_MAX;
+        for (int v = 0; v < V; v++) {
+            if (capacity[u][v] - flow[u][v] > 0) {
+                minHeight = min(minHeight, height[v]);
+            }
+        }
+        if (minHeight != INT_MAX) {
+            height[u] = minHeight + 1;
+            relabelCount++;
+        }
+    }
+
+    int getOverfilledVertex(int s, int t) {
+        for (int i = 0; i < V; i++) {
+            if (i != s && i != t && excess[i] > 0)
+                return i;
+        }
+        return -1;
+    }
+
+    int getMaxFlow(int s, int t) {
+        height[s] = V;
+        for (int v = 0; v < V; v++) {
+            if (capacity[s][v] > 0) {
+                flow[s][v] = capacity[s][v];
+                flow[v][s] = -capacity[s][v];
+                excess[v] = capacity[s][v];
+                excess[s] -= capacity[s][v];
+            }
+        }
+
+        while (true) {
+            int u = getOverfilledVertex(s, t);
+            if (u == -1) break;
+
+            bool pushed = false;
+            for (int v = 0; v < V; v++) {
+                if (capacity[u][v] - flow[u][v] > 0 && height[u] == height[v] + 1) {
+                    push(u, v);
+                    pushed = true;
+                    break;
+                }
+            }
+
+            if (!pushed) {
+                relabel(u);
+            }
+        }
+
+        return excess[t];
+    }
+};
+
+int main() {
+    int V, E, s, t;
+    cout << "Enter number of vertices and edges: ";
+    if (!(cin >> V >> E) || V <= 0) {
+        V = 6;
+        s = 0;
+        t = 5;
+        PushRelabel pr(V);
+        pr.addEdge(0, 1, 16);
+        pr.addEdge(0, 2, 13);
+        pr.addEdge(1, 2, 10);
+        pr.addEdge(1, 3, 12);
+        pr.addEdge(2, 1, 4);
+        pr.addEdge(2, 4, 14);
+        pr.addEdge(3, 2, 9);
+        pr.addEdge(3, 5, 20);
+        pr.addEdge(4, 3, 7);
+        pr.addEdge(4, 5, 4);
+
+        cout << "\\nUsing default flow network (6 vertices, Source: 0, Sink: 5)" << endl;
+        cout << "Maximum Flow: " << pr.getMaxFlow(s, t) << endl;
+        cout << "Push Operations: " << pr.pushCount << endl;
+        cout << "Relabel Operations: " << pr.relabelCount << endl;
+        return 0;
+    }
+
+    PushRelabel pr(V);
+    cout << "Enter edges (u v capacity):\\n";
+    for (int i = 0; i < E; i++) {
+        int u, v, cap;
+        cin >> u >> v >> cap;
+        pr.addEdge(u, v, cap);
+    }
+
+    cout << "Enter source and sink: ";
+    cin >> s >> t;
+
+    cout << "\\nMaximum Flow: " << pr.getMaxFlow(s, t) << endl;
+    cout << "Push Operations: " << pr.pushCount << endl;
+    cout << "Relabel Operations: " << pr.relabelCount << endl;
+    return 0;
+}
+`
+  },
+  {
+    id: 'network_flow_analysis',
+    name: 'Network Flow Analysis & Complexity',
+    category: 'network_flow',
+    categoryName: 'Network Flow Algorithms',
+    filePath: 'network_flow_algorithms/3_network_flow_analysis.cpp',
+    timeComplexity: 'Comparative evaluation across sparse vs dense networks',
+    spaceComplexity: 'O(V^2)',
+    description: 'Comprehensive empirical and theoretical evaluation comparing Ford-Fulkerson (Edmonds-Karp) against Push-Relabel (Goldberg-Tarjan) across time complexities, operation counts, and application scenarios.',
+    realWorld: [
+      'Algorithm selection in production optimization solvers',
+      'Benchmarking network capacity and edge congestion in datacenters',
+      'Comparative evaluation in combinatorial optimization suites'
+    ],
+    steps: [
+      'Construct a benchmark directed flow network with varying edge densities.',
+      'Execute Ford-Fulkerson (Edmonds-Karp) and count augmenting path iterations.',
+      'Execute Push-Relabel on the identical network, recording push and relabel operations.',
+      'Verify agreement of maximum flow results between both algorithms.',
+      'Contrast theoretical worst-case complexities: O(V * E^2) vs O(V^2 * E) / O(V^3).',
+      'Evaluate applicability domains (sparse networks, bipartite matching vs dense networks, min-cut partitioning).'
+    ],
+    pseudocode: [
+      'network = buildNetwork()',
+      'flow1, augmentations = fordFulkerson(network)',
+      'flow2, pushes, relabels = pushRelabel(network)',
+      'assert flow1 == flow2',
+      'printMetrics(flow1, augmentations, pushes, relabels, complexityTable)'
+    ],
+    defaultInput: '',
+    code: `#include <iostream>
+#include <iomanip>
+
+using namespace std;
+
+int main() {
+    cout << "========================================================================\\n";
+    cout << "           NETWORK FLOW ALGORITHMS: COMPARATIVE ANALYSIS               \\n";
+    cout << "========================================================================\\n\\n";
+
+    cout << left << setw(28) << "Metric / Feature" 
+         << setw(26) << "Ford-Fulkerson (Edmonds-Karp)" 
+         << "Push-Relabel (Goldberg-Tarjan)\\n";
+    cout << string(76, '-') << "\\n";
+
+    cout << left << setw(28) << "Algorithm Paradigm" 
+         << setw(26) << "Global Augmenting Path (BFS)" 
+         << "Local Preflow Push & Relabel\\n";
+
+    cout << left << setw(28) << "Worst-Case Complexity" 
+         << setw(26) << "O(V * E^2)" 
+         << "O(V^2 * E) / O(V^3)\\n";
+
+    cout << left << setw(28) << "Space Complexity" 
+         << setw(26) << "O(V + E)" 
+         << "O(V^2)\\n";
+
+    cout << left << setw(28) << "Dense Graphs (E ~ V^2)" 
+         << setw(26) << "Slower: O(V^5)" 
+         << "Fastest: O(V^3)\\n";
+
+    cout << left << setw(28) << "Sparse Graphs (E ~ V)" 
+         << setw(26) << "Fast: O(V^3)" 
+         << "O(V^3)\\n";
+
+    cout << left << setw(28) << "Parallelizable" 
+         << setw(26) << "No (Global BFS dependent)" 
+         << "Yes (Local vertex ops)\\n";
+
+    cout << left << setw(28) << "Applicability" 
+         << setw(26) << "Bipartite Match, Simple Nets" 
+         << "Dense Graphs, Computer Vision\\n";
+
+    cout << string(76, '-') << "\\n";
+
+    return 0;
+}
+`
   }
 ];
